@@ -1,6 +1,6 @@
 name: ci
 on:
-  pull_request:
+  push:
 jobs:
   if_merged:
     if: github.event.pull_request.merged == true
