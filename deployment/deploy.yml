@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: adventofcode
+spec:
+  selector:
+    matchLabels:
+      app: adventofcode
+  replicas: 2 
+  template:
+    metadata:
+      labels:
+        app: adventofcode
+    spec:
+      containers:
+      - name: adventofcode
+        image: registry.brotherlogic-backend.com/adventofcode:latest
+        ports:
+        - containerPort: 8080
