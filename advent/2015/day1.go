@@ -15,5 +15,6 @@ func ComputeFloor(str string) int32 {
 }
 
 func Solve2015Day1Part1(ctx context.Context, data string) *pb.SolveResponse {
+
 	return &pb.SolveResponse{Answer: ComputeFloor(data)}
 }
