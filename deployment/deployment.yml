@@ -21,5 +21,7 @@ spec:
       containers:
       - name: adventofcode
         image: registry.brotherlogic-backend.com/adventofcode:latest
+        imagePullSecrets:
+          - name: regcred
         ports:
         - containerPort: 8080
