@@ -10,6 +10,7 @@ import (
 func ComputeFloor(str string) int32 {
 	left := strings.Count(str, "(")
 	right := strings.Count(str, ")")
+
 	return int32(left - right)
 }
 
