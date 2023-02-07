@@ -27,7 +27,7 @@ func main() {
 	}
 	gs := grpc.NewServer()
 	pb.RegisterAdventServerServiceServer(gs, s)
-	log.Printf("server listening at %v", lis.Addr())
+	log.Printf("Server listening at %v", lis.Addr())
 	if err := gs.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
