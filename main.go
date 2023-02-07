@@ -17,6 +17,8 @@ var (
 )
 
 func main() {
+	flag.Parse()
+
 	s := &server.Server{}
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
