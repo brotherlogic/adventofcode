@@ -3,9 +3,10 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - "**.yml"
 jobs:
     build:
-      if: ${{ !contains(github.event.pusher.email, 'fluxcdbot') }}
       runs-on: ubuntu-22.04
       steps:
       - uses: actions/checkout@v3
