@@ -19,5 +19,5 @@ spec:
     name: adventofcode
   policy:
     semver:
-      range: 0.1.x
+      range: 0.x.0
 
