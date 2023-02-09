@@ -20,6 +20,9 @@ spec:
       range: 0.1.x
 ---
 kind: ImageRepository
+metadata:
+  name: adventofcode
+  namespace: adventofcode
 spec:
   secretRef:
     name: regcred
