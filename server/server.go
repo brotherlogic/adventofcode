@@ -12,5 +12,5 @@ import (
 type Server struct{}
 
 func (s *Server) Solve(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "We haven't written this yet")
+	return nil, status.Errorf(codes.Unimplemented, "we actually haven't written this yet")
 }
