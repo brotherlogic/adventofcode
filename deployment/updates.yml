@@ -43,7 +43,7 @@ spec:
     push:
       branch: main
   update:
-    path: ./deployment
+    path: ./deployment/
     strategy: Setters
 ---
 apiVersion: source.toolkit.fluxcd.io/v1beta2
