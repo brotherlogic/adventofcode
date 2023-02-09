@@ -56,4 +56,6 @@ spec:
   ref:
     branch: main
   url: https://github.com/brotherlogic/adventofcode
+  secretRef:
+    name: adventofcode
 
