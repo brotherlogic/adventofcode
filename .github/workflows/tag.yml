@@ -5,6 +5,7 @@ on:
       - main
 jobs:
     build:
+      if: ${{ !contains(github.event.pusher.email, 'fluxcdbot') }}
       runs-on: ubuntu-22.04
       steps:
       - uses: actions/checkout@v3
