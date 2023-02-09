@@ -6,6 +6,8 @@ metadata:
 spec:
   image: registry.brotherlogic-backend.com/brotherlogic/adventofcode
   interval: 1m0s
+  secretRef:
+    name: regcred
 ---
 apiVersion: image.toolkit.fluxcd.io/v1beta1
 kind: ImagePolicy
@@ -18,11 +20,4 @@ spec:
   policy:
     semver:
       range: 0.1.x
----
-kind: ImageRepository
-metadata:
-  name: adventofcode
-  namespace: adventofcode
-spec:
-  secretRef:
-    name: regcred
+
