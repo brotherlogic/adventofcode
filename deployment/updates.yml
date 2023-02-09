@@ -18,3 +18,8 @@ spec:
   policy:
     semver:
       range: 0.1.x
+---
+kind: ImageRepository
+spec:
+  secretRef:
+    name: regcred
