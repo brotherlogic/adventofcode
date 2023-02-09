@@ -2,9 +2,10 @@ name: Bump version and Push Tag
 on:
   push:
     branches:
-      - master
+      - main
 jobs:
     build:
+      if: ${{ contains(github.event.pusher.email, 'brotherlogic') }}
       runs-on: ubuntu-22.04
       steps:
       - uses: actions/checkout@v3
