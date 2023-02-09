@@ -1,0 +1,20 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta1
+kind: ImageRepository
+metadata:
+  name: adventofcode
+  namespace: adventofcode
+spec:
+  image: registry.brotherlogic-backend.com/brotherlogic/adventofcode
+  interval: 1m0s
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta1
+kind: ImagePolicy
+metadata:
+  name: adventofcode
+  namespace: adventofcode
+spec:
+  imageRepositoryRef:
+    name: adventofcode
+  policy:
+    semver:
+      range: 0.1.x
