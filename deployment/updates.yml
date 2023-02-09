@@ -2,7 +2,7 @@ apiVersion: image.toolkit.fluxcd.io/v1beta1
 kind: ImageRepository
 metadata:
   name: adventofcode
-  namespace: flux-system
+  namespace: adventofcode
 spec:
   image: registry.brotherlogic-backend.com/brotherlogic/adventofcode
   interval: 1m0s
@@ -13,7 +13,7 @@ apiVersion: image.toolkit.fluxcd.io/v1beta1
 kind: ImagePolicy
 metadata:
   name: adventofcode
-  namespace: flux-system
+  namespace: adventofcode
 spec:
   imageRepositoryRef:
     name: adventofcode
@@ -25,13 +25,12 @@ apiVersion: image.toolkit.fluxcd.io/v1beta1
 kind: ImageUpdateAutomation
 metadata:
   name: adventofcode
-  namespace: flux-system
+  namespace: adventofcode
 spec:
   interval: 1m0s
   sourceRef:
     kind: GitRepository
     name: adventofcode
-    namespace: flux-system
   git:
     checkout:
       ref:
