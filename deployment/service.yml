@@ -5,6 +5,12 @@ metadata:
   namespace: adventofcode
 spec:
   type: NodePort
+  metadata:
+    annotations:
+      prometheus.io/port: "8081"
+      prometheus.io/scrape: "true"
+    labels:
+      app: adventofcode
   ports:
     - name: grpc
       port: 8080
