@@ -7,8 +7,15 @@ metadata:
     app: adventofcode
 spec:
   type: NodePort
+  metadata:
+    labels:
+      app: adventofcode
   ports:
-    - port: 8080
+    - name: grpc
+      port: 8080
       targetPort: 8080
+    - name: metrics
+      port: 8081
+      targetPort: 8081
   selector:
     app: adventofcode
