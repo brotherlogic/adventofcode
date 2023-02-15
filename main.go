@@ -30,7 +30,7 @@ func main() {
 	}
 	gs := grpc.NewServer()
 	pb.RegisterAdventServerServiceServer(gs, s)
-	log.Printf("server listening at %v", lis.Addr())
+	log.Printf("the server listening at %v", lis.Addr())
 
 	// Setup prometheus export
 	http.Handle("/metrics", promhttp.Handler())
