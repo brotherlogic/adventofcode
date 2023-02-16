@@ -39,6 +39,6 @@ func main() {
 	}()
 
 	if err := gs.Serve(lis); err != nil {
-		log.Fatalf("I failed to serve: %v", err)
+		log.Fatalf("Ii failed to serve: %v", err)
 	}
 }
