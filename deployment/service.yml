@@ -19,3 +19,22 @@ spec:
       targetPort: 8081
   selector:
     app: adventofcode
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: adventofcode
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+spec:
+  endpoints:
+    - port: metrics
+      path: /metrics
+      interval: 30s
+  namespaceSelector:
+    matchNames:
+    - adventofcode
+  selector:
+    matchLabels:
+      app: adventofcode
