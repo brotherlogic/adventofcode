@@ -23,5 +23,5 @@ type Server struct{}
 
 func (s *Server) Solve(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResponse, error) {
 	count.Inc()
-	return nil, status.Errorf(codes.Unimplemented, "we actually haven't written this yet")
+	return nil, status.Errorf(codes.Unimplemented, "this is unimplemented")
 }
