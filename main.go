@@ -6,7 +6,6 @@ import (
 	"log"
 	"net"
 	"net/http"
-	"time"
 
 	"github.com/brotherlogic/adventofcode/server"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -37,13 +36,6 @@ func main() {
 	http.Handle("/metrics", promhttp.Handler())
 	go func() {
 		http.ListenAndServe(fmt.Sprintf(":%v", *metricsPort), nil)
-	}()
-
-	go func() {
-		for {
-			time.Sleep(time.Second * 5)
-			log.Printf("Tersting")
-		}
 	}()
 
 	if err := gs.Serve(lis); err != nil {
