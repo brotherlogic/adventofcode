@@ -21,7 +21,7 @@ func main() {
 	}
 
 	client := pb.NewAdventServerServiceClient(conn)
-	res, err := client.Solve(ctx, &pb.SolveRequest{})
+	res, err := client.Solve(ctx, &pb.SolveRequest{Year: 2017, Day: 12, Part: 2})
 
 	fmt.Printf("%v -> %v\n", res, err)
 }
