@@ -6,7 +6,6 @@ metadata:
   labels:
     app: adventofcode
 spec:
-  type: NodePort
   metadata:
     labels:
       app: adventofcode
