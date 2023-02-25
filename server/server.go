@@ -2,9 +2,7 @@ package server
 
 import (
 	"context"
-
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
+	"fmt"
 
 	pb "github.com/brotherlogic/adventofcode/proto"
 	aspb "github.com/brotherlogic/adventserver/proto"
@@ -25,25 +23,26 @@ var (
 
 type Server struct{}
 
+func (s *Server) localSolve(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResponse, error) {
+	return nil, fmt.Errorf("No local solves yet")
+}
+
 func (s *Server) Solve(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResponse, error) {
 	count.Inc()
 
-	if req.GetYear() == 2017 && req.GetDay() == 13 && req.GetPart() == 2 {
-		return &pb.SolveResponse{Answer: 1234}, nil
+	resp, err := s.localSolve(ctx, req)
+	if err == nil {
+		return resp, err
 	}
 
-	if req.GetYear() == 2017 && req.GetDay() == 12 && req.GetPart() == 2 {
-		conn, err := utils.LFDialServer(ctx, "adventserver")
-		if err != nil {
-			return nil, err
-		}
-		client := aspb.NewAdventServerServiceClient(conn)
-		val, err := client.Solve(ctx, &aspb.SolveRequest{Year: req.GetYear(), Day: req.GetDay(), Part: req.GetPart()})
-		if err != nil {
-			return nil, err
-		}
-		return &pb.SolveResponse{Answer: val.GetAnswer()}, nil
+	conn, err := utils.LFDialServer(ctx, "adventserver")
+	if err != nil {
+		return nil, err
 	}
-
-	return nil, status.Errorf(codes.Unimplemented, "we actually haven't written this yet")
+	client := aspb.NewAdventServerServiceClient(conn)
+	val, err := client.Solve(ctx, &aspb.SolveRequest{Year: req.GetYear(), Day: req.GetDay(), Part: req.GetPart()})
+	if err != nil {
+		return nil, err
+	}
+	return &pb.SolveResponse{Answer: val.GetAnswer(), StringAnswer: val.GetStringAnswer(), BigAnswer: val.GetBigAnswer()}, nil
 }
