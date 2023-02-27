@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/tls"
 	"flag"
 	"fmt"
 	"log"
@@ -23,6 +24,13 @@ func main() {
 	flag.Parse()
 
 	s := &server.Server{}
+
+	// Load the server certificate and its key
+	serverCert, err := tls.LoadX509KeyPair("server.pem", "server.key")
+	if err != nil {
+		log.Fatalf("Failed to load server certificate and key. %s.", err)
+	}
+	log.Printf("Loaded %v", serverCert)
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
 	if err != nil {

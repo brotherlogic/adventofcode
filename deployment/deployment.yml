@@ -18,5 +18,12 @@ spec:
         image: registry.brotherlogic-backend.com/brotherlogic/adventofcode:0.49.0 # {"$imagepolicy": "flux-system:adventofcode"}
         ports:
         - containerPort: 8080
+       volumes:
+        - name: serverpem-vol
+          secret:
+            secretName: serverpem
+        - name: serverkey-vol
+          secret:
+            secretName: serverkey
       imagePullSecrets:
       - name: regcred
