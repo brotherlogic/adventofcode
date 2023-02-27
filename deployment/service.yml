@@ -5,8 +5,9 @@ metadata:
   namespace: adventofcode
   labels:
     app: adventofcode
+  annotations:
+    traefik.ingress.kuberentes.io/service.serversscheme: h2c
 spec:
-  type: NodePort
   metadata:
     labels:
       app: adventofcode
@@ -19,6 +20,7 @@ spec:
       targetPort: 8081
   selector:
     app: adventofcode
+  type: ClusterIP
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
