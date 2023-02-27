@@ -43,7 +43,7 @@ func main() {
 	// Put the CA certificate to certificate pool
 	certPool := x509.NewCertPool()
 	if !certPool.AppendCertsFromPEM(trustedCert) {
-		log.Fatalf("Failed to append trusted certificate to certificate pool. %s.", err)
+		log.Fatalf("failed to append trusted certificate to certificate pool. %s.", err)
 	}
 
 	// Create the TLS configuration
@@ -57,7 +57,7 @@ func main() {
 
 	// Create a new TLS credentials based on the TLS configuration
 	cred := credentials.NewTLS(tlsConfig)
-	log.Printf("Made cred: %v", cred)
+	log.Printf("made cred: %v", cred)
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
 	if err != nil {
