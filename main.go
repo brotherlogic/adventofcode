@@ -31,7 +31,7 @@ func main() {
 	// Load the server certificate and its key
 	serverCert, err := tls.LoadX509KeyPair("server.pem", "server.key")
 	if err != nil {
-		log.Fatalf("Failed to load server certificate and key. %s.", err)
+		log.Fatalf("failed to load server certificate and key. %s.", err)
 	}
 
 	// Load the CA certificate
