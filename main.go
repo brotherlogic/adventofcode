@@ -37,7 +37,7 @@ func main() {
 	// Load the CA certificate
 	trustedCert, err := ioutil.ReadFile("cacert.pem")
 	if err != nil {
-		log.Fatalf("Failed to load trusted certificate. %s.", err)
+		log.Fatalf("failed to load trusted certificate. %s.", err)
 	}
 
 	// Put the CA certificate to certificate pool
