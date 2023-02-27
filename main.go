@@ -43,7 +43,7 @@ func main() {
 	// Put the CA certificate to certificate pool
 	certPool := x509.NewCertPool()
 	if !certPool.AppendCertsFromPEM(trustedCert) {
-		log.Fatalf("failed to append trusted certificate to certificate pool. %s.", err)
+		log.Fatal("failed to append trusted certificate to certificate pool")
 	}
 
 	// Create the TLS configuration
