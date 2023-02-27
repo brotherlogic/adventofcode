@@ -21,11 +21,13 @@ spec:
       volumeMounts:
        - name: serverpem-vol
          mountPath: "/"
+         readOnly: true
        - name: serverkey-vol
          mountPath: "/"
+         readOnly: true
        - name: cacertpem-vol
          mountPath: "/" 
-      readOnly: true
+         readOnly: true
       volumes:
       - name: serverpem-vol
         secret:
