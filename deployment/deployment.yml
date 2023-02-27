@@ -15,19 +15,19 @@ spec:
     spec:
       containers:
       - name: adventofcode
-        image: registry.brotherlogic-backend.com/brotherlogic/adventofcode:0.51.0 # {"$imagepolicy": "flux-system:adventofcode"}
+        image: registry.brotherlogic-backend.com/brotherlogic/adventofcode:0.54.0 # {"$imagepolicy": "flux-system:adventofcode"}
         ports:
         - containerPort: 8080
         volumeMounts:
-         - name: serverpem-vol
-           mountPath: "/sp"
-           readOnly: true
-         - name: serverkey-vol
-           mountPath: "/sk"
-           readOnly: true
-         - name: cacertpem-vol
-           mountPath: "/cp" 
-           readOnly: true
+        - name: serverpem-vol
+          mountPath: "/sp"
+          readOnly: true
+        - name: serverkey-vol
+          mountPath: "/sk"
+          readOnly: true
+        - name: cacertpem-vol
+          mountPath: "/cp"
+          readOnly: true
       volumes:
       - name: serverpem-vol
         secret:
