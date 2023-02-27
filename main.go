@@ -57,7 +57,7 @@ func main() {
 
 	// Create a new TLS credentials based on the TLS configuration
 	cred := credentials.NewTLS(tlsConfig)
-	log.Printf("Made cred: %v", cred)
+	log.Printf("made cred: %v", cred)
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
 	if err != nil {
