@@ -63,7 +63,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to listen on port %v: %v", *port, err)
 	}
-	gs := grpc.NewServer()
+	gs := grpc.NewServer(grpc.Creds(cred))
 	pb.RegisterAdventServerServiceServer(gs, s)
 	log.Printf("server listening at %v", lis.Addr())
 
