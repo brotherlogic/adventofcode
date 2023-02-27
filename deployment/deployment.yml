@@ -20,13 +20,13 @@ spec:
         - containerPort: 8080
         volumeMounts:
          - name: serverpem-vol
-           mountPath: "/"
+           mountPath: "/sp"
            readOnly: true
          - name: serverkey-vol
-           mountPath: "/"
+           mountPath: "/sk"
            readOnly: true
          - name: cacertpem-vol
-           mountPath: "/" 
+           mountPath: "/cp" 
            readOnly: true
       volumes:
       - name: serverpem-vol
