@@ -60,13 +60,14 @@ func main() {
 
 	// Create a new TLS credentials based on the TLS configuration
 	cred := credentials.NewTLS(tlsConfig)
-	log.Printf("made cred: %v", string(trustedCert))
+	log.Printf("made cred: %v -> %v", string(trustedCert), cred)
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
 	if err != nil {
 		log.Fatalf("failed to listen on port %v: %v", *port, err)
 	}
-	gs := grpc.NewServer(grpc.Creds(cred))
+	//	gs := grpc.NewServer(grpc.Creds(cred))
+	gs := grpc.NewServer()
 	pb.RegisterAdventServerServiceServer(gs, s)
 	log.Printf("server listening at %v", lis.Addr())
 
