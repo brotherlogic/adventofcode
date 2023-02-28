@@ -69,7 +69,7 @@ func main() {
 	//gs := grpc.NewServer(grpc.Creds(cred))
 	gs := grpc.NewServer()
 	pb.RegisterAdventServerServiceServer(gs, s)
-	log.Printf("insecure server listening at %v", lis.Addr())
+	log.Printf("secure server listening at %v", lis.Addr())
 
 	// Setup prometheus export
 	http.Handle("/metrics", promhttp.Handler())
