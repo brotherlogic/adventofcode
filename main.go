@@ -34,6 +34,8 @@ func main() {
 		log.Fatalf("failed to load server certificate and key. %s.", err)
 	}
 	log.Printf("GOT: %v", serverCert.Certificate)
+	data, err := ioutil.ReadFile("sp/server.pem")
+	log.Printf("READ: %v, %v", data, err)
 
 	// Load the CA certificate
 	trustedCert, err := ioutil.ReadFile("cp/cacert.pem")
