@@ -16,6 +16,15 @@ message SolveResponse {
     int64 big_answer = 3;
 }
 
+message UploadRequest {
+    int32 year = 1;
+    int32 day = 2;
+    string data = 3;
+}
+
+message UploadResponse {}
+
 service AdventServerService {
     rpc Solve(SolveRequest) returns (SolveResponse) {};
+    rpc Upload(UploadRequest) returns (UploadResponse) {};
 }
