@@ -12,7 +12,8 @@ require (
 
 require (
 	github.com/beorn7/perks v1.0.1 // indirect
-	github.com/brotherlogic/discovery v0.0.0-20230220192452-aa3448564fd0 // indirect
+	github.com/brotherlogic/discovery v0.0.0-20230221235228-2800d6e5fd10 // indirect
+	github.com/brotherlogic/rstore v0.17.0 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/go-logr/logr v1.2.3 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
@@ -31,5 +32,5 @@ require (
 	golang.org/x/net v0.7.0 // indirect
 	golang.org/x/sys v0.5.0 // indirect
 	golang.org/x/text v0.7.0 // indirect
-	google.golang.org/genproto v0.0.0-20230216225411-c8e22ba71e44 // indirect
+	google.golang.org/genproto v0.0.0-20230222225845-10f96fb3dbec // indirect
 )

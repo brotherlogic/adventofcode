@@ -23,6 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AdventServerServiceClient interface {
 	Solve(ctx context.Context, in *SolveRequest, opts ...grpc.CallOption) (*SolveResponse, error)
+	Upload(ctx context.Context, in *UploadRequest, opts ...grpc.CallOption) (*UploadResponse, error)
 }
 
 type adventServerServiceClient struct {
@@ -42,11 +43,21 @@ func (c *adventServerServiceClient) Solve(ctx context.Context, in *SolveRequest,
 	return out, nil
 }
 
+func (c *adventServerServiceClient) Upload(ctx context.Context, in *UploadRequest, opts ...grpc.CallOption) (*UploadResponse, error) {
+	out := new(UploadResponse)
+	err := c.cc.Invoke(ctx, "/adventofcode.AdventServerService/Upload", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AdventServerServiceServer is the server API for AdventServerService service.
 // All implementations should embed UnimplementedAdventServerServiceServer
 // for forward compatibility
 type AdventServerServiceServer interface {
 	Solve(context.Context, *SolveRequest) (*SolveResponse, error)
+	Upload(context.Context, *UploadRequest) (*UploadResponse, error)
 }
 
 // UnimplementedAdventServerServiceServer should be embedded to have forward compatible implementations.
@@ -55,6 +66,9 @@ type UnimplementedAdventServerServiceServer struct {
 
 func (UnimplementedAdventServerServiceServer) Solve(context.Context, *SolveRequest) (*SolveResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Solve not implemented")
+}
+func (UnimplementedAdventServerServiceServer) Upload(context.Context, *UploadRequest) (*UploadResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Upload not implemented")
 }
 
 // UnsafeAdventServerServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -86,6 +100,24 @@ func _AdventServerService_Solve_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AdventServerService_Upload_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UploadRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdventServerServiceServer).Upload(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/adventofcode.AdventServerService/Upload",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdventServerServiceServer).Upload(ctx, req.(*UploadRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AdventServerService_ServiceDesc is the grpc.ServiceDesc for AdventServerService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -96,6 +128,10 @@ var AdventServerService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Solve",
 			Handler:    _AdventServerService_Solve_Handler,
+		},
+		{
+			MethodName: "Upload",
+			Handler:    _AdventServerService_Upload_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
