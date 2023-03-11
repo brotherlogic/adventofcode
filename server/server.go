@@ -38,6 +38,7 @@ func (s *Server) Upload(ctx context.Context, req *pb.UploadRequest) (*pb.UploadR
 	}
 
 	client := rspb.NewRStoreServiceClient(conn)
+
 	_, err = client.Write(ctx, &rspb.WriteRequest{
 		Key:   fmt.Sprintf("adventofcode/data/%v-%v", req.GetYear(), req.GetYear()),
 		Value: &anypb.Any{Value: []byte(req.GetData())},
