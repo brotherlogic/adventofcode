@@ -20,11 +20,34 @@ message UploadRequest {
     int32 year = 1;
     int32 day = 2;
     string data = 3;
+    bool dual_day = 4;
+    int32 part = 5;
 }
 
 message UploadResponse {}
 
-service AdventServerService {
+message GetDataRequest {
+    int32 year = 1;
+    int32 day = 2;
+    int32 part = 3;
+}
+
+message GetDataResponse {
+    string data = 1;
+}
+
+message RegisterRequest {
+    string callback = 1;
+}
+
+message RegisterResponse {}
+
+service AdventOfCodeService {
     rpc Solve(SolveRequest) returns (SolveResponse) {};
     rpc Upload(UploadRequest) returns (UploadResponse) {};
+    rpc Register(RegisterRequest) returns (RegisterResponse) {};
+}
+
+service SolverService {
+    rpc Solve(SolveRequest) returns (SolveResponse) {};
 }

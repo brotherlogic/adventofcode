@@ -18,120 +18,240 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// AdventServerServiceClient is the client API for AdventServerService service.
+// AdventOfCodeServiceClient is the client API for AdventOfCodeService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type AdventServerServiceClient interface {
+type AdventOfCodeServiceClient interface {
 	Solve(ctx context.Context, in *SolveRequest, opts ...grpc.CallOption) (*SolveResponse, error)
 	Upload(ctx context.Context, in *UploadRequest, opts ...grpc.CallOption) (*UploadResponse, error)
+	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 }
 
-type adventServerServiceClient struct {
+type adventOfCodeServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewAdventServerServiceClient(cc grpc.ClientConnInterface) AdventServerServiceClient {
-	return &adventServerServiceClient{cc}
+func NewAdventOfCodeServiceClient(cc grpc.ClientConnInterface) AdventOfCodeServiceClient {
+	return &adventOfCodeServiceClient{cc}
 }
 
-func (c *adventServerServiceClient) Solve(ctx context.Context, in *SolveRequest, opts ...grpc.CallOption) (*SolveResponse, error) {
+func (c *adventOfCodeServiceClient) Solve(ctx context.Context, in *SolveRequest, opts ...grpc.CallOption) (*SolveResponse, error) {
 	out := new(SolveResponse)
-	err := c.cc.Invoke(ctx, "/adventofcode.AdventServerService/Solve", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/adventofcode.AdventOfCodeService/Solve", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *adventServerServiceClient) Upload(ctx context.Context, in *UploadRequest, opts ...grpc.CallOption) (*UploadResponse, error) {
+func (c *adventOfCodeServiceClient) Upload(ctx context.Context, in *UploadRequest, opts ...grpc.CallOption) (*UploadResponse, error) {
 	out := new(UploadResponse)
-	err := c.cc.Invoke(ctx, "/adventofcode.AdventServerService/Upload", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/adventofcode.AdventOfCodeService/Upload", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// AdventServerServiceServer is the server API for AdventServerService service.
-// All implementations should embed UnimplementedAdventServerServiceServer
+func (c *adventOfCodeServiceClient) Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error) {
+	out := new(RegisterResponse)
+	err := c.cc.Invoke(ctx, "/adventofcode.AdventOfCodeService/Register", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// AdventOfCodeServiceServer is the server API for AdventOfCodeService service.
+// All implementations should embed UnimplementedAdventOfCodeServiceServer
 // for forward compatibility
-type AdventServerServiceServer interface {
+type AdventOfCodeServiceServer interface {
 	Solve(context.Context, *SolveRequest) (*SolveResponse, error)
 	Upload(context.Context, *UploadRequest) (*UploadResponse, error)
+	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
 }
 
-// UnimplementedAdventServerServiceServer should be embedded to have forward compatible implementations.
-type UnimplementedAdventServerServiceServer struct {
+// UnimplementedAdventOfCodeServiceServer should be embedded to have forward compatible implementations.
+type UnimplementedAdventOfCodeServiceServer struct {
 }
 
-func (UnimplementedAdventServerServiceServer) Solve(context.Context, *SolveRequest) (*SolveResponse, error) {
+func (UnimplementedAdventOfCodeServiceServer) Solve(context.Context, *SolveRequest) (*SolveResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Solve not implemented")
 }
-func (UnimplementedAdventServerServiceServer) Upload(context.Context, *UploadRequest) (*UploadResponse, error) {
+func (UnimplementedAdventOfCodeServiceServer) Upload(context.Context, *UploadRequest) (*UploadResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Upload not implemented")
 }
+func (UnimplementedAdventOfCodeServiceServer) Register(context.Context, *RegisterRequest) (*RegisterResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
+}
 
-// UnsafeAdventServerServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to AdventServerServiceServer will
+// UnsafeAdventOfCodeServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to AdventOfCodeServiceServer will
 // result in compilation errors.
-type UnsafeAdventServerServiceServer interface {
-	mustEmbedUnimplementedAdventServerServiceServer()
+type UnsafeAdventOfCodeServiceServer interface {
+	mustEmbedUnimplementedAdventOfCodeServiceServer()
 }
 
-func RegisterAdventServerServiceServer(s grpc.ServiceRegistrar, srv AdventServerServiceServer) {
-	s.RegisterService(&AdventServerService_ServiceDesc, srv)
+func RegisterAdventOfCodeServiceServer(s grpc.ServiceRegistrar, srv AdventOfCodeServiceServer) {
+	s.RegisterService(&AdventOfCodeService_ServiceDesc, srv)
 }
 
-func _AdventServerService_Solve_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _AdventOfCodeService_Solve_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SolveRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AdventServerServiceServer).Solve(ctx, in)
+		return srv.(AdventOfCodeServiceServer).Solve(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/adventofcode.AdventServerService/Solve",
+		FullMethod: "/adventofcode.AdventOfCodeService/Solve",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdventServerServiceServer).Solve(ctx, req.(*SolveRequest))
+		return srv.(AdventOfCodeServiceServer).Solve(ctx, req.(*SolveRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AdventServerService_Upload_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _AdventOfCodeService_Upload_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UploadRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AdventServerServiceServer).Upload(ctx, in)
+		return srv.(AdventOfCodeServiceServer).Upload(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/adventofcode.AdventServerService/Upload",
+		FullMethod: "/adventofcode.AdventOfCodeService/Upload",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdventServerServiceServer).Upload(ctx, req.(*UploadRequest))
+		return srv.(AdventOfCodeServiceServer).Upload(ctx, req.(*UploadRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// AdventServerService_ServiceDesc is the grpc.ServiceDesc for AdventServerService service.
+func _AdventOfCodeService_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RegisterRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdventOfCodeServiceServer).Register(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/adventofcode.AdventOfCodeService/Register",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdventOfCodeServiceServer).Register(ctx, req.(*RegisterRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// AdventOfCodeService_ServiceDesc is the grpc.ServiceDesc for AdventOfCodeService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var AdventServerService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "adventofcode.AdventServerService",
-	HandlerType: (*AdventServerServiceServer)(nil),
+var AdventOfCodeService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "adventofcode.AdventOfCodeService",
+	HandlerType: (*AdventOfCodeServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "Solve",
-			Handler:    _AdventServerService_Solve_Handler,
+			Handler:    _AdventOfCodeService_Solve_Handler,
 		},
 		{
 			MethodName: "Upload",
-			Handler:    _AdventServerService_Upload_Handler,
+			Handler:    _AdventOfCodeService_Upload_Handler,
+		},
+		{
+			MethodName: "Register",
+			Handler:    _AdventOfCodeService_Register_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "advent.proto",
+}
+
+// SolverServiceClient is the client API for SolverService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type SolverServiceClient interface {
+	Solve(ctx context.Context, in *SolveRequest, opts ...grpc.CallOption) (*SolveResponse, error)
+}
+
+type solverServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewSolverServiceClient(cc grpc.ClientConnInterface) SolverServiceClient {
+	return &solverServiceClient{cc}
+}
+
+func (c *solverServiceClient) Solve(ctx context.Context, in *SolveRequest, opts ...grpc.CallOption) (*SolveResponse, error) {
+	out := new(SolveResponse)
+	err := c.cc.Invoke(ctx, "/adventofcode.SolverService/Solve", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// SolverServiceServer is the server API for SolverService service.
+// All implementations should embed UnimplementedSolverServiceServer
+// for forward compatibility
+type SolverServiceServer interface {
+	Solve(context.Context, *SolveRequest) (*SolveResponse, error)
+}
+
+// UnimplementedSolverServiceServer should be embedded to have forward compatible implementations.
+type UnimplementedSolverServiceServer struct {
+}
+
+func (UnimplementedSolverServiceServer) Solve(context.Context, *SolveRequest) (*SolveResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Solve not implemented")
+}
+
+// UnsafeSolverServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to SolverServiceServer will
+// result in compilation errors.
+type UnsafeSolverServiceServer interface {
+	mustEmbedUnimplementedSolverServiceServer()
+}
+
+func RegisterSolverServiceServer(s grpc.ServiceRegistrar, srv SolverServiceServer) {
+	s.RegisterService(&SolverService_ServiceDesc, srv)
+}
+
+func _SolverService_Solve_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SolveRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SolverServiceServer).Solve(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/adventofcode.SolverService/Solve",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SolverServiceServer).Solve(ctx, req.(*SolveRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// SolverService_ServiceDesc is the grpc.ServiceDesc for SolverService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var SolverService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "adventofcode.SolverService",
+	HandlerType: (*SolverServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Solve",
+			Handler:    _SolverService_Solve_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
