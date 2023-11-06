@@ -19,7 +19,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            brotherlogic/adventofcode-2015
+            brotherlogic/adventofcode-solver-2015
           tags: |
             type=ref,event=branch
             type=ref,event=pr
