@@ -4,7 +4,7 @@ from day1 import SolveDay1Part1
 
 class Day1Test(unittest.TestCase):
 
-    def test_something(self):
+    def test_part1(self):
         testcases = [
             {"input": "(())", "expected": 0},
             {"input":"()()", "expected": 0},
