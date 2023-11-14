@@ -18,7 +18,7 @@ class Day1Test(unittest.TestCase):
         ]
         for case in testcases:
             actual = SolveDay1Part1(case["input"])
-            self.assertEqual(case["expected"], actual, "failed test {} expected {}, actual {}".format(
+            self.assertEqual(case["expected"], actual, "failed the test {} expected {}, actual {}".format(
                     case["input"], case["expected"], actual
                 ),)
 
