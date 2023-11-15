@@ -38,6 +38,7 @@ message GetDataResponse {
 
 message RegisterRequest {
     string callback = 1;
+    repeated int32 years = 2;
 }
 
 message RegisterResponse {}
