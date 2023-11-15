@@ -2,19 +2,11 @@
 
 FROM python:3.11 AS build
 
-WORKDIR .
-
-COPY . /app
 WORKDIR /app
 
 COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip3 install --no-cache-dir -r requirements.txt
 
-##
-## Deploy
-##
-FROM gcr.io/distroless/python3
-COPY --from=build /app /app
-WORKDIR /app
+COPY . .
 EXPOSE 8080
-CMD ["2015.py"]
+CMD ["python3", "2015.py"]
