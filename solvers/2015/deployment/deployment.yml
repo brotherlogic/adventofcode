@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: adventofcode-solver-2015
+  namespace: adventofcode
+spec:
+  selector:
+    matchLabels:
+      app: adventofcode-solver-2015
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: adventofcode-solver-2015
+    spec:
+      containers:
+      - name: adventofcode
+        image: registry.brotherlogic-backend.com/brotherlogic/adventofcode-solver-2015:0.1.0 # {"$imagepolicy": "flux-system:adventofcode"}
+        ports:
+        - containerPort: 8080
+      imagePullSecrets:
+      - name: regcred
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: adventofcode-solver-2015
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+spec:
+  endpoints:
+    - port: metrics
+      path: /metrics
+      interval: 30s
+  namespaceSelector:
+    matchNames:
+    - adventofcode-solver-2015
+  selector:
+    matchLabels:
+      app: adventofcode-solver-2015
