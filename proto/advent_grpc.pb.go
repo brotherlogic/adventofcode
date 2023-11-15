@@ -23,8 +23,6 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AdventOfCodeServiceClient interface {
 	Solve(ctx context.Context, in *SolveRequest, opts ...grpc.CallOption) (*SolveResponse, error)
-	Upload(ctx context.Context, in *UploadRequest, opts ...grpc.CallOption) (*UploadResponse, error)
-	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 }
 
 type adventOfCodeServiceClient struct {
@@ -44,31 +42,11 @@ func (c *adventOfCodeServiceClient) Solve(ctx context.Context, in *SolveRequest,
 	return out, nil
 }
 
-func (c *adventOfCodeServiceClient) Upload(ctx context.Context, in *UploadRequest, opts ...grpc.CallOption) (*UploadResponse, error) {
-	out := new(UploadResponse)
-	err := c.cc.Invoke(ctx, "/adventofcode.AdventOfCodeService/Upload", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *adventOfCodeServiceClient) Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error) {
-	out := new(RegisterResponse)
-	err := c.cc.Invoke(ctx, "/adventofcode.AdventOfCodeService/Register", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // AdventOfCodeServiceServer is the server API for AdventOfCodeService service.
 // All implementations should embed UnimplementedAdventOfCodeServiceServer
 // for forward compatibility
 type AdventOfCodeServiceServer interface {
 	Solve(context.Context, *SolveRequest) (*SolveResponse, error)
-	Upload(context.Context, *UploadRequest) (*UploadResponse, error)
-	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
 }
 
 // UnimplementedAdventOfCodeServiceServer should be embedded to have forward compatible implementations.
@@ -77,12 +55,6 @@ type UnimplementedAdventOfCodeServiceServer struct {
 
 func (UnimplementedAdventOfCodeServiceServer) Solve(context.Context, *SolveRequest) (*SolveResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Solve not implemented")
-}
-func (UnimplementedAdventOfCodeServiceServer) Upload(context.Context, *UploadRequest) (*UploadResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Upload not implemented")
-}
-func (UnimplementedAdventOfCodeServiceServer) Register(context.Context, *RegisterRequest) (*RegisterResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
 }
 
 // UnsafeAdventOfCodeServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -114,42 +86,6 @@ func _AdventOfCodeService_Solve_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AdventOfCodeService_Upload_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UploadRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AdventOfCodeServiceServer).Upload(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/adventofcode.AdventOfCodeService/Upload",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdventOfCodeServiceServer).Upload(ctx, req.(*UploadRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _AdventOfCodeService_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RegisterRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AdventOfCodeServiceServer).Register(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/adventofcode.AdventOfCodeService/Register",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdventOfCodeServiceServer).Register(ctx, req.(*RegisterRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // AdventOfCodeService_ServiceDesc is the grpc.ServiceDesc for AdventOfCodeService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -161,13 +97,125 @@ var AdventOfCodeService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "Solve",
 			Handler:    _AdventOfCodeService_Solve_Handler,
 		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "advent.proto",
+}
+
+// AdventOfCodeInternalServiceClient is the client API for AdventOfCodeInternalService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type AdventOfCodeInternalServiceClient interface {
+	Upload(ctx context.Context, in *UploadRequest, opts ...grpc.CallOption) (*UploadResponse, error)
+	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
+}
+
+type adventOfCodeInternalServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewAdventOfCodeInternalServiceClient(cc grpc.ClientConnInterface) AdventOfCodeInternalServiceClient {
+	return &adventOfCodeInternalServiceClient{cc}
+}
+
+func (c *adventOfCodeInternalServiceClient) Upload(ctx context.Context, in *UploadRequest, opts ...grpc.CallOption) (*UploadResponse, error) {
+	out := new(UploadResponse)
+	err := c.cc.Invoke(ctx, "/adventofcode.AdventOfCodeInternalService/Upload", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adventOfCodeInternalServiceClient) Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error) {
+	out := new(RegisterResponse)
+	err := c.cc.Invoke(ctx, "/adventofcode.AdventOfCodeInternalService/Register", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// AdventOfCodeInternalServiceServer is the server API for AdventOfCodeInternalService service.
+// All implementations should embed UnimplementedAdventOfCodeInternalServiceServer
+// for forward compatibility
+type AdventOfCodeInternalServiceServer interface {
+	Upload(context.Context, *UploadRequest) (*UploadResponse, error)
+	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
+}
+
+// UnimplementedAdventOfCodeInternalServiceServer should be embedded to have forward compatible implementations.
+type UnimplementedAdventOfCodeInternalServiceServer struct {
+}
+
+func (UnimplementedAdventOfCodeInternalServiceServer) Upload(context.Context, *UploadRequest) (*UploadResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Upload not implemented")
+}
+func (UnimplementedAdventOfCodeInternalServiceServer) Register(context.Context, *RegisterRequest) (*RegisterResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
+}
+
+// UnsafeAdventOfCodeInternalServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to AdventOfCodeInternalServiceServer will
+// result in compilation errors.
+type UnsafeAdventOfCodeInternalServiceServer interface {
+	mustEmbedUnimplementedAdventOfCodeInternalServiceServer()
+}
+
+func RegisterAdventOfCodeInternalServiceServer(s grpc.ServiceRegistrar, srv AdventOfCodeInternalServiceServer) {
+	s.RegisterService(&AdventOfCodeInternalService_ServiceDesc, srv)
+}
+
+func _AdventOfCodeInternalService_Upload_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UploadRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdventOfCodeInternalServiceServer).Upload(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/adventofcode.AdventOfCodeInternalService/Upload",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdventOfCodeInternalServiceServer).Upload(ctx, req.(*UploadRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdventOfCodeInternalService_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RegisterRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdventOfCodeInternalServiceServer).Register(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/adventofcode.AdventOfCodeInternalService/Register",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdventOfCodeInternalServiceServer).Register(ctx, req.(*RegisterRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// AdventOfCodeInternalService_ServiceDesc is the grpc.ServiceDesc for AdventOfCodeInternalService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var AdventOfCodeInternalService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "adventofcode.AdventOfCodeInternalService",
+	HandlerType: (*AdventOfCodeInternalServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "Upload",
-			Handler:    _AdventOfCodeService_Upload_Handler,
+			Handler:    _AdventOfCodeInternalService_Upload_Handler,
 		},
 		{
 			MethodName: "Register",
-			Handler:    _AdventOfCodeService_Register_Handler,
+			Handler:    _AdventOfCodeInternalService_Register_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

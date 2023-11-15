@@ -15,8 +15,9 @@ import (
 )
 
 var (
-	port        = flag.Int("port", 8080, "The server port.")
-	metricsPort = flag.Int("metrics_port", 8081, "Metrics port")
+	port         = flag.Int("port", 8080, "The server port.")
+	metricsPort  = flag.Int("metrics_port", 8081, "Metrics port")
+	internalPort = flag.Int("internal_port", 8082, "Internal services port")
 )
 
 func main() {
@@ -30,7 +31,13 @@ func main() {
 	}
 	gs := grpc.NewServer()
 	pb.RegisterAdventOfCodeServiceServer(gs, s)
-	log.Printf("Server listening at %v", lis.Addr())
+
+	lisInternal, err := net.Listen("tcp", fmt.Sprintf(":%d", *internalPort))
+	if err != nil {
+		log.Fatalf("failed to listen on internal port %v: %v", *internalPort, err)
+	}
+	gsi := grpc.NewServer()
+	pb.RegisterAdventOfCodeInternalServiceServer(gsi, s)
 
 	// Setup prometheus export
 	http.Handle("/metrics", promhttp.Handler())
@@ -38,7 +45,13 @@ func main() {
 		http.ListenAndServe(fmt.Sprintf(":%v", *metricsPort), nil)
 	}()
 
-	if err := gs.Serve(lis); err != nil {
+	go func() {
+		if err := gs.Serve(lis); err != nil {
+			log.Fatalf("failed to serve: %v", err)
+		}
+	}()
+
+	if err := gsi.Serve(lisInternal); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
 }
