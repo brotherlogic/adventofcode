@@ -59,10 +59,12 @@ class GetDataResponse(_message.Message):
     def __init__(self, data: _Optional[str] = ...) -> None: ...
 
 class RegisterRequest(_message.Message):
-    __slots__ = ["callback"]
+    __slots__ = ["callback", "year"]
     CALLBACK_FIELD_NUMBER: _ClassVar[int]
+    YEAR_FIELD_NUMBER: _ClassVar[int]
     callback: str
-    def __init__(self, callback: _Optional[str] = ...) -> None: ...
+    year: int
+    def __init__(self, callback: _Optional[str] = ..., year: _Optional[int] = ...) -> None: ...
 
 class RegisterResponse(_message.Message):
     __slots__ = []

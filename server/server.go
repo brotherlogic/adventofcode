@@ -6,6 +6,8 @@ import (
 
 	pb "github.com/brotherlogic/adventofcode/proto"
 	rspb "github.com/brotherlogic/rstore/proto"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -13,7 +15,32 @@ import (
 	"google.golang.org/protobuf/types/known/anypb"
 )
 
-type Server struct{}
+type Server struct {
+	years   map[int32]bool
+	solvers map[string]bool
+}
+
+func NewServer() *Server {
+	return &Server{
+		years:   make(map[int32]bool),
+		solvers: make(map[string]bool),
+	}
+}
+
+var (
+	years = promauto.NewGaugeVec(prometheus.GaugeOpts{
+		Name: "adventofcode_years",
+		Help: "The size of the print queue",
+	}, []string{"year"})
+)
+
+func (s *Server) updateMetrics() error {
+	for year := range s.years {
+		years.With(prometheus.Labels{"year": fmt.Sprintf("%v", year)}).Set(1)
+	}
+
+	return nil
+}
 
 func (s *Server) Upload(ctx context.Context, req *pb.UploadRequest) (*pb.UploadResponse, error) {
 	conn, err := grpc.Dial("rstore.rstore:8080", grpc.WithInsecure())
@@ -36,5 +63,8 @@ func (s *Server) Solve(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResp
 }
 
 func (s *Server) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.RegisterResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "Haven't done this yet")
+	s.years[req.GetYear()] = true
+	s.solvers[req.GetCallback()] = true
+
+	return &pb.RegisterResponse{}, s.updateMetrics()
 }

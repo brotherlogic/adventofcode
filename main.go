@@ -22,7 +22,7 @@ var (
 func main() {
 	flag.Parse()
 
-	s := &server.Server{}
+	s := server.NewServer()
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
 	if err != nil {
