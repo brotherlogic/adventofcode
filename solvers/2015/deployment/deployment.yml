@@ -35,7 +35,7 @@ spec:
       interval: 30s
   namespaceSelector:
     matchNames:
-    - adventofcode-solver-2015
+    - adventofcode
   selector:
     matchLabels:
       app: adventofcode-solver-2015
