@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"fmt"
+	"log"
 
 	pb "github.com/brotherlogic/adventofcode/proto"
 	rspb "github.com/brotherlogic/rstore/proto"
@@ -59,6 +60,21 @@ func (s *Server) Upload(ctx context.Context, req *pb.UploadRequest) (*pb.UploadR
 }
 
 func (s *Server) Solve(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResponse, error) {
+	conn, err := grpc.Dial("rstore.rstore:8080", grpc.WithInsecure())
+	if err != nil {
+		return nil, err
+	}
+
+	client := rspb.NewRStoreServiceClient(conn)
+	resp, err := client.Read(ctx, &rspb.ReadRequest{
+		Key: fmt.Sprintf("adventofcode/data/%v-%v-%v", req.GetYear(), req.GetDay(), req.GetPart()),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	log.Printf("Data: %v", string(resp.GetValue().GetValue()))
+
 	return nil, status.Errorf(codes.Unimplemented, "Haven't done this yet")
 }
 
