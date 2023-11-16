@@ -28,6 +28,7 @@ def serve():
     server.add_insecure_port("[::]:8080")
     server.start()
     register()
+    print("serving")
     server.wait_for_termination()
 
 if __name__ == "__main__":
