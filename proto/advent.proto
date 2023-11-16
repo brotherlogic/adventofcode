@@ -8,6 +8,7 @@ message SolveRequest {
     int32 year = 1;
     int32 day = 2;
     int32 part = 3;
+    string data = 4;
 }
 
 message SolveResponse {
@@ -38,13 +39,16 @@ message GetDataResponse {
 
 message RegisterRequest {
     string callback = 1;
-    repeated int32 years = 2;
+    int32 year = 2;
 }
 
 message RegisterResponse {}
 
 service AdventOfCodeService {
     rpc Solve(SolveRequest) returns (SolveResponse) {};
+}
+
+service AdventOfCodeInternalService {
     rpc Upload(UploadRequest) returns (UploadResponse) {};
     rpc Register(RegisterRequest) returns (RegisterResponse) {};
 }

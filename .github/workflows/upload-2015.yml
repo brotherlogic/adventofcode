@@ -1,4 +1,4 @@
-name: Build and Push to Docker
+name: Build and Push 2015 Solver to Docker
 on:
   push:
     tags:
@@ -19,7 +19,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            brotherlogic/adventofcode
+            brotherlogic/adventofcode-solver-2015
           tags: |
             type=ref,event=branch
             type=ref,event=pr
@@ -37,6 +37,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
+          context: "{{defaultContext}}:solvers/2015"
           builder: ${{ steps.buildx.outputs.name }}
           tags: "${{ secrets.REGISTRY_URL }}/${{ steps.meta.outputs.tags }}"
           platforms: linux/arm64,linux/amd64
