@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"time"
@@ -29,7 +30,11 @@ func main() {
 		res, err := client.Solve(ctx, &pb.SolveRequest{Year: 2015, Day: 1, Part: 1})
 		fmt.Printf("%v -> %v\n", res, err)
 	case "upload":
-		res, err := iclient.Upload(ctx, &pb.UploadRequest{Year: 2015, Day: 1, Part: 1, Data: os.Args[2]})
+		data, err := ioutil.ReadFile(os.Args[2])
+		if err != nil {
+			log.Fatalf("Unable to run upload: %v", err)
+		}
+		res, err := iclient.Upload(ctx, &pb.UploadRequest{Year: 2015, Day: 1, Part: 1, Data: string(data)})
 		fmt.Printf("%v -> %v\n", res, err)
 	default:
 		fmt.Printf("Unknown command: %v\n", os.Args[1])
