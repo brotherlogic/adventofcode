@@ -31,6 +31,7 @@ metadata:
   annotations:
     traefik.ingress.kuberentes.io/service.serversscheme: h2c
 spec:
+  type: NodePort
   metadata:
     labels:
       app: adventofcode
