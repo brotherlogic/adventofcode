@@ -72,6 +72,7 @@ func (s *Server) Solve(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResp
 	if err != nil {
 		return nil, err
 	}
+	req.Data = string(resp.GetValue().GetValue())
 
 	var errors []error
 	var solution *pb.SolveResponse
