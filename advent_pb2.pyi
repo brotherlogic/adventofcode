@@ -5,14 +5,16 @@ from typing import ClassVar as _ClassVar, Optional as _Optional
 DESCRIPTOR: _descriptor.FileDescriptor
 
 class SolveRequest(_message.Message):
-    __slots__ = ["year", "day", "part"]
+    __slots__ = ["year", "day", "part", "data"]
     YEAR_FIELD_NUMBER: _ClassVar[int]
     DAY_FIELD_NUMBER: _ClassVar[int]
     PART_FIELD_NUMBER: _ClassVar[int]
+    DATA_FIELD_NUMBER: _ClassVar[int]
     year: int
     day: int
     part: int
-    def __init__(self, year: _Optional[int] = ..., day: _Optional[int] = ..., part: _Optional[int] = ...) -> None: ...
+    data: str
+    def __init__(self, year: _Optional[int] = ..., day: _Optional[int] = ..., part: _Optional[int] = ..., data: _Optional[str] = ...) -> None: ...
 
 class SolveResponse(_message.Message):
     __slots__ = ["answer", "string_answer", "big_answer"]

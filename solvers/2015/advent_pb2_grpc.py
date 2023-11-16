@@ -19,34 +19,12 @@ class AdventOfCodeServiceStub(object):
                 request_serializer=advent__pb2.SolveRequest.SerializeToString,
                 response_deserializer=advent__pb2.SolveResponse.FromString,
                 )
-        self.Upload = channel.unary_unary(
-                '/adventofcode.AdventOfCodeService/Upload',
-                request_serializer=advent__pb2.UploadRequest.SerializeToString,
-                response_deserializer=advent__pb2.UploadResponse.FromString,
-                )
-        self.Register = channel.unary_unary(
-                '/adventofcode.AdventOfCodeService/Register',
-                request_serializer=advent__pb2.RegisterRequest.SerializeToString,
-                response_deserializer=advent__pb2.RegisterResponse.FromString,
-                )
 
 
 class AdventOfCodeServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def Solve(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def Upload(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def Register(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -59,16 +37,6 @@ def add_AdventOfCodeServiceServicer_to_server(servicer, server):
                     servicer.Solve,
                     request_deserializer=advent__pb2.SolveRequest.FromString,
                     response_serializer=advent__pb2.SolveResponse.SerializeToString,
-            ),
-            'Upload': grpc.unary_unary_rpc_method_handler(
-                    servicer.Upload,
-                    request_deserializer=advent__pb2.UploadRequest.FromString,
-                    response_serializer=advent__pb2.UploadResponse.SerializeToString,
-            ),
-            'Register': grpc.unary_unary_rpc_method_handler(
-                    servicer.Register,
-                    request_deserializer=advent__pb2.RegisterRequest.FromString,
-                    response_serializer=advent__pb2.RegisterResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -97,6 +65,66 @@ class AdventOfCodeService(object):
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
+
+class AdventOfCodeInternalServiceStub(object):
+    """Missing associated documentation comment in .proto file."""
+
+    def __init__(self, channel):
+        """Constructor.
+
+        Args:
+            channel: A grpc.Channel.
+        """
+        self.Upload = channel.unary_unary(
+                '/adventofcode.AdventOfCodeInternalService/Upload',
+                request_serializer=advent__pb2.UploadRequest.SerializeToString,
+                response_deserializer=advent__pb2.UploadResponse.FromString,
+                )
+        self.Register = channel.unary_unary(
+                '/adventofcode.AdventOfCodeInternalService/Register',
+                request_serializer=advent__pb2.RegisterRequest.SerializeToString,
+                response_deserializer=advent__pb2.RegisterResponse.FromString,
+                )
+
+
+class AdventOfCodeInternalServiceServicer(object):
+    """Missing associated documentation comment in .proto file."""
+
+    def Upload(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def Register(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+
+def add_AdventOfCodeInternalServiceServicer_to_server(servicer, server):
+    rpc_method_handlers = {
+            'Upload': grpc.unary_unary_rpc_method_handler(
+                    servicer.Upload,
+                    request_deserializer=advent__pb2.UploadRequest.FromString,
+                    response_serializer=advent__pb2.UploadResponse.SerializeToString,
+            ),
+            'Register': grpc.unary_unary_rpc_method_handler(
+                    servicer.Register,
+                    request_deserializer=advent__pb2.RegisterRequest.FromString,
+                    response_serializer=advent__pb2.RegisterResponse.SerializeToString,
+            ),
+    }
+    generic_handler = grpc.method_handlers_generic_handler(
+            'adventofcode.AdventOfCodeInternalService', rpc_method_handlers)
+    server.add_generic_rpc_handlers((generic_handler,))
+
+
+ # This class is part of an EXPERIMENTAL API.
+class AdventOfCodeInternalService(object):
+    """Missing associated documentation comment in .proto file."""
+
     @staticmethod
     def Upload(request,
             target,
@@ -108,7 +136,7 @@ class AdventOfCodeService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/adventofcode.AdventOfCodeService/Upload',
+        return grpc.experimental.unary_unary(request, target, '/adventofcode.AdventOfCodeInternalService/Upload',
             advent__pb2.UploadRequest.SerializeToString,
             advent__pb2.UploadResponse.FromString,
             options, channel_credentials,
@@ -125,7 +153,7 @@ class AdventOfCodeService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/adventofcode.AdventOfCodeService/Register',
+        return grpc.experimental.unary_unary(request, target, '/adventofcode.AdventOfCodeInternalService/Register',
             advent__pb2.RegisterRequest.SerializeToString,
             advent__pb2.RegisterResponse.FromString,
             options, channel_credentials,
