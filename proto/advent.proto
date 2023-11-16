@@ -46,6 +46,9 @@ message RegisterResponse {}
 
 service AdventOfCodeService {
     rpc Solve(SolveRequest) returns (SolveResponse) {};
+}
+
+service AdventOfCodeInternalService {
     rpc Upload(UploadRequest) returns (UploadResponse) {};
     rpc Register(RegisterRequest) returns (RegisterResponse) {};
 }
