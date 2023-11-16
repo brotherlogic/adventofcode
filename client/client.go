@@ -25,12 +25,12 @@ func main() {
 	client := pb.NewAdventOfCodeServiceClient(conn)
 	iclient := pb.NewAdventOfCodeInternalServiceClient(conn)
 
-	switch os.Args[1] {
+	switch os.Args[2] {
 	case "solve":
 		res, err := client.Solve(ctx, &pb.SolveRequest{Year: 2015, Day: 1, Part: 1})
 		fmt.Printf("%v -> %v\n", res, err)
 	case "upload":
-		data, err := ioutil.ReadFile(os.Args[2])
+		data, err := ioutil.ReadFile(os.Args[3])
 		if err != nil {
 			log.Fatalf("Unable to run upload: %v", err)
 		}
