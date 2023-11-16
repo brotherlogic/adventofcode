@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"fmt"
+	"log"
 	"sync"
 
 	pb "github.com/brotherlogic/adventofcode/proto"
@@ -114,6 +115,8 @@ func (s *Server) Solve(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResp
 func (s *Server) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.RegisterResponse, error) {
 	s.years[req.GetYear()] = true
 	s.solvers[req.GetCallback()] = true
+
+	log.Printf("Received and stored: %v", req)
 
 	return &pb.RegisterResponse{}, s.updateMetrics()
 }
