@@ -6,3 +6,6 @@ def SolveDay1Part1(instructions):
         elif c == ')':
             cFloor-=1
     return cFloor
+
+def SolveDay1Part2(instructions):
+    return -1
