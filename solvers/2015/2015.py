@@ -11,7 +11,7 @@ import day1
 
 class SolverService(advent_pb2_grpc.SolverServiceServicer):
     def Solve(self, request, context):
-        if request.year == 2015 and request.day = 1 and request.part = 1:
+        if request.year == 2015 and request.day == 1 and request.part == 1:
             return day1.SolveDay1Part1(request.data)
 
         return None
