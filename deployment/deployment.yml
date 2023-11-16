@@ -47,7 +47,6 @@ spec:
       targetPort: 8082
   selector:
     app: adventofcode
-  type: ClusterIP
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
