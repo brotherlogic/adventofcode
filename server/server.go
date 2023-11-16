@@ -3,7 +3,7 @@ package server
 import (
 	"context"
 	"fmt"
-	"log"
+	"sync"
 
 	pb "github.com/brotherlogic/adventofcode/proto"
 	rspb "github.com/brotherlogic/rstore/proto"
@@ -73,9 +73,41 @@ func (s *Server) Solve(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResp
 		return nil, err
 	}
 
-	log.Printf("Data: %v", string(resp.GetValue().GetValue()))
+	var errors []error
+	var solution *pb.SolveResponse
 
-	return nil, status.Errorf(codes.Unimplemented, "Haven't done this yet")
+	wg := &sync.WaitGroup{}
+	for callback := range s.solvers {
+		conn, err := grpc.Dial(callback, grpc.WithInsecure())
+		if err != nil {
+			errors = append(errors, err)
+			continue
+		}
+		wg.Add(1)
+		defer conn.Close()
+		go func(conn *grpc.ClientConn) {
+			client := pb.NewSolverServiceClient(conn)
+			tsol, err := client.Solve(ctx, req)
+			wg.Done()
+			if err != nil {
+				errors = append(errors, err)
+				return
+			}
+			solution = tsol
+		}(conn)
+	}
+
+	wg.Wait()
+
+	if solution != nil {
+		return solution, nil
+	}
+
+	if len(errors) == 0 {
+		return nil, status.Errorf(codes.Unimplemented, "No solvers for %v/%v%v", req.GetYear(), req.GetDay(), req.GetPart())
+	}
+
+	return nil, status.Errorf(codes.Internal, "Many errors: %v", errors)
 }
 
 func (s *Server) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.RegisterResponse, error) {
