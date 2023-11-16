@@ -8,6 +8,7 @@ message SolveRequest {
     int32 year = 1;
     int32 day = 2;
     int32 part = 3;
+    string data = 4;
 }
 
 message SolveResponse {
