@@ -105,7 +105,7 @@ func (s *Server) Solve(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResp
 	}
 
 	if len(errors) == 0 {
-		return nil, status.Errorf(codes.Unimplemented, "No solvers for %v/%v%v", req.GetYear(), req.GetDay(), req.GetPart())
+		return nil, status.Errorf(codes.Unimplemented, "No solvers for %v/%v/%v", req.GetYear(), req.GetDay(), req.GetPart())
 	}
 
 	return nil, status.Errorf(codes.Internal, "Many errors: %v", errors)
