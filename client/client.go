@@ -22,7 +22,7 @@ func main() {
 	}
 
 	client := pb.NewAdventOfCodeServiceClient(conn)
-	res, err := client.Solve(ctx, &pb.SolveRequest{Year: 2017, Day: 10, Part: 2})
+	res, err := client.Solve(ctx, &pb.SolveRequest{Year: 2015, Day: 1, Part: 1})
 
 	fmt.Printf("%v -> %v\n", res, err)
 }

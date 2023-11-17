@@ -9,4 +9,5 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 
 COPY . .
 EXPOSE 8080
+CMD ["echo", "starting"]
 CMD ["python3", "2015.py"]
