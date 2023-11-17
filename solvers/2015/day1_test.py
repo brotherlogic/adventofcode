@@ -14,7 +14,7 @@ class Day1Test(unittest.TestCase):
             {"input":"())", "expected": -1},
             {"input":"))(", "expected": -1},
             {"input":")))", "expected": -3},
-            {"input":")())())", "expected": -3},
+            {"input":")())())", "expected": -4},
         ]
         for case in testcases:
             actual = SolveDay1Part1(case["input"])
