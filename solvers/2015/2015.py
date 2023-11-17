@@ -11,22 +11,25 @@ import day1
 
 class SolverService(advent_pb2_grpc.SolverServiceServicer):
     def Solve(self, request, context):
-        if request.year == 2015 and request.day = 1 and request.part = 1:
+        if request.year == 2015 and request.day == 1 and request.part == 1:
             return day1.SolveDay1Part1(request.data)
 
         return None
 
 def register():
     channel = grpc.insecure_channel('adventofcode.adventofcode:8082')
-    stub = advent_pb2_grpc.AdventOfCodeServiceStub(channel)
-    response = stub.Register(advent_pb2.RegisterRequest(year=2015, backend="adventofcode.adventofcode-solver-2015:8080"))
+    stub = advent_pb2_grpc.AdventOfCodeInternalServiceStub(channel)
+    response = stub.Register(advent_pb2.RegisterRequest(year=2015, callback="adventofcode.adventofcode-solver-2015:8080"), timeout=1)
+    print("response = " + str(response))
 
 def serve():
+    print("starting up")
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     advent_pb2_grpc.add_SolverServiceServicer_to_server(SolverService(), server)
     server.add_insecure_port("[::]:8080")
     server.start()
     register()
+    print("serving")
     server.wait_for_termination()
 
 if __name__ == "__main__":

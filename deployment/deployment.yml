@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: adventofcode
-        image: registry.brotherlogic-backend.com/brotherlogic/adventofcode:0.74.0 # {"$imagepolicy": "flux-system:adventofcode"}
+        image: registry.brotherlogic-backend.com/brotherlogic/adventofcode:0.88.0 # {"$imagepolicy": "flux-system:adventofcode"}
         ports:
         - containerPort: 8080
       imagePullSecrets:
@@ -31,6 +31,7 @@ metadata:
   annotations:
     traefik.ingress.kuberentes.io/service.serversscheme: h2c
 spec:
+  type: NodePort
   metadata:
     labels:
       app: adventofcode
@@ -46,7 +47,6 @@ spec:
       targetPort: 8082
   selector:
     app: adventofcode
-  type: ClusterIP
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor

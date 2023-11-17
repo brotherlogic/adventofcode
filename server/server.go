@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"fmt"
+	"log"
 	"sync"
 
 	pb "github.com/brotherlogic/adventofcode/proto"
@@ -105,7 +106,7 @@ func (s *Server) Solve(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResp
 	}
 
 	if len(errors) == 0 {
-		return nil, status.Errorf(codes.Unimplemented, "No solvers for %v/%v%v", req.GetYear(), req.GetDay(), req.GetPart())
+		return nil, status.Errorf(codes.Unimplemented, "No solvers for %v/%v/%v", req.GetYear(), req.GetDay(), req.GetPart())
 	}
 
 	return nil, status.Errorf(codes.Internal, "Many errors: %v", errors)
@@ -114,6 +115,8 @@ func (s *Server) Solve(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResp
 func (s *Server) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.RegisterResponse, error) {
 	s.years[req.GetYear()] = true
 	s.solvers[req.GetCallback()] = true
+
+	log.Printf("Received and stored: %v", req)
 
 	return &pb.RegisterResponse{}, s.updateMetrics()
 }
