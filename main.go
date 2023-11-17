@@ -51,7 +51,7 @@ func main() {
 		}
 	}()
 
-	log.Printf("Serving aoc hub")
+	log.Printf("Serving adventofcode hub")
 	if err := gsi.Serve(lisInternal); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
