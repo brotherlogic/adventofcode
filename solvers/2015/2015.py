@@ -23,6 +23,7 @@ def register():
     print("response = " + str(response))
 
 def serve():
+    print("starting up")
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     advent_pb2_grpc.add_SolverServiceServicer_to_server(SolverService(), server)
     server.add_insecure_port("[::]:8080")
