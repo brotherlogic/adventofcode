@@ -47,7 +47,7 @@ func main() {
 
 	go func() {
 		if err := gs.Serve(lis); err != nil {
-			log.Fatalf("failed to serve: %v", err)
+			log.Fatalf("failed to serve grpc: %v", err)
 		}
 	}()
 
