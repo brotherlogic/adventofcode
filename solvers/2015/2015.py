@@ -19,7 +19,7 @@ class SolverService(advent_pb2_grpc.SolverServiceServicer):
 def register():
     channel = grpc.insecure_channel('adventofcode.adventofcode:8082')
     stub = advent_pb2_grpc.AdventOfCodeInternalServiceStub(channel)
-    response = stub.Register(advent_pb2.RegisterRequest(year=2015, callback="adventofcode.adventofcode-solver-2015:8080"))
+    response = stub.Register(advent_pb2.RegisterRequest(year=2015, callback="adventofcode.adventofcode-solver-2015:8080"), timeout=1)
     print("response = " + str(response))
 
 def serve():
