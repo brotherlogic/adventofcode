@@ -25,7 +25,7 @@ jobs:
       - name: Install dependencies
         run: |
             python -m pip install --upgrade pip
-            pip install -r requirements.txt
+            pip install -r ./solvers/2015/requirements.txt
       - name: Test with pytest
         run: |
-            python3 -m unittest discover -s solvers/2015/ -p '*_test.py
+            python3 -m unittest discover -s solvers/2015/ -p '*_test.py'
