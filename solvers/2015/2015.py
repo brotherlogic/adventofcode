@@ -6,6 +6,7 @@ import time
 import grpc
 import advent_pb2
 import advent_pb2_grpc
+import threading
 
 import day1
 
@@ -21,6 +22,7 @@ def register():
     stub = advent_pb2_grpc.AdventOfCodeInternalServiceStub(channel)
     response = stub.Register(advent_pb2.RegisterRequest(year=2015, callback="adventofcode.adventofcode-solver-2015:8080"), timeout=1)
     print("response = " + str(response))
+    threading.Timer(60, register).start()
 
 def serve():
     print("starting up")
@@ -28,8 +30,7 @@ def serve():
     advent_pb2_grpc.add_SolverServiceServicer_to_server(SolverService(), server)
     server.add_insecure_port("[::]:8080")
     server.start()
-    register()
-    print("serving")
+    threading.Timer(60, register).start()
     server.wait_for_termination()
 
 if __name__ == "__main__":
