@@ -28,4 +28,4 @@ jobs:
             pip install -r ./solvers/2015/requirements.txt
       - name: Test with pytest
         run: |
-            python3 -m unittest discover -s solvers/2015/ -p '*_test.py
+            python3 -m unittest discover -s solvers/2015/ -p '*_test.py'
