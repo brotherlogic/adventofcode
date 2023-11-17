@@ -11,7 +11,11 @@ class Day2Test(unittest.TestCase):
             {"input":"1x1x10", "expected": 14},
         ]
         for case in testcases:
-            actual = SolveDay1Part1(case["input"])
+            actual = SolveDay2Part1(case["input"])
             self.assertEqual(case["expected"], actual, "failed the actual test {} expected {}, actual {}".format(
                     case["input"], case["expected"], actual
                 ),)
+
+
+if __name__ == "__main__":
+    unittest.main()
