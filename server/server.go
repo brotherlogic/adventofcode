@@ -47,7 +47,7 @@ func (s *Server) updateMetrics() error {
 func (s *Server) Upload(ctx context.Context, req *pb.UploadRequest) (*pb.UploadResponse, error) {
 	conn, err := grpc.Dial("rstore.rstore:8080", grpc.WithInsecure())
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("dial error on rstore: %w", err)
 	}
 
 	client := rspb.NewRStoreServiceClient(conn)
@@ -57,13 +57,13 @@ func (s *Server) Upload(ctx context.Context, req *pb.UploadRequest) (*pb.UploadR
 		Value: &anypb.Any{Value: []byte(req.GetData())},
 	})
 
-	return &pb.UploadResponse{}, err
+	return &pb.UploadResponse{}, fmt.Errorf("bad write: %w", err)
 }
 
 func (s *Server) Solve(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResponse, error) {
 	conn, err := grpc.Dial("rstore.rstore:8080", grpc.WithInsecure())
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("cannot dial rstore: %w", err)
 	}
 
 	client := rspb.NewRStoreServiceClient(conn)
@@ -71,7 +71,7 @@ func (s *Server) Solve(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResp
 		Key: fmt.Sprintf("adventofcode/data/%v-%v-%v", req.GetYear(), req.GetDay(), req.GetPart()),
 	})
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("bad read: %w", err)
 	}
 	req.Data = string(resp.GetValue().GetValue())
 

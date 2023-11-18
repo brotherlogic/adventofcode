@@ -9,6 +9,7 @@ import advent_pb2_grpc
 import threading
 
 import day1
+import day2
 
 class SolverService(advent_pb2_grpc.SolverServiceServicer):
     def Solve(self, request, context):
@@ -16,6 +17,8 @@ class SolverService(advent_pb2_grpc.SolverServiceServicer):
             return advent_pb2.SolveResponse(answer=day1.SolveDay1Part1(request.data))
         if request.year == 2015 and request.day == 1 and request.part == 2:
             return advent_pb2.SolveResponse(answer=day1.SolveDay1Part2(request.data))
+        if request.year == 2015 and request.day == 2 and request.part == 1:
+            return advent_pb2.SolveResponse(answer=day2.SolveDay2Part2(request.data))
 
         return None
 
