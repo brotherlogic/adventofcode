@@ -34,7 +34,7 @@ func main() {
 		if err != nil {
 			log.Fatalf("Unable to run upload: %v", err)
 		}
-		res, err := iclient.Upload(ctx, &pb.UploadRequest{Year: 2015, Day: 1, Part: 1, Data: string(data)})
+		res, err := iclient.Upload(ctx, &pb.UploadRequest{Year: 2015, Day: 1, Part: 2, Data: string(data)})
 		fmt.Printf("%v -> %v\n", res, err)
 	default:
 		fmt.Printf("Unknown command: %v\n", os.Args[1])
