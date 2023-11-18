@@ -18,6 +18,8 @@ class SolverService(advent_pb2_grpc.SolverServiceServicer):
         if request.year == 2015 and request.day == 1 and request.part == 2:
             return advent_pb2.SolveResponse(answer=day1.SolveDay1Part2(request.data))
         if request.year == 2015 and request.day == 2 and request.part == 1:
+            return advent_pb2.SolveResponse(answer=day2.SolveDay2Part1(request.data))
+        if request.year == 2015 and request.day == 2 and request.part == 2:
             return advent_pb2.SolveResponse(answer=day2.SolveDay2Part2(request.data))
 
         return None
