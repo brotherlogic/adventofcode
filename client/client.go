@@ -27,7 +27,7 @@ func main() {
 
 	switch os.Args[2] {
 	case "solve":
-		res, err := client.Solve(ctx, &pb.SolveRequest{Year: 2015, Day: 1, Part: 1})
+		res, err := client.Solve(ctx, &pb.SolveRequest{Year: 2015, Day: 2, Part: 1})
 		fmt.Printf("%v -> %v\n", res, err)
 	case "upload":
 		data, err := ioutil.ReadFile(os.Args[3])
