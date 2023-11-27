@@ -99,10 +99,12 @@ func main() {
 		return
 	}
 
-	// If we're not in a set, work upwards
-	for year := 2015; year < time.Now().Year(); year++ {
-		runYear(year, 25)
-		return
+	// If we're not in a set, work days at a time
+	for day := 1; day <= 25; day++ {
+		for year := 2015; year < time.Now().Year(); year++ {
+			runYear(year, day)
+			return
+		}
 	}
 
 	log.Printf("We've done it all")
