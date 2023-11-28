@@ -26,6 +26,7 @@ var (
 )
 
 func solve(year, day, part int32) error {
+	log.Printf("Solving %v %v %v", year, day, part)
 	for i := 0; i < retries; i++ {
 		err := solveInternal(year, day, part)
 		if status.Code(err) != codes.NotFound {
@@ -115,6 +116,7 @@ func main() {
 
 	// We have no solved the current issue
 	if iid > 0 {
+		log.Printf("Issue is still open: %v", iid)
 		return
 	}
 
