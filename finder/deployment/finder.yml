@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: adventofcode-finder
 spec:
-  schedule: "0 * * * *"
+  schedule: "*/5 * * * *"
   jobTemplate:
     spec:
       template:
