@@ -83,7 +83,7 @@ func findIssue(iid int32) error {
 func runYear(ctx context.Context, ghclient ghb_client.GithubridgeClient, rsclient rstore_client.RStoreClient, year, db int) error {
 	for day := 1; day <= db; day++ {
 		for part := 1; part <= 2; part++ {
-			err := solve(int32(time.Now().Year()), int32(day), int32(part))
+			err := solve(int32(year), int32(day), int32(part))
 			if status.Code(err) == codes.InvalidArgument {
 				//Raise the issue to solve this problem
 				return raiseIssue(ctx, ghclient, rsclient, year, day, part)
