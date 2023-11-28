@@ -7,6 +7,7 @@ metadata:
   namespace: adventofcode
 data:
   gramophile-dash.json: |
+    {
      {
       "annotations": {
         "list": [
