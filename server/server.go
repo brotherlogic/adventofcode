@@ -14,12 +14,14 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/anypb"
 )
 
 type Server struct {
-	years   map[int32]bool
-	solvers map[string]bool
+	years    map[int32]bool
+	solvers  map[string]bool
+	rsclient rstore_client.RStoreClient
 }
 
 func NewServer() *Server {
@@ -35,6 +37,51 @@ var (
 		Help: "The size of the print queue",
 	}, []string{"year"})
 )
+
+func (s *Server) GetSolution(ctx context.Context, req *pb.GetSolutionRequest) (*pb.GetSolutionResponse, error) {
+	data, err := s.rsclient.Read(ctx, &rspb.ReadRequest{Key: "github.com/brotherlogic/adventofcode/solutions"})
+	if err != nil {
+		return nil, err
+	}
+
+	solutions := &pb.Solutions{}
+	err = proto.Unmarshal(data.GetValue().GetValue(), solutions)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, solution := range solutions.GetSolutions() {
+		if solution.GetDay() == req.GetDay() && solution.GetYear() == req.GetYear() && solution.GetPart() == req.GetPart() {
+			return &pb.GetSolutionResponse{Solution: solution}, nil
+		}
+	}
+
+	return nil, status.Errorf(codes.NotFound, "Unable to locate solution for %v %v %v", req.GetYear(), req.GetDay(), req.GetPart())
+}
+
+func (s *Server) AddSolution(ctx context.Context, req *pb.AddSolutionRequest) (*pb.AddSolutionResponse, error) {
+	data, err := s.rsclient.Read(ctx, &rspb.ReadRequest{Key: "github.com/brotherlogic/adventofcode/solutions"})
+	if err != nil {
+		return nil, err
+	}
+
+	solutions := &pb.Solutions{}
+	err = proto.Unmarshal(data.GetValue().GetValue(), solutions)
+	if err != nil {
+		return nil, err
+	}
+
+	solutions.Solutions = append(solutions.Solutions, req.GetSolution())
+	ndata, err := proto.Marshal(solutions)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.AddSolutionResponse{}, s.rsclient.Write(ctx, &rspb.WriteRequest{
+		Key:   "github.com/brotherlogic/adventofcode/solutions",
+		Value: &anypb.Any{Value: ndata},
+	})
+}
 
 func (s *Server) updateMetrics() error {
 	for year := range s.years {

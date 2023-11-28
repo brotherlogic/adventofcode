@@ -4,6 +4,20 @@ package adventofcode;
 
 option go_package = "github.com/brotherlogic/adventofcode/proto";
 
+message Solutions {
+    repeated Solution solutions = 1;
+}
+
+message Solution {
+    int32 year = 1;
+    int32 day = 2;
+    int32 part = 3;
+
+    int64 big_answer = 4;
+    string string_answer = 5;
+    int32 answer = 6;
+}
+
 message SolveRequest {
     int32 year = 1;
     int32 day = 2;
@@ -44,6 +58,21 @@ message RegisterRequest {
 
 message RegisterResponse {}
 
+message AddSolutionRequest {
+    Solution solution = 1;
+}
+message AddSolutionResponse {}
+
+message GetSolutionRequest {
+    int32 year = 1;
+    int32 day = 2;
+    int32 part = 3;
+}
+
+message GetSolutionResponse {
+    Solution solution = 1;
+}
+
 service AdventOfCodeService {
     rpc Solve(SolveRequest) returns (SolveResponse) {};
 }
@@ -51,6 +80,7 @@ service AdventOfCodeService {
 service AdventOfCodeInternalService {
     rpc Upload(UploadRequest) returns (UploadResponse) {};
     rpc Register(RegisterRequest) returns (RegisterResponse) {};
+    rpc AddSolution(AddSolutionRequest) returns (AddSolutionResponse) {};
 }
 
 service SolverService {
