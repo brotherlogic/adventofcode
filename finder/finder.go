@@ -84,6 +84,7 @@ func runYear(ctx context.Context, ghclient ghb_client.GithubridgeClient, rsclien
 	for day := 1; day <= db; day++ {
 		for part := 1; part <= 2; part++ {
 			err := solve(int32(year), int32(day), int32(part))
+			log.Printf("Solved %v %v %v -> %v", err)
 			if status.Code(err) != codes.OK {
 				//Raise the issue to solve this problem
 				return raiseIssue(ctx, ghclient, rsclient, year, day, part)
@@ -123,7 +124,8 @@ func main() {
 
 	// If we're in a set, run this
 	if time.Now().Month() == time.December && time.Now().Day() <= 25 {
-		runYear(ctx, ghclient, rstore, time.Now().Year(), time.Now().Day())
+		err = runYear(ctx, ghclient, rstore, time.Now().Year(), time.Now().Day())
+		log.Printf("Result: %v", err)
 		return
 	}
 
