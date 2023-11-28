@@ -95,6 +95,7 @@ func runYear(ctx context.Context, ghclient ghb_client.GithubridgeClient, rsclien
 }
 
 func main() {
+	log.Print("Running")
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
 
