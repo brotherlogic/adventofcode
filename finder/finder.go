@@ -64,8 +64,8 @@ func loadExistingIssue(ctx context.Context, rsclient rstore_client.RStoreClient)
 	return int32(binary.LittleEndian.Uint32(data.GetValue().GetValue())), nil
 }
 
-func raiseIssue(ctx context.Context, ghclient ghb_client.GithubridgeClient, rsclient rstore_client.RStoreClient, year, day, part int) error {
-	issue, err := ghclient.AddIssue(ctx, &ghbpb.AddIssueRequest{Title: fmt.Sprintf("Solve %v - %v - %v", year, day, part), Job: "adventofcode"})
+func raiseIssue(ctx context.Context, ghclient ghb_client.GithubridgeClient, rsclient rstore_client.RStoreClient, year, day, part int, err error) error {
+	issue, err := ghclient.AddIssue(ctx, &ghbpb.AddIssueRequest{Title: fmt.Sprintf("Solve %v - %v - %v (%v)", year, day, part, err), Job: "adventofcode"})
 	if err != nil {
 		return err
 	}
