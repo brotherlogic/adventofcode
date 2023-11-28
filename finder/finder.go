@@ -84,7 +84,7 @@ func runYear(ctx context.Context, ghclient ghb_client.GithubridgeClient, rsclien
 	for day := 1; day <= db; day++ {
 		for part := 1; part <= 2; part++ {
 			err := solve(int32(year), int32(day), int32(part))
-			if status.Code(err) == codes.InvalidArgument {
+			if status.Code(err) != codes.OK {
 				//Raise the issue to solve this problem
 				return raiseIssue(ctx, ghclient, rsclient, year, day, part)
 			}
@@ -130,8 +130,9 @@ func main() {
 	// If we're not in a set, work days at a time
 	for day := 1; day <= 25; day++ {
 		for year := 2015; year < time.Now().Year(); year++ {
-			runYear(ctx, ghclient, rstore, year, day)
-			return
+			if runYear(ctx, ghclient, rstore, year, day) != nil {
+				return
+			}
 		}
 	}
 
