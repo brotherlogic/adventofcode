@@ -41,7 +41,7 @@ func solveInternal(year, day, part int32) error {
 	ctx, cancel := context.WithTimeout(context.Background(), solvingDuration)
 	defer cancel()
 
-	conn, err := grpc.Dial("adventofocde.adventofcode:8080", grpc.WithInsecure())
+	conn, err := grpc.Dial("adventofcode.adventofcode:8080", grpc.WithInsecure())
 	if err != nil {
 		return err
 	}
@@ -84,7 +84,7 @@ func runYear(ctx context.Context, ghclient ghb_client.GithubridgeClient, rsclien
 	for day := 1; day <= db; day++ {
 		for part := 1; part <= 2; part++ {
 			err := solve(int32(year), int32(day), int32(part))
-			log.Printf("Solved %v %v %v -> %v", err)
+			log.Printf("Solved %v %v %v -> %v", year, day, part, err)
 			if status.Code(err) != codes.OK {
 				//Raise the issue to solve this problem
 				return raiseIssue(ctx, ghclient, rsclient, year, day, part)
