@@ -40,7 +40,7 @@ func solveInternal(year, day, part int32) error {
 	ctx, cancel := context.WithTimeout(context.Background(), solvingDuration)
 	defer cancel()
 
-	conn, err := grpc.Dial("adventofcode:8080", grpc.WithInsecure())
+	conn, err := grpc.Dial("adventofocde.adventofcode:8080", grpc.WithInsecure())
 	if err != nil {
 		return err
 	}
@@ -132,5 +132,5 @@ func main() {
 		}
 	}
 
-	log.Printf("We've done it all")
+	log.Printf("No more puizzles to solve")
 }
