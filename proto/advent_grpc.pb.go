@@ -109,6 +109,7 @@ type AdventOfCodeInternalServiceClient interface {
 	Upload(ctx context.Context, in *UploadRequest, opts ...grpc.CallOption) (*UploadResponse, error)
 	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 	AddSolution(ctx context.Context, in *AddSolutionRequest, opts ...grpc.CallOption) (*AddSolutionResponse, error)
+	GetSolution(ctx context.Context, in *GetSolutionRequest, opts ...grpc.CallOption) (*GetSolutionResponse, error)
 }
 
 type adventOfCodeInternalServiceClient struct {
@@ -146,6 +147,15 @@ func (c *adventOfCodeInternalServiceClient) AddSolution(ctx context.Context, in 
 	return out, nil
 }
 
+func (c *adventOfCodeInternalServiceClient) GetSolution(ctx context.Context, in *GetSolutionRequest, opts ...grpc.CallOption) (*GetSolutionResponse, error) {
+	out := new(GetSolutionResponse)
+	err := c.cc.Invoke(ctx, "/adventofcode.AdventOfCodeInternalService/GetSolution", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AdventOfCodeInternalServiceServer is the server API for AdventOfCodeInternalService service.
 // All implementations should embed UnimplementedAdventOfCodeInternalServiceServer
 // for forward compatibility
@@ -153,6 +163,7 @@ type AdventOfCodeInternalServiceServer interface {
 	Upload(context.Context, *UploadRequest) (*UploadResponse, error)
 	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
 	AddSolution(context.Context, *AddSolutionRequest) (*AddSolutionResponse, error)
+	GetSolution(context.Context, *GetSolutionRequest) (*GetSolutionResponse, error)
 }
 
 // UnimplementedAdventOfCodeInternalServiceServer should be embedded to have forward compatible implementations.
@@ -167,6 +178,9 @@ func (UnimplementedAdventOfCodeInternalServiceServer) Register(context.Context, 
 }
 func (UnimplementedAdventOfCodeInternalServiceServer) AddSolution(context.Context, *AddSolutionRequest) (*AddSolutionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddSolution not implemented")
+}
+func (UnimplementedAdventOfCodeInternalServiceServer) GetSolution(context.Context, *GetSolutionRequest) (*GetSolutionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSolution not implemented")
 }
 
 // UnsafeAdventOfCodeInternalServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -234,6 +248,24 @@ func _AdventOfCodeInternalService_AddSolution_Handler(srv interface{}, ctx conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AdventOfCodeInternalService_GetSolution_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSolutionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdventOfCodeInternalServiceServer).GetSolution(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/adventofcode.AdventOfCodeInternalService/GetSolution",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdventOfCodeInternalServiceServer).GetSolution(ctx, req.(*GetSolutionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AdventOfCodeInternalService_ServiceDesc is the grpc.ServiceDesc for AdventOfCodeInternalService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -252,6 +284,10 @@ var AdventOfCodeInternalService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AddSolution",
 			Handler:    _AdventOfCodeInternalService_AddSolution_Handler,
+		},
+		{
+			MethodName: "GetSolution",
+			Handler:    _AdventOfCodeInternalService_GetSolution_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

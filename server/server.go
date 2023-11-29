@@ -8,6 +8,9 @@ import (
 
 	pb "github.com/brotherlogic/adventofcode/proto"
 	rspb "github.com/brotherlogic/rstore/proto"
+
+	rstore_client "github.com/brotherlogic/rstore/client"
+
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
 
@@ -77,10 +80,11 @@ func (s *Server) AddSolution(ctx context.Context, req *pb.AddSolutionRequest) (*
 		return nil, err
 	}
 
-	return &pb.AddSolutionResponse{}, s.rsclient.Write(ctx, &rspb.WriteRequest{
+	_, err = s.rsclient.Write(ctx, &rspb.WriteRequest{
 		Key:   "github.com/brotherlogic/adventofcode/solutions",
 		Value: &anypb.Any{Value: ndata},
 	})
+	return &pb.AddSolutionResponse{}, err
 }
 
 func (s *Server) updateMetrics() error {

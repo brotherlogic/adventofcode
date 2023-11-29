@@ -81,6 +81,7 @@ service AdventOfCodeInternalService {
     rpc Upload(UploadRequest) returns (UploadResponse) {};
     rpc Register(RegisterRequest) returns (RegisterResponse) {};
     rpc AddSolution(AddSolutionRequest) returns (AddSolutionResponse) {};
+    rpc GetSolution(GetSolutionRequest) returns (GetSolutionResponse) {};
 }
 
 service SolverService {

@@ -26,6 +26,7 @@ var (
 )
 
 func solve(year, day, part int32) error {
+
 	log.Printf("Solving %v %v %v", year, day, part)
 	for i := 0; i < retries; i++ {
 		err := solveInternal(year, day, part)
@@ -47,11 +48,29 @@ func solveInternal(year, day, part int32) error {
 	}
 
 	client := pb.NewSolverServiceClient(conn)
-	_, err = client.Solve(ctx, &pb.SolveRequest{
+	iclient := pb.NewAdventOfCodeInternalServiceClient(conn)
+	res, err := client.Solve(ctx, &pb.SolveRequest{
 		Year: year,
 		Day:  day,
 		Part: part,
 	})
+
+	if err != nil {
+		return err
+	}
+
+	sol, err := iclient.GetSolution(ctx, &pb.GetSolutionRequest{
+		Year: year,
+		Day:  day,
+		Part: part,
+	})
+	if status.Code(err) == codes.OK {
+		if sol.GetSolution().GetBigAnswer() == res.GetBigAnswer() {
+			return nil
+		}
+
+		return status.Errorf(codes.FailedPrecondition, "Solution is not present or incorrect %v vs %v", sol.GetSolution(), res)
+	}
 
 	return err
 }
@@ -87,7 +106,7 @@ func runYear(ctx context.Context, ghclient ghb_client.GithubridgeClient, rsclien
 			log.Printf("Solved %v %v %v -> %v", year, day, part, err)
 			if status.Code(err) != codes.OK {
 				//Raise the issue to solve this problem
-				return raiseIssue(ctx, ghclient, rsclient, year, day, part)
+				return raiseIssue(ctx, ghclient, rsclient, year, day, part, err)
 			}
 		}
 	}
