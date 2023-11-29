@@ -39,6 +39,11 @@ var (
 		Name: "adventofcode_years",
 		Help: "The size of the print queue",
 	}, []string{"year"})
+
+	solveRequest = promauto.NewGaugeVec(prometheus.GaugeOpts{
+		Name: "adventofcode_solves",
+		Help: "The size of the print queue",
+	}, []string{"puzzle", "result"})
 )
 
 func (s *Server) GetSolution(ctx context.Context, req *pb.GetSolutionRequest) (*pb.GetSolutionResponse, error) {
@@ -112,8 +117,10 @@ func (s *Server) Upload(ctx context.Context, req *pb.UploadRequest) (*pb.UploadR
 }
 
 func (s *Server) Solve(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResponse, error) {
+	puzzle := fmt.Sprintf("%v-%v-%v", req.GetYear(), req.GetDay(), req.GetPart())
 	conn, err := grpc.Dial("rstore.rstore:8080", grpc.WithInsecure())
 	if err != nil {
+		solveRequest.With(prometheus.Labels{"puzzle": puzzle, "result": fmt.Sprintf("Dial %v", status.Code(err))}).Inc()
 		return nil, fmt.Errorf("cannot dial rstore: %w", err)
 	}
 
@@ -122,6 +129,7 @@ func (s *Server) Solve(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResp
 		Key: fmt.Sprintf("adventofcode/data/%v-%v-%v", req.GetYear(), req.GetDay(), req.GetPart()),
 	})
 	if err != nil {
+		solveRequest.With(prometheus.Labels{"puzzle": puzzle, "result": fmt.Sprintf("Read: %v", status.Code(err))}).Inc()
 		return nil, fmt.Errorf("bad read: %w", err)
 	}
 	req.Data = string(resp.GetValue().GetValue())
@@ -153,13 +161,16 @@ func (s *Server) Solve(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResp
 	wg.Wait()
 
 	if solution != nil {
+		solveRequest.With(prometheus.Labels{"puzzle": puzzle, "result": "OK"}).Inc()
 		return solution, nil
 	}
 
 	if len(errors) == 0 {
+		solveRequest.With(prometheus.Labels{"puzzle": puzzle, "result": "Unimplemented"}).Inc()
 		return nil, status.Errorf(codes.Unimplemented, "No solvers for %v/%v/%v", req.GetYear(), req.GetDay(), req.GetPart())
 	}
 
+	solveRequest.With(prometheus.Labels{"puzzle": puzzle, "result": "Internal"}).Inc()
 	return nil, status.Errorf(codes.Internal, "Many errors: %v", errors)
 }
 
