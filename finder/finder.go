@@ -42,13 +42,17 @@ func solveInternal(year, day, part int32) error {
 	ctx, cancel := context.WithTimeout(context.Background(), solvingDuration)
 	defer cancel()
 
-	conn, err := grpc.Dial("adventofcode.adventofcode:8080", grpc.WithInsecure())
+	connm, err := grpc.Dial("adventofcode.adventofcode:8080", grpc.WithInsecure())
+	if err != nil {
+		return fmt.Errorf("unable to dial aoc: %w", err)
+	}
+	conni, err := grpc.Dial("adventofcode.adventofcode:8082", grpc.WithInsecure())
 	if err != nil {
 		return fmt.Errorf("unable to dial aoc: %w", err)
 	}
 
-	client := pb.NewSolverServiceClient(conn)
-	iclient := pb.NewAdventOfCodeInternalServiceClient(conn)
+	client := pb.NewAdventOfCodeServiceClient(connm)
+	iclient := pb.NewAdventOfCodeInternalServiceClient(conni)
 	res, err := client.Solve(ctx, &pb.SolveRequest{
 		Year: year,
 		Day:  day,
