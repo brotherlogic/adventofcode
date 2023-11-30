@@ -44,7 +44,7 @@ func solveInternal(year, day, part int32) error {
 
 	conn, err := grpc.Dial("adventofcode.adventofcode:8080", grpc.WithInsecure())
 	if err != nil {
-		return err
+		return fmt.Errorf("unable to dial aoc: %w", err)
 	}
 
 	client := pb.NewSolverServiceClient(conn)
@@ -56,7 +56,7 @@ func solveInternal(year, day, part int32) error {
 	})
 
 	if err != nil {
-		return err
+		return fmt.Errorf("bad solve: %w", err)
 	}
 
 	sol, err := iclient.GetSolution(ctx, &pb.GetSolutionRequest{
