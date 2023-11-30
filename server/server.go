@@ -71,14 +71,16 @@ func (s *Server) GetSolution(ctx context.Context, req *pb.GetSolutionRequest) (*
 
 func (s *Server) AddSolution(ctx context.Context, req *pb.AddSolutionRequest) (*pb.AddSolutionResponse, error) {
 	data, err := s.rsclient.Read(ctx, &rspb.ReadRequest{Key: "github.com/brotherlogic/adventofcode/solutions"})
-	if err != nil {
+	if err != nil && status.Code(err) != codes.NotFound {
 		return nil, err
 	}
 
-	solutions := &pb.Solutions{}
-	err = proto.Unmarshal(data.GetValue().GetValue(), solutions)
-	if err != nil {
-		return nil, err
+	solutions := &pb.Solutions{Solutions: make([]*pb.Solution, 0)}
+	if status.Code(err) != codes.NotFound {
+		err = proto.Unmarshal(data.GetValue().GetValue(), solutions)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	solutions.Solutions = append(solutions.Solutions, req.GetSolution())

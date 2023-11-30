@@ -36,6 +36,9 @@ func main() {
 		}
 		res, err := iclient.Upload(ctx, &pb.UploadRequest{Year: 2015, Day: 1, Part: 1, Data: string(data)})
 		fmt.Printf("%v -> %v\n", res, err)
+	case "solution":
+		res, err := iclient.AddSolution(ctx, &pb.AddSolutionRequest{Solution: &pb.Solution{Year: 2015, Day: 1, Part: 1, Answer: 280}})
+		fmt.Printf("%v -> %v\n", res, err)
 	default:
 		fmt.Printf("Unknown command: %v\n", os.Args[1])
 	}
