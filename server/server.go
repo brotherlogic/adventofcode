@@ -47,6 +47,7 @@ func (s *Server) GetSolution(ctx context.Context, req *pb.GetSolutionRequest) (*
 		return nil, err
 	}
 
+	log.Printf("HERE %v %v", data, err)
 	solutions := &pb.Solutions{}
 	err = proto.Unmarshal(data.GetValue().GetValue(), solutions)
 	if err != nil {
