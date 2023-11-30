@@ -2,6 +2,8 @@ github.com/brotherlogic/adventofcode v0.103.0 h1:Ikp5dRwEfokbYcU6mqyfUwQ/fPpTqu+
 github.com/brotherlogic/adventofcode v0.103.0/go.mod h1:4SPMzmTg0hDt7a+2Fqz7dtfXHqwsjZDLBhxdEwPdeYk=
 github.com/brotherlogic/adventofcode v0.109.0 h1:ihEfMtDtN5MGTwV89mK2BuS0NUEJqhA0GSpVEJLBKNM=
 github.com/brotherlogic/adventofcode v0.109.0/go.mod h1:4SPMzmTg0hDt7a+2Fqz7dtfXHqwsjZDLBhxdEwPdeYk=
+github.com/brotherlogic/adventofcode v0.113.0 h1:bV7gGrPkm3yHdP51i5NpY0fXu20HEvcvDUopGIkN8mk=
+github.com/brotherlogic/adventofcode v0.113.0/go.mod h1:4SPMzmTg0hDt7a+2Fqz7dtfXHqwsjZDLBhxdEwPdeYk=
 github.com/brotherlogic/githubridge v0.7.0 h1:Wd+yx1trVANn3NZGPJo/YiJKNDOqWjDIwoHB7iCLlwc=
 github.com/brotherlogic/githubridge v0.7.0/go.mod h1:6wCtX/qr68BbuE8rQYMhg+d44omffnl9Bqv32a0+afk=
 github.com/brotherlogic/rstore v0.35.0 h1:Ebr6qZH2Q7bbA2SAyeAwfkqxmQLVd7UrlzdtNzT0qy0=
