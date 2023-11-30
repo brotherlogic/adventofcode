@@ -33,6 +33,7 @@ func solve(year, day, part int32) error {
 		if status.Code(err) != codes.NotFound {
 			return err
 		}
+		log.Printf("Solve fail: %v", err)
 	}
 
 	return status.Errorf(codes.ResourceExhausted, "Unable to solve with retries")
