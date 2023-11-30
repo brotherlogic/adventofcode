@@ -27,10 +27,11 @@ type Server struct {
 	rsclient rstore_client.RStoreClient
 }
 
-func NewServer() *Server {
+func NewServer(rsclient rstore_client.RStoreClient) *Server {
 	return &Server{
-		years:   make(map[int32]bool),
-		solvers: make(map[string]bool),
+		years:    make(map[int32]bool),
+		solvers:  make(map[string]bool),
+		rsclient: rsclient,
 	}
 }
 
