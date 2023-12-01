@@ -25,11 +25,11 @@ var (
 	retries         = 3
 )
 
-func solve(year, day, part int32) error {
+func solve(ctx context.Context, year, day, part int32, issue string) error {
 
 	log.Printf("Solving %v %v %v", year, day, part)
 	for i := 0; i < retries; i++ {
-		err := solveInternal(year, day, part)
+		err := solveInternal(ctx, year, day, part, issue)
 		if status.Code(err) != codes.NotFound {
 			return err
 		}
@@ -39,7 +39,7 @@ func solve(year, day, part int32) error {
 	return status.Errorf(codes.ResourceExhausted, "Unable to solve with retries")
 }
 
-func solveInternal(year, day, part int32) error {
+func solveInternal(sctx context.Context, year, day, part int32, issue string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), solvingDuration)
 	defer cancel()
 
@@ -77,6 +77,10 @@ func solveInternal(year, day, part int32) error {
 		return status.Errorf(codes.FailedPrecondition, "Solution is not present or incorrect %v vs %v", sol.GetSolution(), res)
 	}
 
+	if status.Code(err) == codes.NotFound {
+		return addSolutionToIssue(ctx, sol, issue)
+	}
+
 	return err
 }
 
@@ -86,6 +90,10 @@ func loadExistingIssue(ctx context.Context, rsclient rstore_client.RStoreClient)
 		return -1, nil
 	}
 	return int32(binary.LittleEndian.Uint32(data.GetValue().GetValue())), nil
+}
+
+func addSolutionToIssue(ctx context.Context, solution *pb.Solution, issue string) error {
+	return nil
 }
 
 func raiseIssue(ctx context.Context, ghclient ghb_client.GithubridgeClient, rsclient rstore_client.RStoreClient, year, day, part int, err error) error {
