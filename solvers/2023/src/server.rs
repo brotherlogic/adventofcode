@@ -41,7 +41,7 @@ async fn register() -> Result<(), Box<dyn std::error::Error>> {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let addr = "[::1]:8080".parse().unwrap();
+    let addr = "0.0.0.0:8080".parse().unwrap();
     let solver = RServer::default();
     println!("Server listening on {}", addr);
 
