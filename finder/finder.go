@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"encoding/binary"
 	"fmt"
 	"log"
 	"time"
@@ -10,6 +9,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/anypb"
 
 	ghb_client "github.com/brotherlogic/githubridge/client"
@@ -25,7 +25,7 @@ var (
 	retries         = 3
 )
 
-func solve(ctx context.Context, year, day, part int32, issue string) error {
+func solve(ctx context.Context, year, day, part int32, issue *pb.Issue) error {
 
 	log.Printf("Solving %v %v %v", year, day, part)
 	for i := 0; i < retries; i++ {
@@ -39,7 +39,7 @@ func solve(ctx context.Context, year, day, part int32, issue string) error {
 	return status.Errorf(codes.ResourceExhausted, "Unable to solve with retries")
 }
 
-func solveInternal(sctx context.Context, year, day, part int32, issue string) error {
+func solveInternal(sctx context.Context, year, day, part int32, issue *pb.Issue) error {
 	ctx, cancel := context.WithTimeout(context.Background(), solvingDuration)
 	defer cancel()
 
@@ -78,21 +78,28 @@ func solveInternal(sctx context.Context, year, day, part int32, issue string) er
 	}
 
 	if status.Code(err) == codes.NotFound {
-		return addSolutionToIssue(ctx, sol, issue)
+		return addSolutionToIssue(ctx, sol.GetSolution(), issue)
 	}
 
 	return err
 }
 
-func loadExistingIssue(ctx context.Context, rsclient rstore_client.RStoreClient) (int32, error) {
+func loadExistingIssue(ctx context.Context, rsclient rstore_client.RStoreClient) (*pb.Issue, error) {
 	data, err := rsclient.Read(ctx, &rspb.ReadRequest{Key: "brotherlogic/adventofcode/finder/cissue"})
 	if err != nil {
-		return -1, nil
+		return nil, err
 	}
-	return int32(binary.LittleEndian.Uint32(data.GetValue().GetValue())), nil
+
+	issue := &pb.Issue{}
+	err = proto.Unmarshal(data.GetValue().GetValue(), issue)
+	if err != nil {
+		return nil, err
+	}
+
+	return issue, nil
 }
 
-func addSolutionToIssue(ctx context.Context, solution *pb.Solution, issue string) error {
+func addSolutionToIssue(ctx context.Context, solution *pb.Solution, issue *pb.Issue) error {
 	return nil
 }
 
@@ -102,9 +109,16 @@ func raiseIssue(ctx context.Context, ghclient ghb_client.GithubridgeClient, rscl
 		return err
 	}
 
-	b := make([]byte, 4)
-	binary.LittleEndian.PutUint32(b, uint32(issue.GetIssueId()))
-	_, err = rsclient.Write(ctx, &rspb.WriteRequest{Key: "brotherlogic/adventofcode/finder/cissue", Value: &anypb.Any{Value: b}})
+	iss := &pb.Issue{
+		Id:   issue.GetId(),
+		Open: true,
+	}
+	bytes, err := proto.Marshal(iss)
+	if err != nil {
+		return err
+	}
+
+	_, err = rsclient.Write(ctx, &rspb.WriteRequest{Key: "brotherlogic/adventofcode/finder/cissue", Value: &anypb.Any{Value: bytes}})
 	return err
 }
 
@@ -112,10 +126,10 @@ func findIssue(iid int32) error {
 	return nil
 }
 
-func runYear(ctx context.Context, ghclient ghb_client.GithubridgeClient, rsclient rstore_client.RStoreClient, year, db int) error {
+func runYear(ctx context.Context, ghclient ghb_client.GithubridgeClient, rsclient rstore_client.RStoreClient, year, db int, issue *pb.Issue) error {
 	for day := 1; day <= db; day++ {
 		for part := 1; part <= 2; part++ {
-			err := solve(int32(year), int32(day), int32(part))
+			err := solve(ctx, int32(year), int32(day), int32(part), issue)
 			log.Printf("Solved %v %v %v -> %v", year, day, part, err)
 			if status.Code(err) != codes.OK {
 				//Raise the issue to solve this problem
@@ -143,14 +157,14 @@ func main() {
 	}
 
 	// Check on the existing issue
-	iid, err := loadExistingIssue(ctx, rstore)
+	issue, err := loadExistingIssue(ctx, rstore)
 	if err != nil {
 		log.Fatalf("unable to load existing issue: %v", err)
 	}
 
 	// We have no solved the current issue
-	if iid > 0 {
-		log.Printf("Issue is still open: %v", iid)
+	if issue == nil || !issue.GetOpen() {
+		log.Printf("Issue is still open: %v", issue)
 		return
 	}
 
