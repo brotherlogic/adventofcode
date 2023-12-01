@@ -2,7 +2,7 @@
 FROM rust:1.70
 
 # 2. Copy the files in your machine to the Docker image
-COPY ./ ./
+COPY . .
 
 # Build your program for release
 RUN cargo build --bin server --release
