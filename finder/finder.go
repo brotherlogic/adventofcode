@@ -172,7 +172,7 @@ func main() {
 
 	// Check on the existing issue
 	issue, err := f.loadExistingIssue(ctx)
-	if err != nil {
+	if err != nil && status.Code(err) != codes.NotFound {
 		log.Fatalf("unable to load existing issue: %v", err)
 	}
 
