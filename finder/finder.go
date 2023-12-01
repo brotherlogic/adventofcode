@@ -184,9 +184,13 @@ func main() {
 
 	// If we're in a set, run this
 	if time.Now().Month() == time.December && time.Now().Day() <= 25 {
-		err = f.runYear(ctx, ghclient, rstore, int32(time.Now().Year()), int32(time.Now().Day()), issue)
-		log.Printf("Result: %v", err)
-		return
+		for day := int32(1); day < int32(26); day++ {
+			err = f.runYear(ctx, ghclient, rstore, int32(time.Now().Year()), day, issue)
+			if err != nil {
+				log.Printf("Result: %v", err)
+				return
+			}
+		}
 	}
 
 	// If we're not in a set, work days at a time
