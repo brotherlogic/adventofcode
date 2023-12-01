@@ -24,7 +24,7 @@ spec:
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-name: adventofcode-solver-2023
+  name: adventofcode-solver-2023
   namespace: monitoring
   labels:
     release: kube-prometheus-stack
