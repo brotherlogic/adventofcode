@@ -159,6 +159,8 @@ func main() {
 	if err != nil {
 		log.Fatalf("unable to get ghb client: %v", err)
 	}
+	i, e := ghclient.CreateIssue(ctx, &ghbpb.CreateIssueRequest{User: "brotherlogic", Repo: "githubridge", Title: "Testing"})
+	log.Printf("TRYING %v and %v", i, e)
 
 	rstore, err := rstore_client.GetClient()
 	if err != nil {
