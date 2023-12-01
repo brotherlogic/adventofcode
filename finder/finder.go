@@ -25,11 +25,16 @@ var (
 	retries         = 3
 )
 
-func solve(ctx context.Context, year, day, part int32, issue *pb.Issue) error {
+type finder struct {
+	ghclient ghb_client.GithubridgeClient
+	rsclient rstore_client.RStoreClient
+}
+
+func (f *finder) solve(ctx context.Context, year, day, part int32, issue *pb.Issue) error {
 
 	log.Printf("Solving %v %v %v", year, day, part)
 	for i := 0; i < retries; i++ {
-		err := solveInternal(ctx, year, day, part, issue)
+		err := f.solveInternal(ctx, year, day, part, issue)
 		if status.Code(err) != codes.NotFound {
 			return err
 		}
@@ -39,7 +44,7 @@ func solve(ctx context.Context, year, day, part int32, issue *pb.Issue) error {
 	return status.Errorf(codes.ResourceExhausted, "Unable to solve with retries")
 }
 
-func solveInternal(sctx context.Context, year, day, part int32, issue *pb.Issue) error {
+func (f *finder) solveInternal(sctx context.Context, year, day, part int32, issue *pb.Issue) error {
 	ctx, cancel := context.WithTimeout(context.Background(), solvingDuration)
 	defer cancel()
 
@@ -77,6 +82,10 @@ func solveInternal(sctx context.Context, year, day, part int32, issue *pb.Issue)
 		return status.Errorf(codes.FailedPrecondition, "Solution is not present or incorrect %v vs %v", sol.GetSolution(), res)
 	}
 
+	if issue == nil {
+		return f.raiseIssue(sctx, year, day, part, fmt.Errorf("Starting issue"))
+	}
+
 	if status.Code(err) == codes.NotFound {
 		return addSolutionToIssue(ctx, sol.GetSolution(), issue)
 	}
@@ -84,8 +93,8 @@ func solveInternal(sctx context.Context, year, day, part int32, issue *pb.Issue)
 	return err
 }
 
-func loadExistingIssue(ctx context.Context, rsclient rstore_client.RStoreClient) (*pb.Issue, error) {
-	data, err := rsclient.Read(ctx, &rspb.ReadRequest{Key: "brotherlogic/adventofcode/finder/cissue"})
+func (f *finder) loadExistingIssue(ctx context.Context) (*pb.Issue, error) {
+	data, err := f.rsclient.Read(ctx, &rspb.ReadRequest{Key: "brotherlogic/adventofcode/finder/cissue"})
 	if err != nil {
 		return nil, err
 	}
@@ -103,8 +112,8 @@ func addSolutionToIssue(ctx context.Context, solution *pb.Solution, issue *pb.Is
 	return nil
 }
 
-func raiseIssue(ctx context.Context, ghclient ghb_client.GithubridgeClient, rsclient rstore_client.RStoreClient, year, day, part int, err error) error {
-	issue, err := ghclient.CreateIssue(ctx, &ghbpb.CreateIssueRequest{Title: fmt.Sprintf("Solve %v - %v - %v (%v)", year, day, part, err), Repo: "adventofcode", User: "brotherlogic"})
+func (f *finder) raiseIssue(ctx context.Context, year, day, part int32, err error) error {
+	issue, err := f.ghclient.CreateIssue(ctx, &ghbpb.CreateIssueRequest{Title: fmt.Sprintf("Solve %v - %v - %v (%v)", year, day, part, err), Repo: "adventofcode", User: "brotherlogic"})
 	if err != nil {
 		return err
 	}
@@ -118,7 +127,7 @@ func raiseIssue(ctx context.Context, ghclient ghb_client.GithubridgeClient, rscl
 		return err
 	}
 
-	_, err = rsclient.Write(ctx, &rspb.WriteRequest{Key: "brotherlogic/adventofcode/finder/cissue", Value: &anypb.Any{Value: bytes}})
+	_, err = f.rsclient.Write(ctx, &rspb.WriteRequest{Key: "brotherlogic/adventofcode/finder/cissue", Value: &anypb.Any{Value: bytes}})
 	return err
 }
 
@@ -126,14 +135,14 @@ func findIssue(iid int32) error {
 	return nil
 }
 
-func runYear(ctx context.Context, ghclient ghb_client.GithubridgeClient, rsclient rstore_client.RStoreClient, year, db int, issue *pb.Issue) error {
-	for day := 1; day <= db; day++ {
-		for part := 1; part <= 2; part++ {
-			err := solve(ctx, int32(year), int32(day), int32(part), issue)
+func (f *finder) runYear(ctx context.Context, ghclient ghb_client.GithubridgeClient, rsclient rstore_client.RStoreClient, year, db int32, issue *pb.Issue) error {
+	for day := int32(1); day <= db; day++ {
+		for part := int32(1); part <= 2; part++ {
+			err := f.solve(ctx, int32(year), int32(day), int32(part), issue)
 			log.Printf("Solved %v %v %v -> %v", year, day, part, err)
 			if status.Code(err) != codes.OK {
 				//Raise the issue to solve this problem
-				return raiseIssue(ctx, ghclient, rsclient, year, day, part, err)
+				return f.raiseIssue(ctx, year, day, part, err)
 			}
 		}
 	}
@@ -156,8 +165,13 @@ func main() {
 		log.Fatalf("unable to get rstore client: %v", err)
 	}
 
+	f := &finder{
+		ghclient: ghclient,
+		rsclient: rstore,
+	}
+
 	// Check on the existing issue
-	issue, err := loadExistingIssue(ctx, rstore)
+	issue, err := f.loadExistingIssue(ctx)
 	if err != nil {
 		log.Fatalf("unable to load existing issue: %v", err)
 	}
@@ -170,15 +184,15 @@ func main() {
 
 	// If we're in a set, run this
 	if time.Now().Month() == time.December && time.Now().Day() <= 25 {
-		err = runYear(ctx, ghclient, rstore, time.Now().Year(), time.Now().Day(), issue)
+		err = f.runYear(ctx, ghclient, rstore, int32(time.Now().Year()), int32(time.Now().Day()), issue)
 		log.Printf("Result: %v", err)
 		return
 	}
 
 	// If we're not in a set, work days at a time
-	for day := 1; day <= 25; day++ {
+	for day := int32(1); day <= 25; day++ {
 		for year := 2015; year < time.Now().Year(); year++ {
-			if runYear(ctx, ghclient, rstore, year, day, issue) != nil {
+			if f.runYear(ctx, ghclient, rstore, int32(year), day, issue) != nil {
 				return
 			}
 		}
