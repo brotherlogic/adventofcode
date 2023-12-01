@@ -177,7 +177,7 @@ func main() {
 	}
 
 	// We have no solved the current issue
-	if issue == nil || !issue.GetOpen() {
+	if issue != nil && !issue.GetOpen() {
 		log.Printf("Issue is still open: %v", issue)
 		return
 	}
