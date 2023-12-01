@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"encoding/binary"
 	"fmt"
 	"log"
 	"time"
@@ -10,6 +9,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/anypb"
 
 	ghb_client "github.com/brotherlogic/githubridge/client"
@@ -25,20 +25,26 @@ var (
 	retries         = 3
 )
 
-func solve(year, day, part int32) error {
+type finder struct {
+	ghclient ghb_client.GithubridgeClient
+	rsclient rstore_client.RStoreClient
+}
+
+func (f *finder) solve(ctx context.Context, year, day, part int32, issue *pb.Issue) error {
 
 	log.Printf("Solving %v %v %v", year, day, part)
 	for i := 0; i < retries; i++ {
-		err := solveInternal(year, day, part)
+		err := f.solveInternal(ctx, year, day, part, issue)
 		if status.Code(err) != codes.NotFound {
 			return err
 		}
+		log.Printf("Solve fail: %v", err)
 	}
 
 	return status.Errorf(codes.ResourceExhausted, "Unable to solve with retries")
 }
 
-func solveInternal(year, day, part int32) error {
+func (f *finder) solveInternal(sctx context.Context, year, day, part int32, issue *pb.Issue) error {
 	ctx, cancel := context.WithTimeout(context.Background(), solvingDuration)
 	defer cancel()
 
@@ -76,26 +82,52 @@ func solveInternal(year, day, part int32) error {
 		return status.Errorf(codes.FailedPrecondition, "Solution is not present or incorrect %v vs %v", sol.GetSolution(), res)
 	}
 
+	if issue == nil {
+		return f.raiseIssue(sctx, year, day, part, fmt.Errorf("Starting issue"))
+	}
+
+	if status.Code(err) == codes.NotFound {
+		return addSolutionToIssue(ctx, sol.GetSolution(), issue)
+	}
+
 	return err
 }
 
-func loadExistingIssue(ctx context.Context, rsclient rstore_client.RStoreClient) (int32, error) {
-	data, err := rsclient.Read(ctx, &rspb.ReadRequest{Key: "brotherlogic/adventofcode/finder/cissue"})
+func (f *finder) loadExistingIssue(ctx context.Context) (*pb.Issue, error) {
+	data, err := f.rsclient.Read(ctx, &rspb.ReadRequest{Key: "brotherlogic/adventofcode/finder/cissue"})
 	if err != nil {
-		return -1, nil
+		return nil, err
 	}
-	return int32(binary.LittleEndian.Uint32(data.GetValue().GetValue())), nil
+
+	issue := &pb.Issue{}
+	err = proto.Unmarshal(data.GetValue().GetValue(), issue)
+	if err != nil {
+		return nil, err
+	}
+
+	return issue, nil
 }
 
-func raiseIssue(ctx context.Context, ghclient ghb_client.GithubridgeClient, rsclient rstore_client.RStoreClient, year, day, part int, err error) error {
-	issue, err := ghclient.AddIssue(ctx, &ghbpb.AddIssueRequest{Title: fmt.Sprintf("Solve %v - %v - %v (%v)", year, day, part, err), Job: "adventofcode"})
+func addSolutionToIssue(ctx context.Context, solution *pb.Solution, issue *pb.Issue) error {
+	return nil
+}
+
+func (f *finder) raiseIssue(ctx context.Context, year, day, part int32, err error) error {
+	issue, err := f.ghclient.CreateIssue(ctx, &ghbpb.CreateIssueRequest{Title: fmt.Sprintf("Solve %v - %v - %v (%v)", year, day, part, err), Repo: "adventofcode", User: "brotherlogic"})
 	if err != nil {
 		return err
 	}
 
-	b := make([]byte, 4)
-	binary.LittleEndian.PutUint32(b, uint32(issue.GetIssueId()))
-	_, err = rsclient.Write(ctx, &rspb.WriteRequest{Key: "brotherlogic/adventofcode/finder/cissue", Value: &anypb.Any{Value: b}})
+	iss := &pb.Issue{
+		Id:   issue.GetIssueId(),
+		Open: true,
+	}
+	bytes, err := proto.Marshal(iss)
+	if err != nil {
+		return err
+	}
+
+	_, err = f.rsclient.Write(ctx, &rspb.WriteRequest{Key: "brotherlogic/adventofcode/finder/cissue", Value: &anypb.Any{Value: bytes}})
 	return err
 }
 
@@ -103,14 +135,14 @@ func findIssue(iid int32) error {
 	return nil
 }
 
-func runYear(ctx context.Context, ghclient ghb_client.GithubridgeClient, rsclient rstore_client.RStoreClient, year, db int) error {
-	for day := 1; day <= db; day++ {
-		for part := 1; part <= 2; part++ {
-			err := solve(int32(year), int32(day), int32(part))
+func (f *finder) runYear(ctx context.Context, ghclient ghb_client.GithubridgeClient, rsclient rstore_client.RStoreClient, year, db int32, issue *pb.Issue) error {
+	for day := int32(1); day <= db; day++ {
+		for part := int32(1); part <= 2; part++ {
+			err := f.solve(ctx, int32(year), int32(day), int32(part), issue)
 			log.Printf("Solved %v %v %v -> %v", year, day, part, err)
 			if status.Code(err) != codes.OK {
 				//Raise the issue to solve this problem
-				return raiseIssue(ctx, ghclient, rsclient, year, day, part, err)
+				return f.raiseIssue(ctx, year, day, part, err)
 			}
 		}
 	}
@@ -127,35 +159,46 @@ func main() {
 	if err != nil {
 		log.Fatalf("unable to get ghb client: %v", err)
 	}
+	i, e := ghclient.CreateIssue(ctx, &ghbpb.CreateIssueRequest{User: "brotherlogic", Repo: "githubridge", Title: "Testing"})
+	log.Printf("TRYING %v and %v", i, e)
 
 	rstore, err := rstore_client.GetClient()
 	if err != nil {
 		log.Fatalf("unable to get rstore client: %v", err)
 	}
 
+	f := &finder{
+		ghclient: ghclient,
+		rsclient: rstore,
+	}
+
 	// Check on the existing issue
-	iid, err := loadExistingIssue(ctx, rstore)
-	if err != nil {
+	issue, err := f.loadExistingIssue(ctx)
+	if err != nil && status.Code(err) != codes.NotFound {
 		log.Fatalf("unable to load existing issue: %v", err)
 	}
 
 	// We have no solved the current issue
-	if iid > 0 {
-		log.Printf("Issue is still open: %v", iid)
+	if issue != nil && !issue.GetOpen() {
+		log.Printf("Issue is still open: %v", issue)
 		return
 	}
 
 	// If we're in a set, run this
 	if time.Now().Month() == time.December && time.Now().Day() <= 25 {
-		err = runYear(ctx, ghclient, rstore, time.Now().Year(), time.Now().Day())
-		log.Printf("Result: %v", err)
-		return
+		for day := int32(1); day < int32(26); day++ {
+			err = f.runYear(ctx, ghclient, rstore, int32(time.Now().Year()), day, issue)
+			if err != nil {
+				log.Printf("Result: %v", err)
+				return
+			}
+		}
 	}
 
 	// If we're not in a set, work days at a time
-	for day := 1; day <= 25; day++ {
+	for day := int32(1); day <= 25; day++ {
 		for year := 2015; year < time.Now().Year(); year++ {
-			if runYear(ctx, ghclient, rstore, year, day) != nil {
+			if f.runYear(ctx, ghclient, rstore, int32(year), day, issue) != nil {
 				return
 			}
 		}

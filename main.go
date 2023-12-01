@@ -8,6 +8,7 @@ import (
 	"net/http"
 
 	"github.com/brotherlogic/adventofcode/server"
+	rstore_client "github.com/brotherlogic/rstore/client"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"google.golang.org/grpc"
 
@@ -23,7 +24,11 @@ var (
 func main() {
 	flag.Parse()
 
-	s := server.NewServer()
+	client, err := rstore_client.GetClient()
+	if err != nil {
+		log.Fatalf("Unable to get rstore client: %v", err)
+	}
+	s := server.NewServer(client)
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
 	if err != nil {
