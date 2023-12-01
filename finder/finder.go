@@ -128,6 +128,7 @@ func (f *finder) raiseIssue(ctx context.Context, year, day, part int32, err erro
 	}
 
 	_, err = f.rsclient.Write(ctx, &rspb.WriteRequest{Key: "brotherlogic/adventofcode/finder/cissue", Value: &anypb.Any{Value: bytes}})
+	log.Printf("Written issue: %v", err)
 	return err
 }
 
@@ -188,7 +189,7 @@ func main() {
 
 	// If we're in a set, run this
 	if time.Now().Month() == time.December && time.Now().Day() <= 25 {
-		for day := int32(1); day < int32(26); day++ {
+		for day := int32(1); day <= int32(25); day++ {
 			err = f.runYear(ctx, ghclient, rstore, int32(time.Now().Year()), day, issue)
 			if err != nil {
 				log.Printf("Result: %v", err)
