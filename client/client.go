@@ -27,18 +27,22 @@ func main() {
 
 	switch os.Args[2] {
 	case "solve":
-		res, err := client.Solve(ctx, &pb.SolveRequest{Year: 2015, Day: 1, Part: 1})
+		res, err := client.Solve(ctx, &pb.SolveRequest{Year: 2023, Day: 1, Part: 1})
 		fmt.Printf("%v -> %v\n", res, err)
 	case "upload":
 		data, err := ioutil.ReadFile(os.Args[3])
 		if err != nil {
 			log.Fatalf("Unable to run upload: %v", err)
 		}
-		res, err := iclient.Upload(ctx, &pb.UploadRequest{Year: 2015, Day: 1, Part: 1, Data: string(data)})
+		res, err := iclient.Upload(ctx, &pb.UploadRequest{Year: 2023, Day: 1, Part: 1, Data: string(data)})
 		fmt.Printf("%v -> %v\n", res, err)
 	case "solution":
 		res, err := iclient.AddSolution(ctx, &pb.AddSolutionRequest{Solution: &pb.Solution{Year: 2015, Day: 1, Part: 2, Answer: 1797}})
 		fmt.Printf("%v -> %v\n", res, err)
+	case "tight":
+	     cclient := pb.NewSolverServiceClient(conn)
+	     solution, err := cclient.Solve(ctx, &pb.SolveRequest{Year: 2023, Day: 1, Part: 1})
+	     fmt.Printf("%v %v\n", solution, err)
 	default:
 		fmt.Printf("Unknown command: %v\n", os.Args[1])
 	}

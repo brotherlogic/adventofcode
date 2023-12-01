@@ -45,7 +45,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let solver = RServer::default();
     println!("Server listening on {}", addr);
 
-    register().await?;
+    //register().await?;
 
     Server::builder()
         .add_service(SolverServiceServer::new(solver))

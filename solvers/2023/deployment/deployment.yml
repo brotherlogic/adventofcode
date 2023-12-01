@@ -48,7 +48,7 @@ metadata:
   labels:
     app: adventofcode-solver-2023
 spec:
-  type: ClusterIP
+  type: NodePort
   metadata:
     labels:
       app: adventofcode-solver-2023
