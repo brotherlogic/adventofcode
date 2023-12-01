@@ -25,7 +25,7 @@ impl SolverService for RServer {
 async fn register() -> Result<(), Box<dyn std::error::Error>> {
     println!("Registering 2023 Solver");
 
-    let mut client = AdventOfCodeInternalServiceClient::connect("http://adventofcode.adventofcode:8080").await?;
+    let mut client = AdventOfCodeInternalServiceClient::connect("http://adventofcode.adventofcode:8082").await?;
 
     let request = tonic::Request::new(RegisterRequest {
         year: 2023,
