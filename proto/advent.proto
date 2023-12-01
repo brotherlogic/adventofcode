@@ -5,7 +5,7 @@ package adventofcode;
 option go_package = "github.com/brotherlogic/adventofcode/proto";
 
 message Issue {
-    int32 id = 1;
+    int64 id = 1;
     repeated Solution solution_attempts = 2;
     bool open = 3;
 }

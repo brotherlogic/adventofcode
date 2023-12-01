@@ -104,13 +104,13 @@ func addSolutionToIssue(ctx context.Context, solution *pb.Solution, issue *pb.Is
 }
 
 func raiseIssue(ctx context.Context, ghclient ghb_client.GithubridgeClient, rsclient rstore_client.RStoreClient, year, day, part int, err error) error {
-	issue, err := ghclient.AddIssue(ctx, &ghbpb.AddIssueRequest{Title: fmt.Sprintf("Solve %v - %v - %v (%v)", year, day, part, err), Job: "adventofcode"})
+	issue, err := ghclient.CreateIssue(ctx, &ghbpb.CreateIssueRequest{Title: fmt.Sprintf("Solve %v - %v - %v (%v)", year, day, part, err), Repo: "adventofcode", User: "brotherlogic"})
 	if err != nil {
 		return err
 	}
 
 	iss := &pb.Issue{
-		Id:   issue.GetId(),
+		Id:   issue.GetIssueId(),
 		Open: true,
 	}
 	bytes, err := proto.Marshal(iss)
@@ -170,7 +170,7 @@ func main() {
 
 	// If we're in a set, run this
 	if time.Now().Month() == time.December && time.Now().Day() <= 25 {
-		err = runYear(ctx, ghclient, rstore, time.Now().Year(), time.Now().Day())
+		err = runYear(ctx, ghclient, rstore, time.Now().Year(), time.Now().Day(), issue)
 		log.Printf("Result: %v", err)
 		return
 	}
@@ -178,7 +178,7 @@ func main() {
 	// If we're not in a set, work days at a time
 	for day := 1; day <= 25; day++ {
 		for year := 2015; year < time.Now().Year(); year++ {
-			if runYear(ctx, ghclient, rstore, year, day) != nil {
+			if runYear(ctx, ghclient, rstore, year, day, issue) != nil {
 				return
 			}
 		}

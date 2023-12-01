@@ -6,10 +6,14 @@ github.com/brotherlogic/adventofcode v0.113.0 h1:bV7gGrPkm3yHdP51i5NpY0fXu20HEvc
 github.com/brotherlogic/adventofcode v0.113.0/go.mod h1:4SPMzmTg0hDt7a+2Fqz7dtfXHqwsjZDLBhxdEwPdeYk=
 github.com/brotherlogic/adventofcode v0.120.0 h1:Y8UVzne1cpoIUZeTvJns6Y18xx34Vjk8/hf5XgDUZnU=
 github.com/brotherlogic/adventofcode v0.120.0/go.mod h1:4SPMzmTg0hDt7a+2Fqz7dtfXHqwsjZDLBhxdEwPdeYk=
+github.com/brotherlogic/adventofcode v0.121.0 h1:/yhMnYkuoceXJg0OETcljWGsRXYMKnBfLBKrymSjmSw=
+github.com/brotherlogic/adventofcode v0.121.0/go.mod h1:4SPMzmTg0hDt7a+2Fqz7dtfXHqwsjZDLBhxdEwPdeYk=
 github.com/brotherlogic/githubridge v0.7.0 h1:Wd+yx1trVANn3NZGPJo/YiJKNDOqWjDIwoHB7iCLlwc=
 github.com/brotherlogic/githubridge v0.7.0/go.mod h1:6wCtX/qr68BbuE8rQYMhg+d44omffnl9Bqv32a0+afk=
 github.com/brotherlogic/githubridge v0.9.0 h1:ZmSnLnfSclFAIvZNx7iMRJ7tNIxVdcDF//WA8ITjRqE=
 github.com/brotherlogic/githubridge v0.9.0/go.mod h1:9iBecEjSBLpIPTa1c6CnvvLZDGFRvx2Q3xXXo9IGKLI=
+github.com/brotherlogic/githubridge v0.10.0 h1:sKzxJShkFYmnsCMBWH0g5+mjXfjOKwmQ3mEvdncA2qw=
+github.com/brotherlogic/githubridge v0.10.0/go.mod h1:9iBecEjSBLpIPTa1c6CnvvLZDGFRvx2Q3xXXo9IGKLI=
 github.com/brotherlogic/rstore v0.35.0 h1:Ebr6qZH2Q7bbA2SAyeAwfkqxmQLVd7UrlzdtNzT0qy0=
 github.com/brotherlogic/rstore v0.35.0/go.mod h1:OvTUW9id/7lcCxTnh/0ZcvcGFLjIlHP3WQ0AdxnJyLg=
 github.com/golang/protobuf v1.5.0/go.mod h1:FsONVRAS9T7sI+LIUmWTfcYkHO4aIWwzhcaSAoJOfIk=
