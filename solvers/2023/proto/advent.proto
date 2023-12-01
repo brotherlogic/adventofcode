@@ -1,0 +1,89 @@
+syntax = "proto3";
+
+package adventofcode;
+
+option go_package = "github.com/brotherlogic/adventofcode/proto";
+
+message Solutions {
+    repeated Solution solutions = 1;
+}
+
+message Solution {
+    int32 year = 1;
+    int32 day = 2;
+    int32 part = 3;
+
+    int64 big_answer = 4;
+    string string_answer = 5;
+    int32 answer = 6;
+}
+
+message SolveRequest {
+    int32 year = 1;
+    int32 day = 2;
+    int32 part = 3;
+    string data = 4;
+}
+
+message SolveResponse {
+    int32 answer = 1;
+    string string_answer = 2;
+    int64 big_answer = 3;
+}
+
+message UploadRequest {
+    int32 year = 1;
+    int32 day = 2;
+    string data = 3;
+    bool dual_day = 4;
+    int32 part = 5;
+}
+
+message UploadResponse {}
+
+message GetDataRequest {
+    int32 year = 1;
+    int32 day = 2;
+    int32 part = 3;
+}
+
+message GetDataResponse {
+    string data = 1;
+}
+
+message RegisterRequest {
+    string callback = 1;
+    int32 year = 2;
+}
+
+message RegisterResponse {}
+
+message AddSolutionRequest {
+    Solution solution = 1;
+}
+message AddSolutionResponse {}
+
+message GetSolutionRequest {
+    int32 year = 1;
+    int32 day = 2;
+    int32 part = 3;
+}
+
+message GetSolutionResponse {
+    Solution solution = 1;
+}
+
+service AdventOfCodeService {
+    rpc Solve(SolveRequest) returns (SolveResponse) {};
+}
+
+service AdventOfCodeInternalService {
+    rpc Upload(UploadRequest) returns (UploadResponse) {};
+    rpc Register(RegisterRequest) returns (RegisterResponse) {};
+    rpc AddSolution(AddSolutionRequest) returns (AddSolutionResponse) {};
+    rpc GetSolution(GetSolutionRequest) returns (GetSolutionResponse) {};
+}
+
+service SolverService {
+    rpc Solve(SolveRequest) returns (SolveResponse) {};
+}
