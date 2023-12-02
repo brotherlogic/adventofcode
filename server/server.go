@@ -121,7 +121,7 @@ func (s *Server) Upload(ctx context.Context, req *pb.UploadRequest) (*pb.UploadR
 }
 
 func (s *Server) Solve(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResponse, error) {
-	puzzle := fmt.Sprintf("%v-%v-1", req.GetYear(), req.GetDay())
+	puzzle := fmt.Sprintf("%v-%v-%v", req.GetYear(), req.GetDay(), req.GetPart())
 	conn, err := grpc.Dial("rstore.rstore:8080", grpc.WithInsecure())
 	if err != nil {
 		solveRequest.With(prometheus.Labels{"puzzle": puzzle, "result": fmt.Sprintf("Dial %v", status.Code(err))}).Inc()
@@ -130,7 +130,7 @@ func (s *Server) Solve(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResp
 
 	client := rspb.NewRStoreServiceClient(conn)
 	resp, err := client.Read(ctx, &rspb.ReadRequest{
-		Key: fmt.Sprintf("adventofcode/data/%v-%v-%v", req.GetYear(), req.GetDay(), req.GetPart()),
+		Key: fmt.Sprintf("adventofcode/data/%v-%v-1", req.GetYear(), req.GetDay()),
 	})
 	if err != nil {
 		solveRequest.With(prometheus.Labels{"puzzle": puzzle, "result": fmt.Sprintf("Read: %v", status.Code(err))}).Inc()
