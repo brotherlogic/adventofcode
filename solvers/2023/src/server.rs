@@ -4,7 +4,9 @@ use solver::advent_of_code_internal_service_client::AdventOfCodeInternalServiceC
 use solver::RegisterRequest;
 pub mod solver {
     tonic::include_proto!("adventofcode");
-} 
+}
+
+mod day1;
 
 // defining a struct for our service
 #[derive(Default)]
@@ -13,7 +15,16 @@ pub struct RServer {}
 // implementing rpc for service defined in .proto
 #[tonic::async_trait]
 impl SolverService for RServer {
-    async fn solve(&self,_request:Request<SolveRequest>)->Result<Response<SolveResponse>,Status>{
+    async fn solve(&self,request:Request<SolveRequest>)->Result<Response<SolveResponse>,Status>{
+        let rq = request.into_inner();
+        if rq.year == 2023 && rq.day == 1 && rq.part == 1 {
+            let tanswer = day1::solve_day1_part1(rq.data);
+            return Ok(Response::new(SolveResponse{
+                string_answer:"".to_string(),
+                big_answer:0,
+                answer:tanswer,
+         }));
+        }
         Ok(Response::new(SolveResponse{
                 string_answer:"hello".to_string(),
                 big_answer:0,
@@ -45,7 +56,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let solver = RServer::default();
     println!("Server listening on {}", addr);
 
-    //register().await?;
+    register().await?;
 
     Server::builder()
         .add_service(SolverServiceServer::new(solver))
