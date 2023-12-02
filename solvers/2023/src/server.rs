@@ -7,6 +7,7 @@ pub mod solver {
 }
 
 mod day1;
+mod day2;
 
 // defining a struct for our service
 #[derive(Default)]
@@ -31,6 +32,14 @@ impl SolverService for RServer {
                 string_answer:"".to_string(),
                 big_answer:0,
                 answer:tanswer,
+         }));
+        }
+        if rq.year == 2023 && rq.day == 2 && rq.part == 1 {
+            let tanswer = day2::solve_day2_part1(rq.data);
+            return Ok(Response::new(SolveResponse{
+                string_answer:"".to_string(),
+                big_answer:0,
+                answer:tanswer as i32,
          }));
         }
         Ok(Response::new(SolveResponse{
