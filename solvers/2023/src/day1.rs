@@ -4,6 +4,7 @@ pub fn solve_day1_part1(data: String) -> i32 {
     let parts = data.split("\n");
     let mut value: i32 = 0;
     for part in parts {
+        if part.len() > 0 {
     let mut left: i32 = -1;
     let mut right: i32 = -1;
     for c in part.chars() {
@@ -21,6 +22,7 @@ pub fn solve_day1_part1(data: String) -> i32 {
     value += (left*10 + right) as i32;
     println!("VALUE {} from {}", value, part);
     }
+}
     return value
 }
 
