@@ -1,5 +1,23 @@
 use std::collections::HashMap;
 
+pub fn solve_day1_part2(data: String) -> i32 {
+    let mut translate = HashMap::new();
+    let mut ndata = data;
+    translate.insert("one", "1");
+    translate.insert("two", "2");
+    translate.insert("three", "3");
+    translate.insert("four", "4");
+    translate.insert("five", "5");
+    translate.insert("six", "6");
+    translate.insert("seven", "7");
+    translate.insert("eight", "8");
+    translate.insert("nine", "9");
+    for (key, val) in &translate {
+        ndata = ndata.replace(key,&(key.to_string()+val+key));
+    }
+    return solve_day1_part1(ndata);
+}
+
 pub fn solve_day1_part1(data: String) -> i32 {
     let parts = data.split("\n");
     let mut value: i32 = 0;
@@ -42,7 +60,23 @@ mod testsca {
         for (case, answer) in &test_cases {
             assert_eq!(&solve_day1_part1(case.to_string()),answer);
         } 
-       
-      
+    }
+
+    #[test]
+    fn part2_tests() {
+        let mut test_cases: HashMap<String, i32> = HashMap::new();
+        test_cases.insert("two1nine".to_string(), 29);
+        test_cases.insert("eightwothree".to_string(), 83);
+        test_cases.insert("abcone2threexyz".to_string(), 13);
+        test_cases.insert("xtwone3four".to_string(), 24);
+        test_cases.insert("4nineeightseven2".to_string(), 42);
+        test_cases.insert("zoneight234".to_string(),14);
+        test_cases.insert("7pqrstsixteen".to_string(),76);
+        test_cases.insert("two1nine\neightwothree\nabcone2threexyz\nxtwone3four\n4nineeightseven2\noneight234\n7pqrstsixteen".to_string(), 281);
+
+        for (case, answer) in &test_cases {
+            assert_eq!(&solve_day1_part2(case.to_string()),answer);
+        } 
+
     }
 }
