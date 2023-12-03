@@ -83,7 +83,7 @@ fn fits(num: &Number, board: &Board) -> bool {
         }
 
         //is it to the right?
-        if symbol.y == num.y && symbol.x == num.x+num.xe+1 {
+        if symbol.y == num.y && symbol.x == num.xe+1 {
             return true
         }
 
@@ -168,7 +168,10 @@ mod testsca {
        let answer = solve_day3_part1(board);
        assert_eq!(answer, 467);
     }
-
-
-
+    #[test]
+    fn part1_tests_edge7() {
+       let board = "797/.388*".to_string();
+       let answer = solve_day3_part1(board);
+       assert_eq!(answer, 797+388);
+    }
 }
