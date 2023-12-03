@@ -155,6 +155,24 @@ func (f *finder) runYear(ctx context.Context, ghclient ghb_client.GithubridgeCli
 	return nil
 }
 
+func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
+	rissue, err := f.ghclient.GetIssue(ctx, &ghbpb.GetIssueRequest{
+		User: "brotherlogic",
+		Repo: "adventofcode",
+		Id:   int32(issue.GetId()),
+	})
+	if err != nil {
+		return err
+	}
+
+	if rissue.GetState() == "closed" {
+		f.rsclient.Delete(ctx, &rspb.DeleteRequest{Key: "brotherlogic/adventofcode/finder/cissue"})
+		return nil
+	}
+
+	return nil
+}
+
 func main() {
 	log.Print("Running")
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
@@ -183,7 +201,9 @@ func main() {
 
 	// We have no solved the current issue
 	if issue != nil && issue.GetOpen() {
-		log.Printf("Issue is still open: %v", issue)
+		log.Printf("Issue exists: %v", issue)
+		f.processNewIssue(ctx, issue)
+
 		return
 	}
 
