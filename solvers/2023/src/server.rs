@@ -53,6 +53,7 @@ impl SolverService for RServer {
         }
         if rq.year == 2023 && rq.day == 3 && rq.part == 1 {
             let tanswer = day3::solve_day3_part1(rq.data);
+            println!("Returning {}", tanswer)
             return Ok(Response::new(SolveResponse{
                 string_answer:"".to_string(),
                 big_answer:0,
