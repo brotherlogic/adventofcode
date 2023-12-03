@@ -108,6 +108,7 @@ pub fn solve_day3_part1(board: String) -> u32 {
     println!("BOARD {:?}", board);
     for num in &board.nums {
         if fits(&num, &board) {
+            println!("Adding {}", num.value);
         snum += num.value;
         }
     }
@@ -127,14 +128,43 @@ mod testsca {
 
     #[test]
     fn part1_tests_edge() {
-       let board = "467*\n".to_string();
+       let board = "467*.\n".to_string();
        let answer = solve_day3_part1(board);
        assert_eq!(answer, 467);
     }
-
     #[test]
     fn part1_tests_edge2() {
        let board = ".*467\n".to_string();
+       let answer = solve_day3_part1(board);
+       assert_eq!(answer, 467);
+    }
+    #[test]
+    fn part1_tests_edge3() {
+       let board = "*...\n.467\n".to_string();
+       let answer = solve_day3_part1(board);
+       assert_eq!(answer, 467);
+    }
+    #[test]
+    fn part1_tests_edge4() {
+       let board = "....*\n.467\n".to_string();
+       let answer = solve_day3_part1(board);
+       assert_eq!(answer, 467);
+    }
+    #[test]
+    fn part1_tests_edge5() {
+       let board = ".467\n*....\n".to_string();
+       let answer = solve_day3_part1(board);
+       assert_eq!(answer, 467);
+    }
+    #[test]
+    fn part1_tests_edge5a() {
+       let board = "467\n...*\n".to_string();
+       let answer = solve_day3_part1(board);
+       assert_eq!(answer, 467);
+    }
+    #[test]
+    fn part1_tests_edge6() {
+       let board = ".467\n....*\n".to_string();
        let answer = solve_day3_part1(board);
        assert_eq!(answer, 467);
     }
