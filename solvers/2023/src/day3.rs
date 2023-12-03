@@ -1,4 +1,4 @@
-
+#[derive(Debug)]
 struct Board {
     nums: Vec<Number>,
     symbols: Vec<Symbol>,
@@ -12,6 +12,7 @@ struct Number {
     y: u32,
 }
 
+#[derive(Debug)]
 struct Symbol {
     symbol: String,
     x: u32,
@@ -53,6 +54,14 @@ fn build_board(board: String) -> Board {
 
             x+=1
         }
+
+        if curr_num.len() > 0 {
+            let xval = u32::try_from(curr_num.len()).ok().unwrap();
+            let gnum = curr_num.parse::<u32>().unwrap();
+            b.nums.push(Number{value: gnum, x: x-xval, xe: x-1,y: y});
+            curr_num = "".to_string();
+        }
+
         y+=1
     }
 
@@ -69,6 +78,7 @@ fn safe_sub(val: u32) -> u32 {
 fn fits(num: &Number, board: &Board) -> bool {
     for symbol in &board.symbols {
         //is it to the left?
+        println!("HERE {:?} {:?}", symbol, num);
         if symbol.y == num.y && num.x != 0 && symbol.x == num.x-1 {
             return true
         }
@@ -95,6 +105,7 @@ fn fits(num: &Number, board: &Board) -> bool {
 pub fn solve_day3_part1(board: String) -> u32 {
     let mut snum = 0;
     let  board = build_board(board);
+    println!("BOARD {:?}", board);
     for num in &board.nums {
         if fits(&num, &board) {
         snum += num.value;
@@ -112,6 +123,20 @@ mod testsca {
        let board = "467..114..\n...*......\n..35..633.\n......#...\n617*......\n.....+.58.\n..592.....\n......755.\n...$.*....\n.664.598..".to_string();
        let answer = solve_day3_part1(board);
        assert_eq!(answer, 4361);
+    }
+
+    #[test]
+    fn part1_tests_edge() {
+       let board = "467*\n".to_string();
+       let answer = solve_day3_part1(board);
+       assert_eq!(answer, 467);
+    }
+
+    #[test]
+    fn part1_tests_edge2() {
+       let board = ".*467\n".to_string();
+       let answer = solve_day3_part1(board);
+       assert_eq!(answer, 467);
     }
 
 
