@@ -1,3 +1,21 @@
+
+struct Board {
+    num: Vec<Number>,
+    symbols: Vec<Symbol>,
+}
+
+struct Number {
+    value: u32,
+    x: u32,
+    y: u32,
+}
+
+struct Symbol {
+    symbol: &str,
+    x: u32,
+    y: u32,
+}
+
 pub fn solve_day3_part1(board: String) -> u32 {
     return 0
 }
