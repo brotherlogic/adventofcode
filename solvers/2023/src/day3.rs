@@ -78,13 +78,12 @@ fn safe_sub(val: u32) -> u32 {
 fn fits(num: &Number, board: &Board) -> bool {
     for symbol in &board.symbols {
         //is it to the left?
-        println!("HERE {:?} {:?}", symbol, num);
         if symbol.y == num.y && num.x != 0 && symbol.x == num.x-1 {
             return true
         }
 
         //is it to the right?
-        if symbol.y == num.y && symbol.x == num.x+num.xe+1 {
+        if symbol.y == num.y && symbol.x == num.xe+1 {
             return true
         }
 
@@ -107,6 +106,7 @@ pub fn solve_day3_part1(board: String) -> u32 {
     let  board = build_board(board);
     println!("BOARD {:?}", board);
     for num in &board.nums {
+        println!("HERE {:?} {:?}", num, fits(&num, &board));
         if fits(&num, &board) {
             println!("Adding {}", num.value);
         snum += num.value;
@@ -168,7 +168,10 @@ mod testsca {
        let answer = solve_day3_part1(board);
        assert_eq!(answer, 467);
     }
-
-
-
+    #[test]
+    fn part1_tests_edge7() {
+       let board = "797/.388*".to_string();
+       let answer = solve_day3_part1(board);
+       assert_eq!(answer, 797+388);
+    }
 }
