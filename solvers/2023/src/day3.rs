@@ -74,7 +74,7 @@ fn fits(num: &Number, board: &Board) -> bool {
         }
 
         //is it to the right?
-        if symbol.y == num.y && symbol.x == num.x+num.xe+1 {
+        if symbol.y == num.y && symbol.x == num.x+num.xe {
             return true
         }
 

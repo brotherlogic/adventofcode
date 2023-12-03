@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -27,8 +28,16 @@ func main() {
 
 	switch os.Args[2] {
 	case "solve":
-		res, err := client.Solve(ctx, &pb.SolveRequest{Year: 2023, Day: 2, Part: 2})
-		fmt.Printf("%v -> %v\n", res, err)
+		sflags := flag.NewFlagSet("solve", flag.ExitOnError)
+		year := sflags.Int("year", -1, "year")
+		day := sflags.Int("day", -1, "day")
+		part := sflags.Int("part", -1, "part")
+		if err := sflags.Parse(os.Args[3:]); err == nil {
+			res, err := client.Solve(ctx, &pb.SolveRequest{Year: int32(*year), Day: int32(*day), Part: int32(*part)})
+			fmt.Printf("%v -> %v\n", res, err)
+		} else {
+			fmt.Printf("Parse error: %v", err)
+		}
 	case "upload":
 		data, err := ioutil.ReadFile(os.Args[3])
 		if err != nil {
