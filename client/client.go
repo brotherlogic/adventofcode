@@ -34,7 +34,7 @@ func main() {
 		if err != nil {
 			log.Fatalf("Unable to run upload: %v", err)
 		}
-		res, err := iclient.Upload(ctx, &pb.UploadRequest{Year: 2023, Day: 2, Part: 1, Data: string(data)})
+		res, err := iclient.Upload(ctx, &pb.UploadRequest{Year: 2023, Day: 3, Part: 1, Data: string(data)})
 		fmt.Printf("%v -> %v\n", res, err)
 	case "solution":
 		res, err := iclient.AddSolution(ctx, &pb.AddSolutionRequest{Solution: &pb.Solution{Year: 2015, Day: 2, Part: 1, Answer: 1797}})
