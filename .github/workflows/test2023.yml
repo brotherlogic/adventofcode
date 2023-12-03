@@ -19,6 +19,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Prep
+      run:  apt-get update && apt-get install -y protobuf-compiler libprotobuf-dev
     - name: Build
       run: cargo build --verbose
     - name: Run tests
