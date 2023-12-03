@@ -1,6 +1,6 @@
 
 struct Board {
-    num: Vec<Number>,
+    nums: Vec<Number>,
     symbols: Vec<Symbol>,
 }
 
@@ -11,13 +11,52 @@ struct Number {
 }
 
 struct Symbol {
-    symbol: &str,
+    symbol: String,
     x: u32,
     y: u32,
 }
 
+fn build_board(board: String) -> Board {
+    let mut b = Board{
+        nums:  Vec::new(),
+        symbols:  Vec::new(),
+    };
+
+    let mut elems = board.split("\n");
+    let mut y: u32 = 0;
+    for elem in elems {
+        let mut x: u32 = 0;
+        let mut curr_num :String = "".to_string();
+        for c in elem.chars() {
+            if c.is_digit(10) {
+                curr_num += &c.to_string()
+            } else if c == '.' {
+                if curr_num.len() > 0 {
+                    let xval = u32::try_from(curr_num.len()).ok().unwrap();
+                    let gnum = curr_num.parse::<u32>().unwrap();
+                    b.nums.push(Number{value: gnum, x: x-xval, y: y});
+                    curr_num = "".to_string();
+                }
+                // pass
+            } else {
+                b.symbols.push(Symbol{symbol: c.to_string(), x: x, y: y});
+            }
+
+            x+=1
+        }
+        y+=1
+    }
+
+    return b;
+}
+
 pub fn solve_day3_part1(board: String) -> u32 {
-    return 0
+    let mut snum = 0;
+    let mut board = build_board(board);
+    for num in board.nums {
+        snum += num.value;
+    }
+    return snum;
 }
 
 #[cfg(test)]
