@@ -8,6 +8,10 @@ message Issue {
     int64 id = 1;
     repeated Solution solution_attempts = 2;
     bool open = 3;
+
+    int32 year = 4;
+    int32 day = 5;
+    int32 part = 6;
 }
 
 message Solutions {
