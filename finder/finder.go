@@ -73,7 +73,7 @@ func (f *finder) solveInternal(sctx context.Context, year, day, part int32, issu
 		Day:  day,
 		Part: part,
 	})
-	if status.Code(err) == codes.OK {
+	if err == nil {
 		if sol.GetSolution().GetBigAnswer() == res.GetBigAnswer() || sol.GetSolution().GetAnswer() == res.GetAnswer() {
 			// We solved it
 			return nil
@@ -98,10 +98,6 @@ func (f *finder) loadExistingIssue(ctx context.Context) (*pb.Issue, error) {
 	}
 
 	return issue, nil
-}
-
-func addSolutionToIssue(ctx context.Context, solution *pb.Solution, issue *pb.Issue) error {
-	return nil
 }
 
 func (f *finder) raiseIssue(ctx context.Context, year, day, part int32, err error) error {
