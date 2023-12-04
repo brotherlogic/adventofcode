@@ -115,9 +115,65 @@ pub fn solve_day3_part1(board: String) -> u32 {
     return snum;
 }
 
+fn adjacent(symbol: &Symbol, num: &Number) -> bool {
+
+    if symbol.y == num.y && num.x != 0 && symbol.x == num.x-1 {
+        return true
+    }
+
+    //is it to the right?
+    if symbol.y == num.y && symbol.x == num.xe+1 {
+        return true
+    }
+
+    // is it on the top part
+    if num.y != 0 && symbol.y == num.y-1 && symbol.x >= safe_sub(num.x)  && symbol.x <= num.xe+1 {
+        return true
+    }
+
+    // is it on the bottom part
+    if symbol.y == num.y+1 && symbol.x >= safe_sub(num.x)  && symbol.x <= num.xe+1 {
+        return true
+    }
+
+    return false
+}
+
+pub fn solve_day3_part2(board: String) -> u32 {
+    let mut snum = 0;
+    let  board = build_board(board);
+    for symbol in &board.symbols {
+        if symbol.symbol == "*" {
+            let mut num1: u32 = 0;
+            let mut num2: u32 = 0;
+            for number in &board.nums {
+                if adjacent(symbol, number) {
+                    if num1 == 0 {
+                        num1 = number.value;
+                    } else {
+                        num2 = number.value;
+                    }
+                }
+            }
+
+            if num1 > 0 && num2 > 0 {
+                snum += num1*num2;
+            }
+        }
+    }
+    return snum;
+}
+
 #[cfg(test)]
 mod testsca {
     use super::*;
+
+    #[test]
+    fn part2_tests() {
+       let board = "467..114..\n...*......\n..35..633.\n......#...\n617*......\n.....+.58.\n..592.....\n......755.\n...$.*....\n.664.598..".to_string();
+       let answer = solve_day3_part2(board);
+       assert_eq!(answer, 467835);
+    }
 
     #[test]
     fn part1_tests() {
