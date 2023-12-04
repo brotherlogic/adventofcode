@@ -174,17 +174,17 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 	}
 
 	if rissue.GetState() == "closed" {
-		f.rsclient.Delete(ctx, &rspb.DeleteRequest{Key: "brotherlogic/adventofcode/finder/cissue"})
-		return nil
+		log.Printf("Deleting issue - marked as clsoed")
+		_, err := f.rsclient.Delete(ctx, &rspb.DeleteRequest{Key: "brotherlogic/adventofcode/finder/cissue"})
+		return err
 	}
 
 	// See if we have the right solution for this one
 	conn, err := grpc.Dial("adventofcode.adventofcode:8082", grpc.WithInsecure())
-	connm, err := grpc.Dial("adventofcode.adventofcode:8080", grpc.WithInsecure())
 	if err != nil {
 		return fmt.Errorf("unable to dial aoc: %w", err)
 	}
-
+	connm, err := grpc.Dial("adventofcode.adventofcode:8080", grpc.WithInsecure())
 	if err != nil {
 		return fmt.Errorf("unable to dial aoc: %w", err)
 	}
@@ -198,6 +198,7 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 
 	// If we haven't got a solution yet, we need to keep working
 	if err != nil {
+		log.Printf("Returning as we have no solution: %v", err)
 		return nil
 	}
 
