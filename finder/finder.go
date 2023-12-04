@@ -35,10 +35,9 @@ func (f *finder) solve(ctx context.Context, year, day, part int32, issue *pb.Iss
 	log.Printf("Solving %v %v %v", year, day, part)
 	for i := 0; i < retries; i++ {
 		err := f.solveInternal(ctx, year, day, part, issue)
-		if status.Code(err) != codes.NotFound {
+		if err == nil {
 			return err
 		}
-		log.Printf("Solve fail: %v", err)
 	}
 
 	return status.Errorf(codes.ResourceExhausted, "Unable to solve with retries")
@@ -80,14 +79,6 @@ func (f *finder) solveInternal(sctx context.Context, year, day, part int32, issu
 		}
 
 		return status.Errorf(codes.FailedPrecondition, "Solution is not present or incorrect %v vs %v", sol.GetSolution(), res)
-	}
-
-	if issue == nil {
-		return f.raiseIssue(sctx, year, day, part, fmt.Errorf("Starting issue"))
-	}
-
-	if status.Code(err) == codes.NotFound {
-		return addSolutionToIssue(ctx, sol.GetSolution(), issue)
 	}
 
 	return err
