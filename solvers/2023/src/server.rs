@@ -114,6 +114,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     }).unwrap());
     sched.start().await.unwrap();
 
+    println!("Running server")
     Server::builder()
         .add_service(SolverServiceServer::new(solver))
         .serve(addr)
