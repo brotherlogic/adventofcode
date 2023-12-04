@@ -164,7 +164,11 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 		Repo: "adventofcode",
 		Id:   int32(issue.GetId()),
 	})
-	if err != nil {
+
+	if status.Code(err) == codes.NotFound {
+		// Effective issue close
+		rissue = &ghbpb.GetIssueResponse{State: "closed"}
+	} else if err != nil {
 		return err
 	}
 
