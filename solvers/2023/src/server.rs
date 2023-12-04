@@ -119,6 +119,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     thread::spawn(||async {
         loop {
+            println!("Registering");
             register().await;
             thread::sleep(Duration::from_millis(60000));
         }
