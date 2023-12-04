@@ -266,7 +266,7 @@ func main() {
 	// We have no solved the current issue
 	if issue != nil && issue.GetOpen() {
 		log.Printf("Issue exists: %v", issue)
-		f.processNewIssue(ctx, issue)
+		log.Printf("Processed: %v", f.processNewIssue(ctx, issue))
 
 		return
 	}
