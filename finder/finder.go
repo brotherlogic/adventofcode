@@ -135,10 +135,6 @@ func (f *finder) raiseIssue(ctx context.Context, year, day, part int32, err erro
 	return err
 }
 
-func findIssue(iid int32) error {
-	return nil
-}
-
 func (f *finder) runYear(ctx context.Context, ghclient ghb_client.GithubridgeClient, rsclient rstore_client.RStoreClient, year, db int32, issue *pb.Issue) error {
 	for day := int32(1); day <= db; day++ {
 		for part := int32(1); part <= 2; part++ {
@@ -150,6 +146,7 @@ func (f *finder) runYear(ctx context.Context, ghclient ghb_client.GithubridgeCli
 					log.Printf("Processing error: %v", err)
 					return nil
 				}
+				log.Printf("Raising issue for error: %v", err)
 				//Raise the issue to solve this problem
 				err2 := f.raiseIssue(ctx, year, day, part, err)
 				if err2 != nil {
@@ -259,7 +256,7 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 }
 
 func main() {
-	log.Print("Running")
+	log.Print("Running finder script")
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
 
@@ -292,8 +289,11 @@ func main() {
 		return
 	}
 
+	log.Printf("Running for the current year")
+
 	// If we're in a set, run this
 	if time.Now().Month() == time.December && time.Now().Day() <= 25 {
+		log.Printf("In a set")
 		for day := int32(1); day <= int32(25); day++ {
 			err = f.runYear(ctx, ghclient, rstore, int32(time.Now().Year()), day, issue)
 			if err != nil {
