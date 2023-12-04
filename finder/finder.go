@@ -301,6 +301,8 @@ func main() {
 				return
 			}
 		}
+
+		return
 	}
 
 	log.Println("Not running for the current year - trying other years")
