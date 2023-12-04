@@ -74,7 +74,8 @@ func (f *finder) solveInternal(sctx context.Context, year, day, part int32, issu
 		Part: part,
 	})
 	if status.Code(err) == codes.OK {
-		if sol.GetSolution().GetBigAnswer() == res.GetBigAnswer() {
+		if sol.GetSolution().GetBigAnswer() == res.GetBigAnswer() || sol.GetSolution().GetAnswer() == res.GetAnswer() {
+			// We solved it
 			return nil
 		}
 
