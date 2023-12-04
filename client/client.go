@@ -52,8 +52,15 @@ func main() {
 			fmt.Printf("%v -> %v\n", res, err)
 		}
 	case "solution":
-		res, err := iclient.AddSolution(ctx, &pb.AddSolutionRequest{Solution: &pb.Solution{Year: 2015, Day: 2, Part: 1, Answer: 1797}})
-		fmt.Printf("%v -> %v\n", res, err)
+		sflags := flag.NewFlagSet("solve", flag.ExitOnError)
+		year := sflags.Int("year", -1, "year")
+		day := sflags.Int("day", -1, "day")
+		part := sflags.Int("part", -1, "part")
+		solution := sflags.Int("solution", -1, "solution")
+		if err := sflags.Parse(os.Args[3:]); err == nil {
+			res, err := iclient.AddSolution(ctx, &pb.AddSolutionRequest{Solution: &pb.Solution{Year: int32(*year), Day: int32(*day), Part: int32(*part), Answer: int32(*solution)}})
+			fmt.Printf("%v -> %v\n", res, err)
+		}
 	case "tight":
 		cclient := pb.NewSolverServiceClient(conn)
 		solution, err := cclient.Solve(ctx, &pb.SolveRequest{Year: 2023, Day: 1, Part: 1})
