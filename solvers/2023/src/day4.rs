@@ -19,7 +19,7 @@ fn build_scratch(data: String) -> Vec<Scratch> {
 
         let mut bits = line.split(":");
         let fb = bits.next().unwrap();
-        let mut first_bits = fb.split(" ");
+        let mut first_bits = fb.split_whitespace();
         first_bits.next();
         let gn = first_bits.next().unwrap();
         s.card_number = gn.parse::<u32>().unwrap();
@@ -27,7 +27,7 @@ fn build_scratch(data: String) -> Vec<Scratch> {
         let mut other = bits.next().unwrap().trim();
         let mut halves = other.split("|");
         let mut wins = halves.next().unwrap().trim();
-        for w in wins.split(" ") {
+        for w in wins.split_whitespace() {
             s.winners.push(w.parse::<u32>().unwrap());
         }
         let mut haves = halves.next().unwrap().trim();
