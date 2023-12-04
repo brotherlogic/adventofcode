@@ -94,6 +94,7 @@ impl SolverService for RServer {
     }
 }
 
+#[tokio::main]
 async fn register() -> Result<(), Box<dyn std::error::Error>> {
     println!("Registering 2023 Solver");
 
