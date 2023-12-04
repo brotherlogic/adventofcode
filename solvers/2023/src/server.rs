@@ -2,7 +2,7 @@ use tonic::{transport::Server, Request, Response, Status};
 use solver::{SolveResponse, SolveRequest, solver_service_server::{SolverService, SolverServiceServer}};
 use solver::advent_of_code_internal_service_client::AdventOfCodeInternalServiceClient;
 use solver::RegisterRequest;
-use tokio_cron_scheduler::{JobScheduler, Job};
+use std::thread;
 use tokio::time::{ Duration};
 pub mod solver {
     tonic::include_proto!("adventofcode");
@@ -117,11 +117,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let solver = RServer::default();
     println!("Server listening on {}", addr);
 
-    let mut sched = JobScheduler::new().await.unwrap();
-    sched.add(Job::new_repeated(Duration::from_secs(60), |_uuid,_l| {
-        register();
-    }).unwrap());
-    sched.start().await.unwrap();
+    thread::spawn(||async {
+        loop {
+            register().await;
+            thread::sleep(Duration::from_millis(60000));
+        }
+    });
 
     println!("Running server");
     Server::builder()
