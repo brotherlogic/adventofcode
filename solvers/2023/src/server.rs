@@ -117,6 +117,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let solver = RServer::default();
     println!("Server listening on {}", addr);
 
+    println!("Spawning the registration thread");
     thread::spawn(||async {
         loop {
             println!("Registering");
