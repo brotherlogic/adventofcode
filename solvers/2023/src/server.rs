@@ -118,10 +118,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("Server listening on {}", addr);
 
     println!("Spawning the registration thread");
-    thread::spawn(||async {
+    thread::spawn(|| {
+        println!("Starting");
         loop {
             println!("Registering");
-            register().await;
+            register();
             thread::sleep(Duration::from_millis(60000));
         }
     });
