@@ -186,9 +186,9 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 	client := pb.NewAdventOfCodeInternalServiceClient(conn)
 	mclient := pb.NewAdventOfCodeServiceClient(connm)
 	msol, err := mclient.Solve(ctx, &pb.SolveRequest{
-		Year: rissue.GetYear(),
-		Day:  rissue.GetDay(),
-		Part: rissue.GetPart(),
+		Year: issue.GetYear(),
+		Day:  issue.GetDay(),
+		Part: issue.GetPart(),
 	})
 
 	// If we haven't got a solution yet, we need to keep working
@@ -197,9 +197,9 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 	}
 
 	solution, err := client.GetSolution(ctx, &pb.GetSolutionRequest{
-		Year: rissue.GetYear(),
-		Day:  rissue.GetDay(),
-		Part: rissue.GetPart(),
+		Year: issue.GetYear(),
+		Day:  issue.GetDay(),
+		Part: issue.GetPart(),
 	})
 	if status.Code(err) == codes.NotFound {
 		// We have a potential solution, but no confirmation - if this is new, post
@@ -225,11 +225,11 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 				return err
 			}
 
-			_, err = f.ghclient.AddCommentToIssue(ctx, &ghbpb.AddCommentToIssue{
-				User:   "brotherlogic",
-				Repo:   "adventofcode",
-				Number: rissue.GetId(),
-				Body:   fmt.Sprintf("%v", msol),
+			_, err = f.ghclient.CommentOnIssue(ctx, &ghbpb.CommentOnIssueRequest{
+				User:    "brotherlogic",
+				Repo:    "adventofcode",
+				Id:      int32(issue.GetId()),
+				Comment: fmt.Sprintf("%v", msol),
 			})
 		}
 	}
