@@ -210,6 +210,10 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 			}
 		}
 
+		if found {
+			return status.Errorf(codes.DataLoss, "Already seen this solution, no support for it or incorrect")
+		}
+
 		if !found {
 			log.Printf("Found new solution: %v", solution)
 			issue.SolutionAttempts = append(issue.SolutionAttempts, solution.GetSolution())
