@@ -85,6 +85,16 @@ class AdventOfCodeInternalServiceStub(object):
                 request_serializer=advent__pb2.RegisterRequest.SerializeToString,
                 response_deserializer=advent__pb2.RegisterResponse.FromString,
                 )
+        self.AddSolution = channel.unary_unary(
+                '/adventofcode.AdventOfCodeInternalService/AddSolution',
+                request_serializer=advent__pb2.AddSolutionRequest.SerializeToString,
+                response_deserializer=advent__pb2.AddSolutionResponse.FromString,
+                )
+        self.GetSolution = channel.unary_unary(
+                '/adventofcode.AdventOfCodeInternalService/GetSolution',
+                request_serializer=advent__pb2.GetSolutionRequest.SerializeToString,
+                response_deserializer=advent__pb2.GetSolutionResponse.FromString,
+                )
 
 
 class AdventOfCodeInternalServiceServicer(object):
@@ -102,6 +112,18 @@ class AdventOfCodeInternalServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def AddSolution(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetSolution(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_AdventOfCodeInternalServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -114,6 +136,16 @@ def add_AdventOfCodeInternalServiceServicer_to_server(servicer, server):
                     servicer.Register,
                     request_deserializer=advent__pb2.RegisterRequest.FromString,
                     response_serializer=advent__pb2.RegisterResponse.SerializeToString,
+            ),
+            'AddSolution': grpc.unary_unary_rpc_method_handler(
+                    servicer.AddSolution,
+                    request_deserializer=advent__pb2.AddSolutionRequest.FromString,
+                    response_serializer=advent__pb2.AddSolutionResponse.SerializeToString,
+            ),
+            'GetSolution': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetSolution,
+                    request_deserializer=advent__pb2.GetSolutionRequest.FromString,
+                    response_serializer=advent__pb2.GetSolutionResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -156,6 +188,40 @@ class AdventOfCodeInternalService(object):
         return grpc.experimental.unary_unary(request, target, '/adventofcode.AdventOfCodeInternalService/Register',
             advent__pb2.RegisterRequest.SerializeToString,
             advent__pb2.RegisterResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def AddSolution(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/adventofcode.AdventOfCodeInternalService/AddSolution',
+            advent__pb2.AddSolutionRequest.SerializeToString,
+            advent__pb2.AddSolutionResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetSolution(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/adventofcode.AdventOfCodeInternalService/GetSolution',
+            advent__pb2.GetSolutionRequest.SerializeToString,
+            advent__pb2.GetSolutionResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 

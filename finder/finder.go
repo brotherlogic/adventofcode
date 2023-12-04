@@ -121,6 +121,9 @@ func (f *finder) raiseIssue(ctx context.Context, year, day, part int32, err erro
 	iss := &pb.Issue{
 		Id:   issue.GetIssueId(),
 		Open: true,
+		Year: year,
+		Day:  day,
+		Part: part,
 	}
 	bytes, err := proto.Marshal(iss)
 	if err != nil {
@@ -168,6 +171,67 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 	if rissue.GetState() == "closed" {
 		f.rsclient.Delete(ctx, &rspb.DeleteRequest{Key: "brotherlogic/adventofcode/finder/cissue"})
 		return nil
+	}
+
+	// See if we have the right solution for this one
+	conn, err := grpc.Dial("adventofcode.adventofcode:8082", grpc.WithInsecure())
+	connm, err := grpc.Dial("adventofcode.adventofcode:8080", grpc.WithInsecure())
+	if err != nil {
+		return fmt.Errorf("unable to dial aoc: %w", err)
+	}
+
+	if err != nil {
+		return fmt.Errorf("unable to dial aoc: %w", err)
+	}
+	client := pb.NewAdventOfCodeInternalServiceClient(conn)
+	mclient := pb.NewAdventOfCodeServiceClient(connm)
+	msol, err := mclient.Solve(ctx, &pb.SolveRequest{
+		Year: rissue.GetYear(),
+		Day:  rissue.GetDay(),
+		Part: rissue.GetPart(),
+	})
+
+	// If we haven't got a solution yet, we need to keep working
+	if err != nil {
+		return nil
+	}
+
+	solution, err := client.GetSolution(ctx, &pb.GetSolutionRequest{
+		Year: rissue.GetYear(),
+		Day:  rissue.GetDay(),
+		Part: rissue.GetPart(),
+	})
+	if status.Code(err) == codes.NotFound {
+		// We have a potential solution, but no confirmation - if this is new, post
+		found := false
+		for _, sol := range issue.GetSolutionAttempts() {
+			if sol.GetYear() == issue.GetYear() && sol.GetDay() == issue.GetDay() && sol.GetPart() == issue.GetPart() {
+				if sol.GetAnswer() == solution.GetSolution().GetAnswer() &&
+					sol.GetBigAnswer() == solution.GetSolution().GetBigAnswer() &&
+					sol.GetStringAnswer() == solution.GetSolution().GetStringAnswer() {
+					found = true
+				}
+			}
+		}
+
+		if !found {
+			issue.SolutionAttempts = append(issue.SolutionAttempts, solution.GetSolution())
+			data, err := proto.Marshal(rissue)
+			if err != nil {
+				return err
+			}
+			_, err = f.rsclient.Write(ctx, &rspb.WriteRequest{Key: "brotherlogic/adventofcode/finder/cissue", Value: &anypb.Any{Value: data}})
+			if err != nil {
+				return err
+			}
+
+			_, err = f.ghclient.AddCommentToIssue(ctx, &ghbpb.AddCommentToIssue{
+				User:   "brotherlogic",
+				Repo:   "adventofcode",
+				Number: rissue.GetId(),
+				Body:   fmt.Sprintf("%v", msol),
+			})
+		}
 	}
 
 	return nil
