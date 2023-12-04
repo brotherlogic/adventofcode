@@ -167,6 +167,7 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 
 	if status.Code(err) == codes.NotFound {
 		// Effective issue close
+		log.Printf("Closing issue, as gh reported not found: %v", err)
 		rissue = &ghbpb.GetIssueResponse{State: "closed"}
 	} else if err != nil {
 		return err
@@ -219,6 +220,7 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 		}
 
 		if !found {
+			log.Printf("Found new solution: %v", solution)
 			issue.SolutionAttempts = append(issue.SolutionAttempts, solution.GetSolution())
 			data, err := proto.Marshal(rissue)
 			if err != nil {
@@ -235,6 +237,7 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 				Id:      int32(issue.GetId()),
 				Comment: fmt.Sprintf("%v", msol),
 			})
+			return err
 		}
 	}
 
