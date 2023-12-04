@@ -204,8 +204,8 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 	if status.Code(err) == codes.NotFound {
 		// We have a potential solution, but no confirmation - if this is new, post
 		found := false
-		for _, sol := range rissue.GetSolutions() {
-			if sol.GetYear() == rissue.GetYear() && sol.GetDay() == rissue.GetDay() && sol.GetPart() == rissue.GetPart() {
+		for _, sol := range issue.GetSolutionAttempts() {
+			if sol.GetYear() == issue.GetYear() && sol.GetDay() == issue.GetDay() && sol.GetPart() == issue.GetPart() {
 				if sol.GetAnswer() == solution.GetSolution().GetAnswer() &&
 					sol.GetBigAnswer() == solution.GetSolution().GetBigAnswer() &&
 					sol.GetStringAnswer() == solution.GetSolution().GetStringAnswer() {
@@ -215,7 +215,7 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 		}
 
 		if !found {
-			rissue.Solutions = append(rissue.Solutions, solution.GetSolution)
+			issue.SolutionAttempts = append(issue.SolutionAttempts, solution.GetSolution())
 			data, err := proto.Marshal(rissue)
 			if err != nil {
 				return err
@@ -225,7 +225,12 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 				return err
 			}
 
-			_, err := f.ghclient.Add
+			_, err = f.ghclient.AddCommentToIssue(ctx, &ghbpb.AddCommentToIssue{
+				User:   "brotherlogic",
+				Repo:   "adventofcode",
+				Number: rissue.GetId(),
+				Body:   fmt.Sprintf("%v", msol),
+			})
 		}
 	}
 
