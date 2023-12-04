@@ -239,6 +239,14 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 			})
 			return err
 		}
+	} else if status.Code(err) == codes.OK {
+		// Close the issue
+		_, err := f.ghclient.CloseIssue(ctx, &ghbpb.CloseIssueRequest{
+			User: "brotherlogic",
+			Repo: "adventofcode",
+			Id:   int32(issue.GetId()),
+		})
+		return err
 	}
 
 	return nil
