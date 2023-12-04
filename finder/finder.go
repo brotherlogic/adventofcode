@@ -272,6 +272,7 @@ func main() {
 	if err != nil && status.Code(err) != codes.NotFound {
 		log.Fatalf("unable to load existing issue: %v", err)
 	}
+	log.Printf("Loaded existing issue: %v %v", issue, err)
 
 	// We have no solved the current issue
 	if issue != nil && issue.GetOpen() {
