@@ -65,7 +65,7 @@ pub fn solve_day5_part1(data: String) -> i32 {
     println!("Starting");
     let (seeds, mappers) = build_data(data);
 
-    let mut lowest = 99999999;
+    let mut lowest = i64::MAX;
  
     for mut seed in seeds {
         while seed.stype != "location" {
