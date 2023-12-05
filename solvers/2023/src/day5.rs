@@ -66,40 +66,58 @@ pub fn solve_day5_part2(data: String) -> i32 {
     let (seeds, mappers) = build_data(data);
 
     let mut lowest = i64::MAX;
+    let mut start: i64 = 0;
+    let mut end: i64 = 0;
  
-    for mut seed in seeds {
-        while seed.stype != "location" {
-            println!("HERE {:?}", seed);
-            let mut done = false;
-            for mapper in &mappers {
-                if mapper.base == seed.stype && mapper.map_start <= seed.value && mapper.map_end >= seed.value {
-                    println!("APPLYING {:?}", mapper);
-                    seed = Seed{
-                        stype: mapper.result.to_string(),
-                        value: seed.value + mapper.adjustment,
-                    };
-                    done = true
-                }
-            }
-            if !done {
+    for mut tseed in seeds {
+        if start == 0 {
+            start = tseed.value;
+            continue;
+        }
+        if end == 0 {
+            end = tseed.value;
+        }
+        println!("Running {} to {}", start, end);
+
+        for sv in start..start+end {
+            let mut seed = Seed{value: sv, stype: "seed".to_string()};
+            while seed.stype != "location" {
+                println!("HERE {:?}", seed);
+           
+                let mut done = false;
                 for mapper in &mappers {
-                    if mapper.base == seed.stype {
-                        println!("APPLYING {:?}", mapper);
+                    if mapper.base == seed.stype && mapper.map_start <= seed.value && mapper.map_end >= seed.value {
                         seed = Seed{
                             stype: mapper.result.to_string(),
-                            value: seed.value,
+                            value: seed.value + mapper.adjustment,
                         };
-                        break;
+                        println!("RESULT {} {:?}", sv, seed);
+                        done = true
                     }
                 }
+                if !done {
+                    for mapper in &mappers {
+                        if mapper.base == seed.stype {
+                            seed = Seed{
+                                stype: mapper.result.to_string(),
+                                value: seed.value,
+                            };
+                            break;
+                        }
+                    }
+                }
+
+                println!("RESULT {} {:?}", sv, seed);
             }
 
-            println!("RESULT {:?}", seed);
+            println!("RESULT {} {:?}", sv, seed);
+            if seed.value < lowest {
+                lowest = seed.value;
+            }
         }
 
-        if seed.value < lowest {
-            lowest = seed.value;
-        }
+        start = 0;
+        end = 0;
     }
 
     return lowest.try_into().unwrap();
