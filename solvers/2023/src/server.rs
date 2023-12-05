@@ -97,7 +97,7 @@ impl SolverService for RServer {
             return Ok(Response::new(SolveResponse{
                 string_answer:"".to_string(),
                 big_answer:0,
-                answer:tanswer as i32,
+                answer:tanswer,
          }));
         }
        Err(Status::unimplemented("Solution is not implemented yet"))
