@@ -216,7 +216,11 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 
 		if !found {
 			log.Printf("Found new solution: %v", solution)
-			issue.SolutionAttempts = append(issue.SolutionAttempts, solution.GetSolution())
+			issue.SolutionAttempts = append(issue.SolutionAttempts, &pb.Solution{
+				Answer:       msol.GetAnswer(),
+				BigAnswer:    msol.GetBigAnswer(),
+				StringAnswer: msol.GetStringAnswer(),
+			})
 			data, err := proto.Marshal(issue)
 			if err != nil {
 				return err
