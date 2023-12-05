@@ -202,9 +202,9 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 		found := false
 		for _, sol := range issue.GetSolutionAttempts() {
 			if sol.GetYear() == issue.GetYear() && sol.GetDay() == issue.GetDay() && sol.GetPart() == issue.GetPart() {
-				if sol.GetAnswer() == solution.GetSolution().GetAnswer() &&
-					sol.GetBigAnswer() == solution.GetSolution().GetBigAnswer() &&
-					sol.GetStringAnswer() == solution.GetSolution().GetStringAnswer() {
+				if sol.GetAnswer() == msol.GetAnswer() &&
+					sol.GetBigAnswer() == msol.GetBigAnswer() &&
+					sol.GetStringAnswer() == msol.GetStringAnswer() {
 					found = true
 				}
 			}
