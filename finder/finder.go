@@ -192,7 +192,7 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 		return nil
 	}
 
-	solution, err := client.GetSolution(ctx, &pb.GetSolutionRequest{
+	_, err = client.GetSolution(ctx, &pb.GetSolutionRequest{
 		Year: issue.GetYear(),
 		Day:  issue.GetDay(),
 		Part: issue.GetPart(),
