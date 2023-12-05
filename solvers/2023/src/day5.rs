@@ -25,9 +25,11 @@ fn build_data(data: String) -> (Vec<Seed>, Vec<Mapper>) {
         if line.trim().len() == 0 {
             continue;
         } else  if line.starts_with("seeds: ") {
+        log.Println!("Parsing {}", line);
             let parts = line.split_whitespace();
             for part in parts {
                 if !part.starts_with("seeds") {
+                log.Println!("Seedv {}", part)
                     seeds.push(Seed{stype: "seed".to_string(), value: part.parse::<i32>().unwrap()});
                 }
             }
