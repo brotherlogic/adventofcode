@@ -61,6 +61,68 @@ fn build_data(data: String) -> (Vec<Seed>, Vec<Mapper>) {
     return (seeds, mappers);
 }
 
+pub fn solve_day5_part2(data: String) -> i32 {
+    println!("Starting");
+    let (seeds, mappers) = build_data(data);
+
+    let mut lowest = i64::MAX;
+    let mut start: i64 = 0;
+    let mut end: i64 = 0;
+ 
+    for mut tseed in seeds {
+        if start == 0 {
+            start = tseed.value;
+            continue;
+        }
+        if end == 0 {
+            end = tseed.value;
+        }
+        println!("Running {} to {}", start, end);
+
+        for sv in start..start+end {
+            let mut seed = Seed{value: sv, stype: "seed".to_string()};
+            while seed.stype != "location" {
+                println!("HERE {:?}", seed);
+           
+                let mut done = false;
+                for mapper in &mappers {
+                    if mapper.base == seed.stype && mapper.map_start <= seed.value && mapper.map_end >= seed.value {
+                        seed = Seed{
+                            stype: mapper.result.to_string(),
+                            value: seed.value + mapper.adjustment,
+                        };
+                        println!("RESULT {} {:?}", sv, seed);
+                        done = true
+                    }
+                }
+                if !done {
+                    for mapper in &mappers {
+                        if mapper.base == seed.stype {
+                            seed = Seed{
+                                stype: mapper.result.to_string(),
+                                value: seed.value,
+                            };
+                            break;
+                        }
+                    }
+                }
+
+                println!("RESULT {} {:?}", sv, seed);
+            }
+
+            println!("RESULT {} {:?}", sv, seed);
+            if seed.value < lowest {
+                lowest = seed.value;
+            }
+        }
+
+        start = 0;
+        end = 0;
+    }
+
+    return lowest.try_into().unwrap();
+}
+
 pub fn solve_day5_part1(data: String) -> i32 {
     println!("Starting");
     let (seeds, mappers) = build_data(data);
@@ -146,5 +208,43 @@ humidity-to-location map:
 56 93 4".to_string();
     let answer: i32 = 35;
     assert_eq!(solve_day5_part1(data.to_string()), answer)
+}
+
+#[test]
+fn part2_tests() {
+    let data = "seeds: 79 14 55 13
+seed-to-soil map:
+50 98 2
+52 50 48
+
+soil-to-fertilizer map:
+0 15 37
+37 52 2
+39 0 15
+
+fertilizer-to-water map:
+49 53 8
+0 11 42
+42 0 7
+57 7 4
+
+water-to-light map:
+88 18 7
+18 25 70
+
+light-to-temperature map:
+45 77 23
+81 45 19
+68 64 13
+
+temperature-to-humidity map:
+0 69 1
+1 0 69
+
+humidity-to-location map:
+60 56 37
+56 93 4".to_string();
+    let answer: i32 = 46;
+    assert_eq!(solve_day5_part2(data.to_string()), answer)
 }
 }
