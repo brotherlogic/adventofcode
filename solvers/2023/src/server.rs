@@ -134,7 +134,6 @@ impl SolverService for RServer {
 
 #[tokio::main]
 async fn register() -> Result<(), Box<dyn std::error::Error>> {
-    println!("Registering 2023 Solver");
 
     let mut client = AdventOfCodeInternalServiceClient::connect("http://adventofcode.adventofcode:8082").await?;
 
@@ -145,7 +144,6 @@ async fn register() -> Result<(), Box<dyn std::error::Error>> {
 
     let response = client.register(request).await?;
 
-    println!("RESPONSE={:?}", response);
 
     Ok(())
 }
@@ -160,7 +158,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     thread::spawn(|| {
         println!("Starting");
         loop {
-            println!("Registering");
             register();
             thread::sleep(Duration::from_millis(60000));
         }
