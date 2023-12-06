@@ -166,7 +166,7 @@ func (s *Server) Solve(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResp
 			}).Observe(float64(time.Since(t1).Milliseconds()))
 			wg.Done()
 			if err != nil {
-				errors = append(errors, err)
+				errors = append(errors, fmt.Errorf("%v -> %w", c, err))
 				return
 			}
 			solution = tsol
