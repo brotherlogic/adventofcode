@@ -167,6 +167,7 @@ pub fn path_part_2(data: String) -> i32 {
         if first == 0 {
             first = seed.value
         } else {
+            println!("HERE {} -> {}", first, first+seed.value);
             let nl = process_range(SeedRange{stype: "seed".to_string(),base: first, end: first+seed.value}, &mappers).try_into().unwrap();
             if nl < lowest {
                 lowest = nl;
