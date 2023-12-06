@@ -59,6 +59,190 @@ fn build_data(data: String) -> (Vec<Seed>, Vec<Mapper>) {
     return (seeds, mappers);
 }
 
+#[derive(Debug)]
+struct Range {
+    base: i64,
+    end: i64,
+}
+#[derive(Debug)]
+struct SeedRange {
+    base: i64,
+    end: i64,
+    stype: String,
+}
+
+fn process_range(s: SeedRange, mappers: &Vec<Mapper>) -> i64 {
+    let mut all_ranges: Vec<SeedRange> = Vec::new();
+    all_ranges.push(s);
+    let mut lowest = i64::MAX;
+
+    while all_ranges.len() > 0 {
+        let c = all_ranges.pop().unwrap();
+        println!("GOT {:?}", c);
+        if c.stype == "location" {
+            if c.base < lowest {
+                lowest = c.base;
+            }
+        } else {
+            let mut processed = false;
+            for mapper in mappers {
+                if mapper.base == c.stype {
+                    if c.base >= mapper.map_start  && c.end <= mapper.map_end {
+                        println!("FE {:?}", mapper);
+                         // Mapper fully encloses range
+                        all_ranges.push(SeedRange{
+                            stype: mapper.result.clone(),
+                            base: c.base + mapper.adjustment,
+                            end: c.end + mapper.adjustment,
+                        });
+                        processed = true;
+                        break;
+                    } else if c.base >= mapper.map_start && c.base <= mapper.map_end {
+                        println!("PE {:?}", mapper);
+                        // Range pops out of end of map
+                        all_ranges.push(SeedRange{
+                            stype: mapper.result.clone(),
+                            base: c.base + mapper.adjustment,
+                            end: mapper.map_end + mapper.adjustment,
+                        });
+                        all_ranges.push(SeedRange{
+                            stype: mapper.base.clone(),
+                            base: mapper.map_end+1,
+                            end: c.end,
+                        });
+                        processed = true;
+                        break;
+                    } else if c.end >= mapper.map_start && c.end <= mapper.map_end {
+                        println!("PS {:?}", mapper);
+                        // Range pops out of start of map
+                        all_ranges.push(SeedRange{
+                            stype: mapper.result.clone(),
+                            base: mapper.map_start+mapper.adjustment,
+                            end: c.end + mapper.adjustment,
+                        });
+                        all_ranges.push(SeedRange{
+                            stype: mapper.base.clone(),
+                            base: c.base,
+                            end: mapper.map_start-1,
+                        });
+                        processed = true;
+                        break;
+                    }
+                }   
+            }
+
+            if !processed {
+                for mapper in mappers {
+                    if mapper.base == c.stype {
+                        println!("NC {:?}", mapper);
+                        all_ranges.push(SeedRange{
+                            stype: mapper.result.clone(),
+                            base: c.base,
+                            end: c.end,
+                        });
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    return lowest;
+}
+
+pub fn path_part_1(data: String) -> i32 {
+    let (seeds, mappers) = build_data(data);
+    let mut lowest: i32 = i32::MAX;
+    for seed in seeds {
+        let nl = process_range(SeedRange{stype: "seed".to_string(),base: 13, end: 13}, &mappers).try_into().unwrap();
+        if nl < lowest {
+            lowest = nl;
+        }
+    }
+    return lowest;
+}
+
+pub fn path_part_2(data: String) -> i32 {
+    let (seeds, mappers) = build_data(data);
+    let mut lowest: i32 = i32::MAX;
+    let mut first = 0;
+    let mut second = 0;
+    for seed in seeds {
+        if first == 0 {
+            first = seed.value
+        } else {
+            let nl = process_range(SeedRange{stype: "seed".to_string(),base: first, end: first+seed.value}, &mappers).try_into().unwrap();
+            if nl < lowest {
+                lowest = nl;
+            }
+            first = 0;
+        }
+    }
+    return lowest;
+}
+
+fn overlap(r: Range, m: Mapper) -> Range {
+    let mut base = 0;
+    let mut end = 0;
+    if r.base < m.map_start {
+        base = m.map_start;
+    }  else {
+        base = r.base
+    }
+
+    if r.end > m.map_end {
+        end = m.map_end;
+    } else {
+        end = r.end
+    }
+
+    if base < end {
+        return Range{base: base, end: end};
+    }
+    return Range{base: 0, end: 0};
+}
+
+fn run_range(r: Range, mappers: &Vec<Mapper>, curr: &str) -> i64 {
+    println!("RANGE {:?} {}", r, curr);
+    let mut best = i64::MAX;
+    for mapper in mappers {
+        if mapper.base == curr {
+            println!("RUNNING MAPPER {:?}", mapper);
+            let mut base = 0;
+            let mut end = 0;
+            if r.base < mapper.map_start {
+                base = mapper.map_start;
+            }  else {
+                base = r.base
+            }
+        
+            if r.end > mapper.map_end {
+                end = mapper.map_end;
+            } else {
+                end = r.end
+            }
+
+         
+            let mut overlap = Range{base: r.base, end: r.end};
+            if base <= end {
+                overlap =  Range{base: base, end: end};
+            }
+             
+            println!("OVERLAP {:?}", overlap);
+
+            if overlap.base != 0 && overlap.end != 0 {
+                let nbest = run_range(overlap, mappers, &mapper.result);
+                if nbest < best {
+                    best = nbest;
+                }
+            }
+        }
+    }
+
+    println!("HERE {}", best);
+    return best;
+}
+
 fn reverse_solve(data: String) -> i32 {
     let (seeds, mappers) = build_data(data);
     let mut start = 0;
@@ -138,7 +322,7 @@ pub fn solve_day5_part2(data: String) -> i32 {
     let mut start: i64 = 0;
     let mut end: i64 = 0;
  
-    for mut tseed in seeds {
+    for  tseed in seeds {
         if start == 0 {
             start = tseed.value;
             continue;
@@ -264,8 +448,10 @@ humidity-to-location map:
 60 56 37
 56 93 4".to_string();
     let answer: i32 = 35;
+    let ianswer: i32 = 79;
     assert_eq!(solve_day5_part1(data.to_string()), answer);
     assert_eq!(reverse_solve(data.to_string()), answer);
+    assert_eq!(path_part_1(data.to_string()), answer);
 }
 
 #[test]
@@ -303,6 +489,7 @@ humidity-to-location map:
 60 56 37
 56 93 4".to_string();
     let answer: i32 = 46;
-    assert_eq!(reverse_solve_part2(data.to_string()), answer)
+    assert_eq!(reverse_solve_part2(data.to_string()), answer);
+    assert_eq!(path_part_2(data.to_string()), answer);
 }
 }
