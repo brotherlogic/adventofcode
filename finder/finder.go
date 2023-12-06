@@ -192,7 +192,7 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 		return nil
 	}
 
-	solution, err := client.GetSolution(ctx, &pb.GetSolutionRequest{
+	_, err = client.GetSolution(ctx, &pb.GetSolutionRequest{
 		Year: issue.GetYear(),
 		Day:  issue.GetDay(),
 		Part: issue.GetPart(),
@@ -215,11 +215,14 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 		}
 
 		if !found {
-			log.Printf("Found new solution: %v", solution)
+			log.Printf("Found new solution: %v", msol)
 			issue.SolutionAttempts = append(issue.SolutionAttempts, &pb.Solution{
 				Answer:       msol.GetAnswer(),
 				BigAnswer:    msol.GetBigAnswer(),
 				StringAnswer: msol.GetStringAnswer(),
+				Year:         issue.GetYear(),
+				Day:          issue.GetDay(),
+				Part:         issue.GetPart(),
 			})
 			data, err := proto.Marshal(issue)
 			if err != nil {
