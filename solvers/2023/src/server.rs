@@ -110,8 +110,17 @@ impl SolverService for RServer {
                 answer:tanswer,
          }));
         }
-                if rq.year == 2023 && rq.day == 6 && rq.part == 1 {
+         if rq.year == 2023 && rq.day == 6 && rq.part == 1 {
             let tanswer = day6::solve_day6_part1(rq.data);
+            println!("Returning {}", tanswer);
+            return Ok(Response::new(SolveResponse{
+                string_answer:"".to_string(),
+                big_answer:0,
+                answer:tanswer,
+         }));
+        }
+         if rq.year == 2023 && rq.day == 6 && rq.part == 2 {
+            let tanswer = day6::solve_day6_part2(rq.data);
             println!("Returning {}", tanswer);
             return Ok(Response::new(SolveResponse{
                 string_answer:"".to_string(),
