@@ -59,6 +59,102 @@ fn build_data(data: String) -> (Vec<Seed>, Vec<Mapper>) {
     return (seeds, mappers);
 }
 
+#[derive(Debug)]
+struct Range {
+    base: i64,
+    end: i64,
+}
+
+struct SeedRange {
+    base: i64,
+    end: i64,
+    stype: String,
+}
+
+fn process_range(s: SeedRange, mappers: &Vec<Mapper>) -> i64 {
+    let curr := s.stype;
+    let all_ranges: Vec<SeedRange> = Vec::new();
+    all_ranges.push(s);
+
+    while curr != "location" {
+        let mut new_ranges = Vec::new();
+        for seed in all_ranges {
+            for mapper in mappers {
+                if mapper.base == seed.
+            }
+        }
+    }
+    let ranges = expand_ranges(s)
+}
+
+fn path(data: String) -> i32 {
+    let (seeds, mappers) = build_data(data);
+
+    return run_range(Range{base:79, end: 79}, &mappers, "seed").try_into().unwrap();
+}
+
+fn overlap(r: Range, m: Mapper) -> Range {
+    let mut base = 0;
+    let mut end = 0;
+    if r.base < m.map_start {
+        base = m.map_start;
+    }  else {
+        base = r.base
+    }
+
+    if r.end > m.map_end {
+        end = m.map_end;
+    } else {
+        end = r.end
+    }
+
+    if base < end {
+        return Range{base: base, end: end};
+    }
+    return Range{base: 0, end: 0};
+}
+
+fn run_range(r: Range, mappers: &Vec<Mapper>, curr: &str) -> i64 {
+    println!("RANGE {:?} {}", r, curr);
+    let mut best = i64::MAX;
+    for mapper in mappers {
+        if mapper.base == curr {
+            println!("RUNNING MAPPER {:?}", mapper);
+            let mut base = 0;
+            let mut end = 0;
+            if r.base < mapper.map_start {
+                base = mapper.map_start;
+            }  else {
+                base = r.base
+            }
+        
+            if r.end > mapper.map_end {
+                end = mapper.map_end;
+            } else {
+                end = r.end
+            }
+
+         
+            let mut overlap = Range{base: r.base, end: r.end};
+            if base <= end {
+                overlap =  Range{base: base, end: end};
+            }
+             
+            println!("OVERLAP {:?}", overlap);
+
+            if overlap.base != 0 && overlap.end != 0 {
+                let nbest = run_range(overlap, mappers, &mapper.result);
+                if nbest < best {
+                    best = nbest;
+                }
+            }
+        }
+    }
+
+    println!("HERE {}", best);
+    return best;
+}
+
 fn reverse_solve(data: String) -> i32 {
     let (seeds, mappers) = build_data(data);
     let mut start = 0;
@@ -138,7 +234,7 @@ pub fn solve_day5_part2(data: String) -> i32 {
     let mut start: i64 = 0;
     let mut end: i64 = 0;
  
-    for mut tseed in seeds {
+    for  tseed in seeds {
         if start == 0 {
             start = tseed.value;
             continue;
@@ -264,8 +360,10 @@ humidity-to-location map:
 60 56 37
 56 93 4".to_string();
     let answer: i32 = 35;
+    let ianswer: i32 = 79;
     assert_eq!(solve_day5_part1(data.to_string()), answer);
     assert_eq!(reverse_solve(data.to_string()), answer);
+    assert_eq!(path(data.to_string()), ianswer);
 }
 
 #[test]
