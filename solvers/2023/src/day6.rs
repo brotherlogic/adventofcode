@@ -4,28 +4,33 @@ struct Race {
 }
 
 fn build_races(data: String) -> Vec<Race> {
-    elems = data.split("\n")
-    iter1 = elems.next().unwrap().trim().split_whitespace();
-    iter2 = elems.next().unwrap().trim().split_whitespace();;
+    let mut elems = data.split("\n");
+    let mut iter1 = elems.next().unwrap().trim().split_whitespace();
+    let mut iter2 = elems.next().unwrap().trim().split_whitespace();
     
     // Skip the prefix
     iter1.next();
-    iter2.next();;
+    iter2.next();
 
-    let races = Vec::new();
+    let mut races = Vec::new();
     for t in iter1.next() {
-        d = iter2.next()
-        races.push(Race{time: t.parse::<i64>().unwrap(), distance: d.parse:<i64>().unwrap()})
+        let d = iter2.next();
+        races.push(Race{
+            time: t.parse::<i64>().unwrap(), 
+            distance: d.unwrap().parse::<i64>().unwrap(),
+        })
     }
 
     return races;
 }
 
 
-pub fn solve_day6_part1(data: String) -> u64 {
-    let mut solution = 1
+pub fn solve_day6_part1(data: String) -> i32 {
+    let mut solution = 1;
 
-    let races = build_races(data)
+    let races = build_races(data);
+
+    return solution;
 }
 
 
@@ -36,9 +41,9 @@ mod testsca {
 #[test]
 fn part1_tests() {
     let data = "Time:      7  15   30
-    Distance:  9  40  200".to_string()
-    let answer = 288
-    solution = solve_day6_part1(data)
-    asser_eq!(solution, answer)
+    Distance:  9  40  200".to_string();
+    let answer = 288;
+    let solution = solve_day6_part1(data);
+    assert_eq!(solution, answer);
 }
 }
