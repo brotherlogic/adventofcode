@@ -26,6 +26,24 @@ fn build_races(data: String) -> Vec<Race> {
     return races;
 }
 
+fn build_race(data: String) -> Race {
+    let mut elems = data.split("\n");
+    let mut line1 = elems.next().unwrap().trim();
+    let mut line2 = elems.next().unwrap().trim();
+    
+    let mut timel = line1.split(":");
+    timel.next();
+    let mut time = timel.next().unwrap(); 
+    let timestr: String = time.chars().filter(|c| !c.is_whitespace()).collect();
+
+    let mut distancel = line2.split(":");
+    distancel.next();
+    let mut distance = distancel.next().unwrap();
+    let distancestr: String = distance.chars().filter(|c| !c.is_whitespace()).collect();
+
+    return Race{time: timestr.parse::<i64>().unwrap(), distance: distancestr.parse::<i64>().unwrap()};
+}
+
 fn solve_race(race: Race) -> i32 {
     let a: f64 = -1_f64;
     let b: f64 = race.time as f64;
@@ -54,6 +72,16 @@ pub fn solve_day6_part1(data: String) -> i32 {
     return solution;
 }
 
+pub fn solve_day6_part2(data: String) -> i32 {
+    let mut solution = 1;
+
+    let race = build_race(data);
+    println!("Running {:?}", race);
+    solution *= solve_race(race);
+   
+    return solution;
+}
+
 
 #[cfg(test)]
 mod testsca {
@@ -65,6 +93,14 @@ fn part1_tests() {
     Distance:  9  40  200".to_string();
     let answer = 288;
     let solution = solve_day6_part1(data);
+    assert_eq!(solution, answer);
+}
+#[test]
+fn part2_tests() {
+    let data = "Time:      7  15   30
+    Distance:  9  40  200".to_string();
+    let answer = 71503;
+    let solution = solve_day6_part2(data);
     assert_eq!(solution, answer);
 }
 }
