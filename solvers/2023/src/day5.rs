@@ -64,7 +64,7 @@ struct Range {
     base: i64,
     end: i64,
 }
-
+#[derive(Debug)]
 struct SeedRange {
     base: i64,
     end: i64,
@@ -72,28 +72,113 @@ struct SeedRange {
 }
 
 fn process_range(s: SeedRange, mappers: &Vec<Mapper>) -> i64 {
-    let curr := s.stype;
-    let all_ranges: Vec<SeedRange> = Vec::new();
+    let mut all_ranges: Vec<SeedRange> = Vec::new();
     all_ranges.push(s);
+    let mut lowest = i64::MAX;
 
-    while curr != "location" {
-        let mut new_ranges = Vec::new();
-        for mapper in mappers {
-                for seed in all_ranges {
-      
-                if mapper.base == seed.stype {
-                    // Current range 
+    while all_ranges.len() > 0 {
+        let c = all_ranges.pop().unwrap();
+        println!("GOT {:?}", c);
+        if c.stype == "location" {
+            if c.base < lowest {
+                lowest = c.base;
+            }
+        } else {
+            let mut processed = false;
+            for mapper in mappers {
+                if mapper.base == c.stype {
+                    if c.base >= mapper.map_start  && c.end <= mapper.map_end {
+                        println!("FE {:?}", mapper);
+                         // Mapper fully encloses range
+                        all_ranges.push(SeedRange{
+                            stype: mapper.result.clone(),
+                            base: c.base + mapper.adjustment,
+                            end: c.end + mapper.adjustment,
+                        });
+                        processed = true;
+                        break;
+                    } else if c.base >= mapper.map_start && c.base <= mapper.map_end {
+                        println!("PE {:?}", mapper);
+                        // Range pops out of end of map
+                        all_ranges.push(SeedRange{
+                            stype: mapper.result.clone(),
+                            base: c.base + mapper.adjustment,
+                            end: mapper.map_end + mapper.adjustment,
+                        });
+                        all_ranges.push(SeedRange{
+                            stype: mapper.base.clone(),
+                            base: mapper.map_end+1,
+                            end: c.end,
+                        });
+                        processed = true;
+                        break;
+                    } else if c.end >= mapper.map_start && c.end <= mapper.map_end {
+                        println!("PS {:?}", mapper);
+                        // Range pops out of start of map
+                        all_ranges.push(SeedRange{
+                            stype: mapper.result.clone(),
+                            base: mapper.map_start+mapper.adjustment,
+                            end: c.end + mapper.adjustment,
+                        });
+                        all_ranges.push(SeedRange{
+                            stype: mapper.base.clone(),
+                            base: c.base,
+                            end: mapper.map_start-1,
+                        });
+                        processed = true;
+                        break;
+                    }
+                }   
+            }
+
+            if !processed {
+                for mapper in mappers {
+                    if mapper.base == c.stype {
+                        println!("NC {:?}", mapper);
+                        all_ranges.push(SeedRange{
+                            stype: mapper.result.clone(),
+                            base: c.base,
+                            end: c.end,
+                        });
+                        break;
+                    }
                 }
             }
         }
     }
-    let ranges = expand_ranges(s)
+
+    return lowest;
 }
 
-fn path(data: String) -> i32 {
+pub fn path_part_1(data: String) -> i32 {
     let (seeds, mappers) = build_data(data);
+    let mut lowest: i32 = i32::MAX;
+    for seed in seeds {
+        let nl = process_range(SeedRange{stype: "seed".to_string(),base: 13, end: 13}, &mappers).try_into().unwrap();
+        if nl < lowest {
+            lowest = nl;
+        }
+    }
+    return lowest;
+}
 
-    return run_range(Range{base:79, end: 79}, &mappers, "seed").try_into().unwrap();
+pub fn path_part_2(data: String) -> i32 {
+    let (seeds, mappers) = build_data(data);
+    let mut lowest: i32 = i32::MAX;
+    let mut first = 0;
+    let mut second = 0;
+    for seed in seeds {
+        if first == 0 {
+            first = seed.value
+        } else {
+            let nl = process_range(SeedRange{stype: "seed".to_string(),base: first, end: first+seed.value}, &mappers).try_into().unwrap();
+            if nl < lowest {
+                lowest = nl;
+            }
+            first = 0;
+        }
+    }
+    return lowest;
 }
 
 fn overlap(r: Range, m: Mapper) -> Range {
@@ -366,7 +451,7 @@ humidity-to-location map:
     let ianswer: i32 = 79;
     assert_eq!(solve_day5_part1(data.to_string()), answer);
     assert_eq!(reverse_solve(data.to_string()), answer);
-    assert_eq!(path(data.to_string()), ianswer);
+    assert_eq!(path_part_1(data.to_string()), answer);
 }
 
 #[test]
@@ -404,6 +489,7 @@ humidity-to-location map:
 60 56 37
 56 93 4".to_string();
     let answer: i32 = 46;
-    assert_eq!(reverse_solve_part2(data.to_string()), answer)
+    assert_eq!(reverse_solve_part2(data.to_string()), answer);
+    assert_eq!(path_part_2(data.to_string()), answer);
 }
 }
