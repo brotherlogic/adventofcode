@@ -156,10 +156,11 @@ func (s *Server) Solve(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResp
 		}
 		wg.Add(1)
 		defer conn.Close()
-		go func(conn *grpc.ClientConn) {
+		go func(conn *grpc.ClientConn, c string) {
 			client := pb.NewSolverServiceClient(conn)
 			t1 := time.Now()
 			tsol, err := client.Solve(ctx, req)
+			log.Printf("Solved %v in %v", c, time.Since(t1))
 			solveTimes.With(prometheus.Labels{
 				"puzzle": fmt.Sprintf("%v-%v-%v", req.GetYear(), req.GetDay(), req.GetPart()),
 				"result": fmt.Sprintf("%v", status.Code(err)),
