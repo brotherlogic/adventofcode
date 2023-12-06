@@ -170,7 +170,7 @@ func (s *Server) Solve(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResp
 				return
 			}
 			solution = tsol
-		}(conn)
+		}(conn, callback)
 	}
 
 	wg.Wait()
