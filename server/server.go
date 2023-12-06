@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"sync"
+	"time"
 
 	pb "github.com/brotherlogic/adventofcode/proto"
 	rspb "github.com/brotherlogic/rstore/proto"
@@ -43,6 +44,11 @@ var (
 
 	solveRequest = promauto.NewGaugeVec(prometheus.GaugeOpts{
 		Name: "adventofcode_solves",
+		Help: "The size of the print queue",
+	}, []string{"puzzle", "result"})
+
+	solveTimes = promauto.NewHistogramVec(prometheus.HistogramOpts{
+		Name: "adventofcode_times",
 		Help: "The size of the print queue",
 	}, []string{"puzzle", "result"})
 )
@@ -152,7 +158,12 @@ func (s *Server) Solve(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResp
 		defer conn.Close()
 		go func(conn *grpc.ClientConn) {
 			client := pb.NewSolverServiceClient(conn)
+			t1 := time.Now()
 			tsol, err := client.Solve(ctx, req)
+			solveTimes.With(prometheus.Labels{
+				"puzzle": fmt.Sprintf("%v-%v-%v", req.GetYear(), req.GetDay(), req.GetPart()),
+				"result": fmt.Sprintf("%v", status.Code(err)),
+			}).Observe(float64(time.Since(t1).Milliseconds()))
 			wg.Done()
 			if err != nil {
 				errors = append(errors, err)

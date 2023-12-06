@@ -2,15 +2,15 @@
 struct Mapper {
     base: String,
     result: String,
-    map_start: i32,
-    map_end: i32,
-    adjustment: i32,
+    map_start: i64,
+    map_end: i64,
+    adjustment: i64,
 }
 
 #[derive(Debug)]
 struct Seed {
     stype: String,
-    value: i32,
+    value: i64,
 }
 
 fn build_data(data: String) -> (Vec<Seed>, Vec<Mapper>) {
@@ -30,7 +30,7 @@ fn build_data(data: String) -> (Vec<Seed>, Vec<Mapper>) {
             for part in parts {
                 if !part.starts_with("seeds") {
                 log.Println!("Seedv {}", part)
-                    seeds.push(Seed{stype: "seed".to_string(), value: part.parse::<i32>().unwrap()});
+                    seeds.push(Seed{stype: "seed".to_string(), value: part.parse::<i64>().unwrap()});
                 }
             }
         } else if line.trim().ends_with("map:") {
@@ -51,9 +51,9 @@ fn build_data(data: String) -> (Vec<Seed>, Vec<Mapper>) {
             mappers.push(Mapper{
                 base: base.to_string(),
                 result: result.to_string(),
-                map_start: sp.parse::<i32>().unwrap(),
-                map_end: sp.parse::<i32>().unwrap() + tp.parse::<i32>().unwrap(),
-                adjustment: fp.parse::<i32>().unwrap() - sp.parse::<i32>().unwrap(),
+                map_start: sp.parse::<i64>().unwrap(),
+                map_end: sp.parse::<i64>().unwrap() + tp.parse::<i64>().unwrap(),
+                adjustment: fp.parse::<i64>().unwrap() - sp.parse::<i64>().unwrap(),
             });
         }
     }
@@ -61,7 +61,7 @@ fn build_data(data: String) -> (Vec<Seed>, Vec<Mapper>) {
     return (seeds, mappers);
 }
 
-pub fn solve_day5_part1(data: String) -> i32 {
+pub fn solve_day5_part1(data: String) -> i64 {
     println!("Starting");
     let (seeds, mappers) = build_data(data);
 
@@ -144,7 +144,7 @@ temperature-to-humidity map:
 humidity-to-location map:
 60 56 37
 56 93 4".to_string();
-    let answer: i32 = 35;
+    let answer: i64 = 35;
     assert_eq!(solve_day5_part1(data.to_string()), answer)
 }
 }
