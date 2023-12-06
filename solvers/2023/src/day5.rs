@@ -77,6 +77,7 @@ fn process_range(s: SeedRange, mappers: &Vec<Mapper>) -> i64 {
     let mut lowest = i64::MAX;
 
     while all_ranges.len() > 0 {
+     //   println!("LEN {}", all_ranges.len());
         let c = all_ranges.pop().unwrap();
         if c.stype == "location" {
             if c.base < lowest {
@@ -481,4 +482,5 @@ humidity-to-location map:
     assert_eq!(reverse_solve_part2(data.to_string()), answer);
     assert_eq!(path_part_2(data.to_string()), answer);
 }
+
 }
