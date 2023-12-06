@@ -294,7 +294,7 @@ func main() {
 	// If we're in a set, run this
 	if time.Now().Month() == time.December && time.Now().Day() <= 25 {
 		log.Printf("In a set")
-		for day := int32(1); day <= int32(time.Now().Day()); day++ {
+		for day := int32(time.Now().Day()); day >= 1; day-- {
 			err = f.runYear(ctx, ghclient, rstore, int32(time.Now().Year()), day, issue)
 			if err != nil {
 				log.Printf("Result: %v", err)
