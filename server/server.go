@@ -59,7 +59,6 @@ func (s *Server) GetSolution(ctx context.Context, req *pb.GetSolutionRequest) (*
 		return nil, err
 	}
 
-	log.Printf("HERE %v %v", data, err)
 	solutions := &pb.Solutions{}
 	err = proto.Unmarshal(data.GetValue().GetValue(), solutions)
 	if err != nil {
@@ -193,8 +192,6 @@ func (s *Server) Solve(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResp
 func (s *Server) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.RegisterResponse, error) {
 	s.years[req.GetYear()] = true
 	s.solvers[req.GetCallback()] = true
-
-	log.Printf("Received and stored: %v", req)
 
 	return &pb.RegisterResponse{}, s.updateMetrics()
 }
