@@ -78,7 +78,6 @@ fn process_range(s: SeedRange, mappers: &Vec<Mapper>) -> i64 {
 
     while all_ranges.len() > 0 {
         let c = all_ranges.pop().unwrap();
-        println!("GOT {:?}", c);
         if c.stype == "location" {
             if c.base < lowest {
                 lowest = c.base;
@@ -88,7 +87,6 @@ fn process_range(s: SeedRange, mappers: &Vec<Mapper>) -> i64 {
             for mapper in mappers {
                 if mapper.base == c.stype {
                     if c.base >= mapper.map_start  && c.end <= mapper.map_end {
-                        println!("FE {:?}", mapper);
                          // Mapper fully encloses range
                         all_ranges.push(SeedRange{
                             stype: mapper.result.clone(),
@@ -98,7 +96,6 @@ fn process_range(s: SeedRange, mappers: &Vec<Mapper>) -> i64 {
                         processed = true;
                         break;
                     } else if c.base >= mapper.map_start && c.base <= mapper.map_end {
-                        println!("PE {:?}", mapper);
                         // Range pops out of end of map
                         all_ranges.push(SeedRange{
                             stype: mapper.result.clone(),
@@ -113,7 +110,6 @@ fn process_range(s: SeedRange, mappers: &Vec<Mapper>) -> i64 {
                         processed = true;
                         break;
                     } else if c.end >= mapper.map_start && c.end <= mapper.map_end {
-                        println!("PS {:?}", mapper);
                         // Range pops out of start of map
                         all_ranges.push(SeedRange{
                             stype: mapper.result.clone(),
@@ -134,7 +130,6 @@ fn process_range(s: SeedRange, mappers: &Vec<Mapper>) -> i64 {
             if !processed {
                 for mapper in mappers {
                     if mapper.base == c.stype {
-                        println!("NC {:?}", mapper);
                         all_ranges.push(SeedRange{
                             stype: mapper.result.clone(),
                             base: c.base,
@@ -203,11 +198,9 @@ fn overlap(r: Range, m: Mapper) -> Range {
 }
 
 fn run_range(r: Range, mappers: &Vec<Mapper>, curr: &str) -> i64 {
-    println!("RANGE {:?} {}", r, curr);
     let mut best = i64::MAX;
     for mapper in mappers {
         if mapper.base == curr {
-            println!("RUNNING MAPPER {:?}", mapper);
             let mut base = 0;
             let mut end = 0;
             if r.base < mapper.map_start {
@@ -228,8 +221,7 @@ fn run_range(r: Range, mappers: &Vec<Mapper>, curr: &str) -> i64 {
                 overlap =  Range{base: base, end: end};
             }
              
-            println!("OVERLAP {:?}", overlap);
-
+       
             if overlap.base != 0 && overlap.end != 0 {
                 let nbest = run_range(overlap, mappers, &mapper.result);
                 if nbest < best {
@@ -239,7 +231,6 @@ fn run_range(r: Range, mappers: &Vec<Mapper>, curr: &str) -> i64 {
         }
     }
 
-    println!("HERE {}", best);
     return best;
 }
 
@@ -315,7 +306,6 @@ fn reverse(result: i64, mappers: &Vec<Mapper>) -> i64 {
 }
 
 pub fn solve_day5_part2(data: String) -> i32 {
-    println!("Starting");
     let (seeds, mappers) = build_data(data);
 
     let mut lowest = i64::MAX;
@@ -370,7 +360,6 @@ pub fn solve_day5_part2(data: String) -> i32 {
 }
 
 pub fn solve_day5_part1(data: String) -> i32 {
-    println!("Starting");
     let (seeds, mappers) = build_data(data);
 
     let mut lowest = i64::MAX;
