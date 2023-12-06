@@ -78,9 +78,12 @@ fn process_range(s: SeedRange, mappers: &Vec<Mapper>) -> i64 {
 
     while curr != "location" {
         let mut new_ranges = Vec::new();
-        for seed in all_ranges {
-            for mapper in mappers {
-                if mapper.base == seed.
+        for mapper in mappers {
+                for seed in all_ranges {
+      
+                if mapper.base == seed.stype {
+                    // Current range 
+                }
             }
         }
     }
