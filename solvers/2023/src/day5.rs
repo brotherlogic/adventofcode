@@ -25,16 +25,10 @@ fn build_data(data: String) -> (Vec<Seed>, Vec<Mapper>) {
         if line.trim().len() == 0 {
             continue;
         } else  if line.starts_with("seeds: ") {
-        println!("Parsing {}", line);
             let parts = line.split_whitespace();
             for part in parts {
                 if !part.starts_with("seeds") {
-<<<<<<< HEAD
-                log.Println!("Seedv {}", part)
-=======
-                println!("Seedv {}", part);
->>>>>>> origin/main
-                    seeds.push(Seed{stype: "seed".to_string(), value: part.parse::<i64>().unwrap()});
+                seeds.push(Seed{stype: "seed".to_string(), value: part.parse::<i64>().unwrap()});
                 }
             }
         } else if line.trim().ends_with("map:") {
@@ -65,7 +59,133 @@ fn build_data(data: String) -> (Vec<Seed>, Vec<Mapper>) {
     return (seeds, mappers);
 }
 
-pub fn solve_day5_part1(data: String) -> i64 {
+fn reverse_solve(data: String) -> i32 {
+    let (seeds, mappers) = build_data(data);
+    let mut start = 0;
+    loop {
+        let value = reverse(start, &mappers);
+        for s in &seeds {
+            if value == s.value {
+                return start.try_into().unwrap();
+            }
+        }
+        start+=1
+    }
+}
+
+pub fn reverse_solve_part2(data: String) -> i32 {
+    let (seeds, mappers) = build_data(data);
+    let mut start = 0;
+    loop {
+        let value = reverse(start, &mappers);
+        let mut first: i64 = 0;
+        let mut second: i64 = 0;
+        for s in &seeds {
+            if first == 0 {
+                first = s.value;
+            } else {
+                if value >= first && value <= first+s.value {
+                    return start.try_into().unwrap();
+                }
+                first = 0;
+                second = 0;
+            }
+        }
+        start+=1
+    }
+}
+
+fn reverse(result: i64, mappers: &Vec<Mapper>) -> i64 {
+    let mut bs = Seed{stype: "location".to_string(), value: result};
+
+    let mut lc = 0;
+    while bs.stype != "seed" {
+        let mut done = false;
+        lc += 1;
+        if lc > 100 {
+            return 99;
+        }
+        for mapper in mappers {
+            if mapper.result == bs.stype && mapper.map_start <= bs.value-mapper.adjustment && mapper.map_end >= bs.value-mapper.adjustment {
+                bs = Seed{
+                    stype: mapper.base.to_string(),
+                    value: bs.value - mapper.adjustment,
+                };
+                done = true;
+            }
+        }
+        if !done {
+            for mapper in mappers {
+                if mapper.result == bs.stype {
+                    bs = Seed{
+                        stype: mapper.base.to_string(),
+                        value: bs.value,
+                    };
+                    break;
+                }
+            }
+        }
+    }
+
+    return bs.value;
+}
+
+pub fn solve_day5_part2(data: String) -> i32 {
+    println!("Starting");
+    let (seeds, mappers) = build_data(data);
+
+    let mut lowest = i64::MAX;
+    let mut start: i64 = 0;
+    let mut end: i64 = 0;
+ 
+    for mut tseed in seeds {
+        if start == 0 {
+            start = tseed.value;
+            continue;
+        }
+        if end == 0 {
+            end = tseed.value;
+        }
+
+        for sv in start..start+end {
+            let mut seed = Seed{value: sv, stype: "seed".to_string()};
+            while seed.stype != "location" {
+           
+                let mut done = false;
+                for mapper in &mappers {
+                    if mapper.base == seed.stype && mapper.map_start <= seed.value && mapper.map_end >= seed.value {
+                        seed = Seed{
+                            stype: mapper.result.to_string(),
+                            value: seed.value + mapper.adjustment,
+                        };
+                        done = true
+                    }
+                }
+                if !done {
+                    for mapper in &mappers {
+                        if mapper.base == seed.stype {
+                            seed = Seed{
+                                stype: mapper.result.to_string(),
+                                value: seed.value,
+                            };
+                            break;
+                        }
+                    }
+                }
+            }
+            if seed.value < lowest {
+                lowest = seed.value;
+            }
+        }
+
+        start = 0;
+        end = 0;
+    }
+
+    return lowest.try_into().unwrap();
+}
+
+pub fn solve_day5_part1(data: String) -> i32 {
     println!("Starting");
     let (seeds, mappers) = build_data(data);
 
@@ -73,11 +193,9 @@ pub fn solve_day5_part1(data: String) -> i64 {
  
     for mut seed in seeds {
         while seed.stype != "location" {
-            println!("HERE {:?}", seed);
             let mut done = false;
             for mapper in &mappers {
                 if mapper.base == seed.stype && mapper.map_start <= seed.value && mapper.map_end >= seed.value {
-                    println!("APPLYING {:?}", mapper);
                     seed = Seed{
                         stype: mapper.result.to_string(),
                         value: seed.value + mapper.adjustment,
@@ -88,7 +206,6 @@ pub fn solve_day5_part1(data: String) -> i64 {
             if !done {
                 for mapper in &mappers {
                     if mapper.base == seed.stype {
-                        println!("APPLYING {:?}", mapper);
                         seed = Seed{
                             stype: mapper.result.to_string(),
                             value: seed.value,
@@ -97,8 +214,6 @@ pub fn solve_day5_part1(data: String) -> i64 {
                     }
                 }
             }
-
-            println!("RESULT {:?}", seed);
         }
 
         if seed.value < lowest {
@@ -148,8 +263,9 @@ temperature-to-humidity map:
 humidity-to-location map:
 60 56 37
 56 93 4".to_string();
-    let answer: i64 = 35;
-    assert_eq!(solve_day5_part1(data.to_string()), answer)
+    let answer: i32 = 35;
+    assert_eq!(solve_day5_part1(data.to_string()), answer);
+    assert_eq!(reverse_solve(data.to_string()), answer);
 }
 
 #[test]
@@ -187,6 +303,6 @@ humidity-to-location map:
 60 56 37
 56 93 4".to_string();
     let answer: i32 = 46;
-    assert_eq!(solve_day5_part2(data.to_string()), answer)
+    assert_eq!(reverse_solve_part2(data.to_string()), answer)
 }
 }

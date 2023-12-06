@@ -101,7 +101,7 @@ impl SolverService for RServer {
          }));
         }
         if rq.year == 2023 && rq.day == 5 && rq.part == 2 {
-            let tanswer = day5::solve_day5_part2(rq.data);
+            let tanswer = day5::reverse_solve_part2(rq.data);
             println!("Returning {}", tanswer);
             return Ok(Response::new(SolveResponse{
                 string_answer:"".to_string(),

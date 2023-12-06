@@ -2,7 +2,7 @@
 name = "solver-2023"
 version = "0.1.0"
 authors = ["brotherlogic <brotherlogic@gmail.com>"]
-edition = "2018"
+edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -12,12 +12,12 @@ name = "server"
 path = "src/server.rs"
 
 [dependencies]
-tonic = "0.8.3"
+tonic = "0.10.0"
 prost = "0.12"
 tokio = { version = "1.19.2", features = ["macros", "rt-multi-thread"] }
 tokio-cron-scheduler = "*"
 axum = "0.5.17"
 
 [build-dependencies]
-tonic-build = "0.8.3"
+tonic-build = "0.10.0"
 
