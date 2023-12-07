@@ -56,9 +56,19 @@ func main() {
 		year := sflags.Int("year", -1, "year")
 		day := sflags.Int("day", -1, "day")
 		part := sflags.Int("part", -1, "part")
-		solution := sflags.Int("solution", -1, "solution")
+		solution := sflags.Int("solution", 0, "solution")
+		bigsolution := sflags.Int("big_solution", 0, "big solution")
 		if err := sflags.Parse(os.Args[3:]); err == nil {
-			res, err := iclient.AddSolution(ctx, &pb.AddSolutionRequest{Solution: &pb.Solution{Year: int32(*year), Day: int32(*day), Part: int32(*part), Answer: int32(*solution)}})
+			res, err := iclient.AddSolution(ctx, &pb.AddSolutionRequest{Solution: &pb.Solution{Year: int32(*year), Day: int32(*day), Part: int32(*part), Answer: int32(*solution), BigAnswer: int64(*bigsolution)}})
+			fmt.Printf("%v -> %v\n", res, err)
+		}
+	case "gsolution":
+		sflags := flag.NewFlagSet("solve", flag.ExitOnError)
+		year := sflags.Int("year", -1, "year")
+		day := sflags.Int("day", -1, "day")
+		part := sflags.Int("part", -1, "part")
+		if err := sflags.Parse(os.Args[3:]); err == nil {
+			res, err := iclient.GetSolution(ctx, &pb.GetSolutionRequest{Year: int32(*year), Day: int32(*day), Part: int32(*part)})
 			fmt.Printf("%v -> %v\n", res, err)
 		}
 	case "tight":
