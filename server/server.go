@@ -66,7 +66,7 @@ func (s *Server) GetSolution(ctx context.Context, req *pb.GetSolutionRequest) (*
 		return nil, err
 	}
 
-	solresp := &pb.GetSolutionResponse{}
+	solresp := &pb.GetSolutionResponse{Solution: &pb.Solution{}}
 	found := false
 	for _, solution := range solutions.GetSolutions() {
 		if solution.GetDay() == req.GetDay() && solution.GetYear() == req.GetYear() && solution.GetPart() == req.GetPart() {
