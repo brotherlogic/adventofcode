@@ -5,6 +5,7 @@ struct Hand {
     cards: String,
     bid: i64,
     ordering: String,
+    part2_ordering: String,
 }
 
 fn translate(cards: String) -> String {
@@ -30,7 +31,43 @@ fn translate(cards: String) -> String {
     return nstr;
 }
 
+fn translate_part2(cards: String) -> String {
+    let mut nstr = "".to_string();
+    for c in cards.chars() {
+        match c {
+            'J' => nstr += "A",
+            '2' => nstr += "B",
+            '3' => nstr += "C",
+            '4' => nstr += "D",
+            '5' => nstr += "E",
+            '6' => nstr += "F",
+            '7' => nstr += "G",
+            '8' => nstr += "H",
+            '9' => nstr += "I",
+            'T' => nstr += "J",
+            'Q' => nstr += "K",
+            'K' => nstr += "L",
+            'A' => nstr += "M",
+            _   => nstr += "N",
+        }
+    }
+    return nstr;
+}
+
+fn get_part2_rank(cards: String) -> String {
+    let mut hands = Vec::new();
+    for rep in vec!["2", "3", "4", "5", "6", "7", "8", "9", "T", "Q", "K", "A"] {
+        hands.push(get_rank(cards.replace("J", rep)));
+    }
+
+    hands.sort_by(|a, b| a.cmp(&b));
+
+    return hands.iter().rev().next().unwrap().to_string();
+
+}
+
 fn get_rank(cards: String) -> String {
+    println!("GETTING RANK {}", cards);
     let mut mapper: HashMap<char, u32> = HashMap::new();
     for c in cards.chars() {
         if mapper.contains_key(&c) {
@@ -47,30 +84,34 @@ fn get_rank(cards: String) -> String {
     if mapper.keys().len() == 2 {
         for (key, val) in &mapper {
             if *val == 1 || *val == 4 {
-                return "F".to_string();
+                return "F".to_string(); // Four of a kind
             }
-            return "E".to_string();
+            return "E".to_string(); // FUll House
         }
     }
 
     if mapper.keys().len() == 3 {
         for (key, val) in &mapper {
             if *val == 3 {
-                return "D".to_string();
+                return "D".to_string(); // Three of a kind
             } else if *val == 2 {
-              return "C".to_string();
+              return "C".to_string(); // Two Pair
             }
         }
     }
 
     if mapper.keys().len() == 4{
-        return "B".to_string();
+        return "B".to_string(); // One Pair
     }
-        return "A".to_string();
+        return "A".to_string(); // High Card
 }
 
 fn get_ordering(cards: String) -> String {
     return get_rank(cards.clone()) + "-" + &translate(cards);
+}
+
+fn get_part2_ordering(cards: String) -> String {
+    return get_part2_rank(cards.clone()) + "-" + &translate_part2(cards);
 }
 
 fn build_hands(data: String) -> Vec<Hand> {
@@ -80,7 +121,7 @@ fn build_hands(data: String) -> Vec<Hand> {
         let cards = elems.next().unwrap().to_string();
         let bid = elems.next().unwrap().parse::<i64>().unwrap();
 
-        hands.push(Hand{cards: cards.clone(), bid: bid, ordering: get_ordering(cards)});
+        hands.push(Hand{cards: cards.clone(), bid: bid, ordering: get_ordering(cards.clone()), part2_ordering: get_part2_ordering(cards.clone())});
     }
 
     return hands;
@@ -108,7 +149,7 @@ pub fn solve_day7_part2(data: String) -> i64 {
     let mut hands = build_hands(data);
 
     // Sort the hands here
-    hands.sort_by(|a, b| a.ordering.cmp(&b.ordering));
+    hands.sort_by(|a, b| a.part2_ordering.cmp(&b.part2_ordering));
 
     let mut rank = 1;
     let mut total = 0;
