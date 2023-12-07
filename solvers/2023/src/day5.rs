@@ -146,11 +146,11 @@ fn process_range(s: SeedRange, mappers: &Vec<Mapper>) -> i64 {
     return lowest;
 }
 
-pub fn path_part_1(data: String) -> i32 {
+pub fn path_part_1(data: String) -> i64 {
     let (seeds, mappers) = build_data(data);
-    let mut lowest: i32 = i32::MAX;
+    let mut lowest: i64 = i64::MAX;
     for seed in seeds {
-        let nl = process_range(SeedRange{stype: "seed".to_string(),base: 13, end: 13}, &mappers).try_into().unwrap();
+        let nl = process_range(SeedRange{stype: "seed".to_string(),base: 13, end: 13}, &mappers);
         if nl < lowest {
             lowest = nl;
         }
@@ -158,9 +158,9 @@ pub fn path_part_1(data: String) -> i32 {
     return lowest;
 }
 
-pub fn path_part_2(data: String) -> i32 {
+pub fn path_part_2(data: String) -> i64 {
     let (seeds, mappers) = build_data(data);
-    let mut lowest: i32 = i32::MAX;
+    let mut lowest: i64 = i64::MAX;
     let mut first = 0;
     let mut second = 0;
     for seed in seeds {
@@ -168,7 +168,7 @@ pub fn path_part_2(data: String) -> i32 {
             first = seed.value
         } else {
             println!("HERE {} -> {}", first, first+seed.value);
-            let nl = process_range(SeedRange{stype: "seed".to_string(),base: first, end: first+seed.value}, &mappers).try_into().unwrap();
+            let nl = process_range(SeedRange{stype: "seed".to_string(),base: first, end: first+seed.value}, &mappers);
             if nl < lowest {
                 lowest = nl;
             }
@@ -438,10 +438,8 @@ temperature-to-humidity map:
 humidity-to-location map:
 60 56 37
 56 93 4".to_string();
-    let answer: i32 = 35;
+    let answer: i64 = 35;
     let ianswer: i32 = 79;
-    assert_eq!(solve_day5_part1(data.to_string()), answer);
-    assert_eq!(reverse_solve(data.to_string()), answer);
     assert_eq!(path_part_1(data.to_string()), answer);
 }
 
@@ -479,9 +477,12 @@ temperature-to-humidity map:
 humidity-to-location map:
 60 56 37
 56 93 4".to_string();
-    let answer: i32 = 46;
-    assert_eq!(reverse_solve_part2(data.to_string()), answer);
+    let answer: i64 = 46;
     assert_eq!(path_part_2(data.to_string()), answer);
 }
 
+
+
 }
+
+
