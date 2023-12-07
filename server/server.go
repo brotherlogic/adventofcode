@@ -66,10 +66,26 @@ func (s *Server) GetSolution(ctx context.Context, req *pb.GetSolutionRequest) (*
 		return nil, err
 	}
 
+	solresp := &pb.GetSolutionResponse{}
+	found := false
 	for _, solution := range solutions.GetSolutions() {
 		if solution.GetDay() == req.GetDay() && solution.GetYear() == req.GetYear() && solution.GetPart() == req.GetPart() {
-			return &pb.GetSolutionResponse{Solution: solution}, nil
+			if solution.GetAnswer() > 0 {
+				solresp.Solution.Answer = solution.GetAnswer()
+				found = true
+			}
+			if solution.GetBigAnswer() > 0 {
+				solresp.Solution.BigAnswer = solution.GetBigAnswer()
+				found = true
+			}
+			if solution.GetStringAnswer() != "" {
+				solresp.Solution.BigAnswer = solution.GetBigAnswer()
+				found = true
+			}
 		}
+	}
+	if found {
+		return solresp, nil
 	}
 
 	return nil, status.Errorf(codes.NotFound, "Unable to locate solution for %v %v %v", req.GetYear(), req.GetDay(), req.GetPart())
