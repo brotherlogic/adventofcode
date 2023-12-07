@@ -38,6 +38,7 @@ func (f *finder) solve(ctx context.Context, year, day, part int32, issue *pb.Iss
 		if err == nil {
 			return err
 		}
+		log.Printf("Solve fail: %v", err)
 	}
 
 	return status.Errorf(codes.ResourceExhausted, "Unable to solve with retries")
