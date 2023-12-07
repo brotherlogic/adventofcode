@@ -138,6 +138,15 @@ impl SolverService for RServer {
                 answer:0,
          }));
         }
+        if rq.year == 2023 && rq.day == 7 && rq.part == 2 {
+            let tanswer = day7::solve_day7_part2(rq.data);
+            println!("Returning {}", tanswer);
+            return Ok(Response::new(SolveResponse{
+                string_answer:"".to_string(),
+                big_answer:tanswer,
+                answer:0,
+         }));
+        }
        Err(Status::unimplemented("Solution is not implemented yet"))
     }
 }
