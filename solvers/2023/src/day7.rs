@@ -104,6 +104,23 @@ pub fn solve_day7_part1(data: String) -> i64 {
     return total;
 }
 
+pub fn solve_day7_part2(data: String) -> i64 {
+    let mut hands = build_hands(data);
+
+    // Sort the hands here
+    hands.sort_by(|a, b| a.ordering.cmp(&b.ordering));
+
+    let mut rank = 1;
+    let mut total = 0;
+    for hand in hands {
+        println!("HAND {:?}", hand);
+        total += rank * hand.bid;
+        rank+=1;
+    }
+
+    return total;
+}
+
 #[cfg(test)]
 mod testsca {
     use super::*;
@@ -118,5 +135,17 @@ mod testsca {
 
        let score = solve_day7_part1(test_case);
        assert_eq!(score, 6440)
+    }
+
+    #[test]
+    fn part2_tests() {
+       let test_case = "32T3K 765
+       T55J5 684
+       KK677 28
+       KTJJT 220
+       QQQJA 483".to_string();
+
+       let score = solve_day7_part2(test_case);
+       assert_eq!(score, 5905)
     }
 }
