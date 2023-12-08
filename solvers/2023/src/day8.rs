@@ -66,6 +66,9 @@ pub fn solve_day8_part2(data: String) -> i32 {
             starts.push("".to_string() + &route.name);
         }
     }
+
+    println!("FOUND {} STARTS", starts.len());
+
     while !allz(&starts) {
         let mut next: Vec<String> = Vec::new();
         while starts.len() > 0 {
