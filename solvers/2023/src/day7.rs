@@ -67,7 +67,6 @@ fn get_part2_rank(cards: String) -> String {
 }
 
 fn get_rank(cards: String) -> String {
-    println!("GETTING RANK {}", cards);
     let mut mapper: HashMap<char, u32> = HashMap::new();
     for c in cards.chars() {
         if mapper.contains_key(&c) {
@@ -137,7 +136,6 @@ pub fn solve_day7_part1(data: String) -> i64 {
     let mut rank = 1;
     let mut total = 0;
     for hand in hands {
-        println!("HAND {:?}", hand);
         total += rank * hand.bid;
         rank+=1;
     }
@@ -154,7 +152,6 @@ pub fn solve_day7_part2(data: String) -> i64 {
     let mut rank = 1;
     let mut total = 0;
     for hand in hands {
-        println!("HAND {:?}", hand);
         total += rank * hand.bid;
         rank+=1;
     }
