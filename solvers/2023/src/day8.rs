@@ -125,6 +125,7 @@ ZZZ = (ZZZ, ZZZ)".to_string();
        assert_eq!(score, 6)
     }
 
+    #[test]
     fn part2_tests() {
         let test_case = "LR
 
