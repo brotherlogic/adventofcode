@@ -1,4 +1,5 @@
 use std::process;
+use std::collections::HashMap;
 
 #[derive(Debug)]
 struct Route {
@@ -60,36 +61,16 @@ pub fn solve_day8_part2(data: String) -> i32 {
     let (path, routes) = build_routes(data);
 
     let mut steps = 0;
-    let mut starts: Vec<String> = Vec::new();
+    let mut starts: HashMap<String, Vec<u32>> = HashMap::new();
     for route in &routes {
         if &route.name[2..3] == "A" {
-            starts.push("".to_string() + &route.name);
+            starts.insert("".to_string() + &route.name, Vec::new());
         }
     }
 
     println!("FOUND {} STARTS", starts.len());
 
-    while !allz(&starts) {
-        let mut next: Vec<String> = Vec::new();
-        while starts.len() > 0 {
-            let val = starts.pop().unwrap();
-            for route in &routes {
-                if route.name == val {
-                    match path.as_bytes()[steps%path.len()] as char {
-                        'L' => next.push("".to_string() + &route.left),
-                        'R' => next.push("".to_string() + &route.right),
-                        _ => process::exit(1),
-                    }
-                      break;
-                }
-            }
-        }
-        for v in next {
-            starts.push(v);
-        }
-        steps+=1;
-    }
-    return steps.try_into().unwrap();
+   return 0;
 }
 
 
@@ -125,6 +106,7 @@ ZZZ = (ZZZ, ZZZ)".to_string();
        assert_eq!(score, 6)
     }
 
+    #[test]
     fn part2_tests() {
         let test_case = "LR
 
