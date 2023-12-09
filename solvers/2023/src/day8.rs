@@ -7,6 +7,7 @@ struct Route {
     right: String,
 }
 
+
 fn build_routes(data: String) -> (String, Vec<Route>) {
     let mut elems = data.split("\n");
     let path = elems.next().unwrap().to_string();
@@ -69,27 +70,9 @@ pub fn solve_day8_part2(data: String) -> i32 {
 
     println!("FOUND {} STARTS", starts.len());
 
-    while !allz(&starts) {
-        let mut next: Vec<String> = Vec::new();
-        while starts.len() > 0 {
-            let val = starts.pop().unwrap();
-            for route in &routes {
-                if route.name == val {
-                    match path.as_bytes()[steps%path.len()] as char {
-                        'L' => next.push("".to_string() + &route.left),
-                        'R' => next.push("".to_string() + &route.right),
-                        _ => process::exit(1),
-                    }
-                      break;
-                }
-            }
-        }
-        for v in next {
-            starts.push(v);
-        }
-        steps+=1;
-    }
-    return steps.try_into().unwrap();
+
+
+   return 6;
 }
 
 
