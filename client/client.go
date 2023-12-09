@@ -57,6 +57,7 @@ func main() {
 		day := sflags.Int("day", -1, "day")
 		part := sflags.Int("part", -1, "part")
 		solution := sflags.Int("solution", 0, "solution")
+<<<<<<< Updated upstream
 		bigsolution := sflags.Int("big_solution", 0, "big solution")
 		if err := sflags.Parse(os.Args[3:]); err == nil {
 			res, err := iclient.AddSolution(ctx, &pb.AddSolutionRequest{Solution: &pb.Solution{Year: int32(*year), Day: int32(*day), Part: int32(*part), Answer: int32(*solution), BigAnswer: int64(*bigsolution)}})
@@ -69,6 +70,11 @@ func main() {
 		part := sflags.Int("part", -1, "part")
 		if err := sflags.Parse(os.Args[3:]); err == nil {
 			res, err := iclient.GetSolution(ctx, &pb.GetSolutionRequest{Year: int32(*year), Day: int32(*day), Part: int32(*part)})
+=======
+		bsolution := sflags.Int("big_answer", 0, "big answer")
+		if err := sflags.Parse(os.Args[3:]); err == nil {
+			res, err := iclient.AddSolution(ctx, &pb.AddSolutionRequest{Solution: &pb.Solution{Year: int32(*year), Day: int32(*day), Part: int32(*part), Answer: int32(*solution), BigAnswer: int64(*bsolution)}})
+>>>>>>> Stashed changes
 			fmt.Printf("%v -> %v\n", res, err)
 		}
 	case "tight":
