@@ -30,7 +30,7 @@ fn get_next_num_rev(nums: Vec<i32>) -> i32 {
 
     for d in &diffs {
         if d != &0 {
-            return first-get_next_num(diffs);
+            return first-get_next_num_rev(diffs);
         }
     }
 
@@ -98,7 +98,7 @@ mod testsca {
     }
 
 
-   // #[test]
+    #[test]
     fn part2_tests() {
        let test_case = "0 3 6 9 12 15
 1 3 6 10 15 21
