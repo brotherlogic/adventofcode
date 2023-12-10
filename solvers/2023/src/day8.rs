@@ -60,93 +60,39 @@ fn allz(starts: &Vec<String>) -> bool {
 
 #[derive(Debug)]
 struct Looper {
-    preamble: Vec<i32>,
-    round: Vec<i32>,
+    round: i64,
 }
 
 impl Looper {
-    fn next(&self, i: i32) -> i32 {
-        let mut sofar = i;
-        if self.preamble.len() > 0 && i < self.preamble[self.preamble.len()-1] {
-            for val in &self.preamble {
-                if sofar > *val {
-                    return sofar - val;
-                }
-                sofar -= val;
-            }
-        }
-
-        println!("HUH1 {:?} -> {} {}", &self, sofar, i);
-     
-        sofar = sofar % self.round[self.round.len()-1];
-
-        println!("HUH2 {:?} -> {} {}", &self, sofar, i);
-        for val in &self.round {
-            println!("VALUE {} {}", val, sofar);
-            if sofar < *val {
-                println!("RESOLVE {}", val-sofar);
-                return val - sofar;
-            }
-            sofar -= val;
-        }
-
-        return 0;
+    fn next(&self, i: i64) -> i64 {
+       if i%&self.round == 0 {
+        return self.round;
+       }
+       return i%self.round;
     }
 
-    fn in_z(&self, i: i32) -> bool {
-        if self.preamble.len() > 0 && i < self.preamble[self.preamble.len()-1] {
-            for val in &self.preamble {
-                if *val == i {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        let sofar = i % self.round[self.round.len()-1];
-        println!("CHECKING {}", sofar);
-        if sofar == 0 {
-            return true;
-        }
-        for val in &self.round {
-            if *val == sofar {
-                return true;
-            }
-        }
-
-        return false;
+    fn in_z(&self, i: i64) -> bool {
+       return i%self.round == 0;
     }
 }
 
 fn build_looper(start: String, path: String, routes: &Vec<Route>) -> Looper {
-    let mut done: Vec<(String, i32, i32)> = Vec::new();
+    let mut done: Vec<(String, i64, i64)> = Vec::new();
     let mut steps = 0;
     let mut nstate = "".to_string()+&start;
 
     let mut loops = 0;
+    let mut jump = 0;
     loop {
         if nstate[2..3] == *"Z" {
             for (pos, (st, nu, _)) in done.iter().enumerate() {
-                if st == &nstate && nu == &(steps%path.len() as i32){
-
-                    let mut preamble: Vec<i32> = Vec::new();
-                    let mut round: Vec<i32> = Vec::new();
-
+                if st == &nstate && nu == &(steps%path.len() as i64){
                     for (npos, (_st, nu2, steps)) in done.iter().enumerate() {
-                        if npos < pos {
-                            preamble.push(*steps);
-                        } else {
-                            round.push(*steps);
-                        }
-                    }
-                    
-                    return Looper{
-                        preamble: preamble, 
-                        round: round,
+                        return Looper{round: *steps};
                     }
                 }
             }
-            done.push((nstate.clone(), steps%path.len() as i32, steps));
+            done.push((nstate.clone(), steps%path.len() as i64, steps));
         }
 
         for route in routes {
@@ -161,13 +107,11 @@ fn build_looper(start: String, path: String, routes: &Vec<Route>) -> Looper {
         }
 
         steps += 1;
-        if steps == 10 {
-            return Looper{preamble: Vec::new(), round: Vec::new()};
-        }
+        jump += 1;
     }
 }
 
-pub fn solve_day8_part2(data: String) -> i32 {
+pub fn solve_day8_part2(data: String) -> i64 {
     let (path, routes) = build_routes(data);
 
     let mut starts: Vec<String> = Vec::new();
@@ -180,30 +124,24 @@ pub fn solve_day8_part2(data: String) -> i32 {
     let mut loopers: Vec<Looper> = Vec::new();
     for start in starts {
         let looper = build_looper(start, "".to_string()+&path, &routes);
-        println!("LOOPER {:?}", looper);
         loopers.push(looper);
     }
 
-    let mut pointer = 0;
+    let mut pointer:i64 = 0;
     let mut loops = 0;
     loop {
-        println!("POINTER {}", pointer);
         loops += 1;
-        if loops > 10 {
-            return 0;
-        }
      
-        let mut lowest = i32::MAX;
+        let mut highest = 0;
         for looper in &loopers {
             let val = looper.next(pointer);
-            if val < lowest {
-                lowest = val;
+            if val > highest {
+                highest = val;
             }
         }
-
-        println!("LOWEST {} -> {}", lowest, pointer+lowest);
-
-        pointer += lowest;
+    
+  
+        pointer += highest;
         let mut found = false;
         for looper in &loopers {
             if !looper.in_z(pointer) {
@@ -215,8 +153,8 @@ pub fn solve_day8_part2(data: String) -> i32 {
         if !found {
             return pointer;
         }
+
     }
-   return -1;
 }
 
 

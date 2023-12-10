@@ -163,8 +163,8 @@ impl SolverService for RServer {
             println!("Returning {}", tanswer);
             return Ok(Response::new(SolveResponse{
                 string_answer:"".to_string(),
-                big_answer:0,
-                answer:tanswer,
+                big_answer:tanswer,
+                answer:0,
          }));
         }
         if rq.year == 2023 && rq.day == 9 && rq.part == 1 {
