@@ -107,7 +107,6 @@ fn build_looper(start: String, path: String, routes: &Vec<Route>) -> Looper {
         }
 
         steps += 1;
-        jump += 1;
     }
 }
 
