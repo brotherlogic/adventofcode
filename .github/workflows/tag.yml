@@ -9,7 +9,7 @@ jobs:
     build:
       runs-on: ubuntu-22.04
       steps:
-      - uses: Wandalen/wretry.action@1.2.0
+      - uses: Wandalen/wretry.action@master
         with:
           attempt_limit: 3
       - uses: actions/checkout@v3
