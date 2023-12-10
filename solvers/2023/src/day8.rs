@@ -1,4 +1,5 @@
 use std::process;
+use std::collections::HashMap;
 
 #[derive(Debug)]
 struct Route {
@@ -57,10 +58,118 @@ fn allz(starts: &Vec<String>) -> bool {
     return true;
 }
 
+#[derive(Debug)]
+struct Looper {
+    preamble: Vec<i32>,
+    round: Vec<i32>,
+}
+
+impl Looper {
+    fn next(&self, i: i32) -> i32 {
+        let mut sofar = i;
+        if self.preamble.len() > 0 && i < self.preamble[self.preamble.len()-1] {
+            for val in &self.preamble {
+                if sofar > *val {
+                    return sofar - val;
+                }
+                sofar -= val;
+            }
+        }
+
+        println!("HUH1 {:?} -> {} {}", &self, sofar, i);
+     
+        sofar = sofar % self.round[self.round.len()-1];
+
+        println!("HUH2 {:?} -> {} {}", &self, sofar, i);
+        for val in &self.round {
+            println!("VALUE {} {}", val, sofar);
+            if sofar < *val {
+                println!("RESOLVE {}", val-sofar);
+                return val - sofar;
+            }
+            sofar -= val;
+        }
+
+        return 0;
+    }
+
+    fn in_z(&self, i: i32) -> bool {
+        if self.preamble.len() > 0 && i < self.preamble[self.preamble.len()-1] {
+            for val in &self.preamble {
+                if *val == i {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        let sofar = i % self.round[self.round.len()-1];
+        println!("CHECKING {}", sofar);
+        if sofar == 0 {
+            return true;
+        }
+        for val in &self.round {
+            if *val == sofar {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
+
+fn build_looper(start: String, path: String, routes: &Vec<Route>) -> Looper {
+    let mut done: Vec<(String, i32, i32)> = Vec::new();
+    let mut steps = 0;
+    let mut nstate = "".to_string()+&start;
+
+    let mut loops = 0;
+    loop {
+        if nstate[2..3] == *"Z" {
+            for (pos, (st, nu, _)) in done.iter().enumerate() {
+                if st == &nstate && nu == &(steps%path.len() as i32){
+
+                    let mut preamble: Vec<i32> = Vec::new();
+                    let mut round: Vec<i32> = Vec::new();
+
+                    for (npos, (_st, nu2, steps)) in done.iter().enumerate() {
+                        if npos < pos {
+                            preamble.push(*steps);
+                        } else {
+                            round.push(*steps);
+                        }
+                    }
+                    
+                    return Looper{
+                        preamble: preamble, 
+                        round: round,
+                    }
+                }
+            }
+            done.push((nstate.clone(), steps%path.len() as i32, steps));
+        }
+
+        for route in routes {
+            if route.name == nstate {
+                if path.as_bytes()[steps as usize%path.len()] as char == 'L' {
+                    nstate = "".to_string() + &route.left;
+                } else {
+                    nstate = "".to_string()+&route.right;
+                }
+                break;
+            }
+        }
+
+        steps += 1;
+        if steps == 10 {
+            return Looper{preamble: Vec::new(), round: Vec::new()};
+        }
+    }
+}
+
 pub fn solve_day8_part2(data: String) -> i32 {
     let (path, routes) = build_routes(data);
 
-    let mut steps = 0;
     let mut starts: Vec<String> = Vec::new();
     for route in &routes {
         if &route.name[2..3] == "A" {
@@ -68,11 +177,46 @@ pub fn solve_day8_part2(data: String) -> i32 {
         }
     }
 
-    println!("FOUND {} STARTS", starts.len());
+    let mut loopers: Vec<Looper> = Vec::new();
+    for start in starts {
+        let looper = build_looper(start, "".to_string()+&path, &routes);
+        println!("LOOPER {:?}", looper);
+        loopers.push(looper);
+    }
 
+    let mut pointer = 0;
+    let mut loops = 0;
+    loop {
+        println!("POINTER {}", pointer);
+        loops += 1;
+        if loops > 10 {
+            return 0;
+        }
+     
+        let mut lowest = i32::MAX;
+        for looper in &loopers {
+            let val = looper.next(pointer);
+            if val < lowest {
+                lowest = val;
+            }
+        }
 
+        println!("LOWEST {} -> {}", lowest, pointer+lowest);
 
-   return 6;
+        pointer += lowest;
+        let mut found = false;
+        for looper in &loopers {
+            if !looper.in_z(pointer) {
+                found = true;
+                break;
+            }
+        }
+
+        if !found {
+            return pointer;
+        }
+    }
+   return -1;
 }
 
 
