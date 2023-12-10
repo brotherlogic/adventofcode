@@ -161,9 +161,6 @@ fn build_looper(start: String, path: String, routes: &Vec<Route>) -> Looper {
         }
 
         steps += 1;
-        if steps == 10 {
-            return Looper{preamble: Vec::new(), round: Vec::new()};
-        }
     }
 }
 
