@@ -27,28 +27,28 @@ pub fn solve_day10_part1(data: String) -> i32 {
 
     while process.len() > 0 {
         let (currx,curry,val) = process.pop().unwrap();
-        println!("TRAVERSE {},{}", currx,curry);
+        println!("TRAVERSE {},{} -> {}", currx,curry, pipes.board[curry][currx]);
         match pipes.board[curry][currx] {
             'S' => {
-                if pipes.board[curry-1][currx] == '|' || pipes.board[curry-1][currx] == 'F' || pipes.board[curry-1][currx] == '7' {
+                if curry > 0 && (pipes.board[curry-1][currx] == '|' || pipes.board[curry-1][currx] == 'F' || pipes.board[curry-1][currx] == '7') {
                     if best[curry-1][currx] > val+1 {
                     best[curry-1][currx] = val+1;
                     process.push((currx,curry-1, val+1));
                     }
                 }
-                if pipes.board[curry][currx+1] == '-' || pipes.board[curry][currx+1] == '7' || pipes.board[curry][currx] == 'J' {
+                if currx < pipes.board[curry].len() && (pipes.board[curry][currx+1] == '-' || pipes.board[curry][currx+1] == '7' || pipes.board[curry][currx+1] == 'J') {
                     if best[curry][currx+1] > val+1 {
                     best[curry][currx+1] = val+1;
                     process.push((currx+1,curry, val+1));
                     }
                 }
-                if pipes.board[curry+1][currx] == '|' || pipes.board[curry+1][currx] == 'L' || pipes.board[curry+1][currx] == 'J' {
+                if curry < pipes.board.len() && (pipes.board[curry+1][currx] == '|' || pipes.board[curry+1][currx] == 'L' || pipes.board[curry+1][currx] == 'J') {
                     if best[curry+1][currx] > val + 1 {
                     best[curry+1][currx] = val + 1;
                     process.push((currx, curry+1, val+1));
                     }
                 }
-                if pipes.board[curry][currx-1] == '-' || pipes.board[curry][currx-1] == 'L' || pipes.board[curry][currx-1] == 'F' {
+                if currx > 0 && (pipes.board[curry][currx-1] == '-' || pipes.board[curry][currx-1] == 'L' || pipes.board[curry][currx-1] == 'F') {
                     if best[curry][currx-1] > val + 1 {
                     best[curry][currx-1] = val + 1;
                     process.push((currx, curry+1,val+1));
@@ -62,7 +62,7 @@ pub fn solve_day10_part1(data: String) -> i32 {
                 }
                 if best[curry+1][currx] > val + 1 {
                     best[curry+1][currx] = val + 1;
-                    process.push((currx, curry-1, val+1));
+                    process.push((currx, curry+1, val+1));
                 }
             },
             '-' => {
@@ -165,5 +165,17 @@ fn part1_test_first() {
 
    let score = solve_day10_part1(test_case);
    assert_eq!(score, 4)
+}
+
+#[test]
+fn part1_test_second() {
+   let test_case = "..F7.
+   .FJ|.
+   SJ.L7
+   |F--J
+   LJ...".to_string();
+
+   let score = solve_day10_part1(test_case);
+   assert_eq!(score, 8)
 }
 }
