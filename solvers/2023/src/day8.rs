@@ -186,10 +186,7 @@ pub fn solve_day8_part2(data: String) -> i32 {
     loop {
         println!("POINTER {}", pointer);
         loops += 1;
-        if loops > 10 {
-            return 0;
-        }
-     
+       
         let mut lowest = i32::MAX;
         for looper in &loopers {
             let val = looper.next(pointer);
