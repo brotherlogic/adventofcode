@@ -8,6 +8,7 @@ struct Route {
     right: String,
 }
 
+
 fn build_routes(data: String) -> (String, Vec<Route>) {
     let mut elems = data.split("\n");
     let path = elems.next().unwrap().to_string();
@@ -215,6 +216,7 @@ pub fn solve_day8_part2(data: String) -> i32 {
             return pointer;
         }
     }
+   return -1;
 }
 
 
