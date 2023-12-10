@@ -1,5 +1,4 @@
 use std::process;
-use std::collections::HashMap;
 
 #[derive(Debug)]
 struct Route {
