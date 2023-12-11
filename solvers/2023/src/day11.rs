@@ -52,13 +52,13 @@ pub fn solve_day11_part2(data: String, adder: i64) -> i64 {
 
         for col in &cols {
             if col < gx {
-                ngx+=adder;
+                ngx+=adder-1;
             }
         }
 
         for row in &rows {
             if row < gy {
-                ngy+=adder;
+                ngy+=adder-1;
             }
         }
 
