@@ -1,4 +1,100 @@
 pub fn solve_day10_part1(data: String) -> i32 {
+    let (best, _) = build_best(data);
+
+    let mut bestv = 0;
+    for row in best {
+        for val in row {
+            if val > bestv && val < i32::MAX{
+                bestv = val;
+            }
+        }
+    }
+
+    return bestv;
+}
+
+fn has_seen(x: usize, y: usize, seen: &Vec<(usize,usize)>) -> bool {
+    for (xe, ye) in seen {
+        if *xe == x && *ye == y {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+fn can_escape(x: usize, y: usize, best: Vec<Vec<i32>>, map: Vec<Vec<String>>) -> bool {
+    let mut seen = Vec::new();
+    let mut togo = Vec::new();
+
+    togo.push((x, y));
+    seen.push((x, y));
+
+    while togo.len() > 0 {
+        let (currx,curry) = togo.pop().unwrap();
+
+        if currx == 0 || currx == best[0].len()-1 || curry == 0 || curry == best.len()-1 {
+            return true;
+        }
+
+        // Go west
+        if currx > 0 && best[curry][currx-1] == i32::MAX {
+            if !has_seen(currx-1, curry, &seen) {
+                togo.push((currx-1, curry));
+                seen.push((currx-1, curry));
+            }
+        }
+
+        // Go east
+        if currx < best[0].len()-1 && best[curry][currx+1] == i32::MAX {
+            if !has_seen(currx+1, curry, &seen) {
+                togo.push((currx+1, curry));
+                seen.push((currx+1, curry));
+            }
+        }
+
+        // Go north
+        if curry > 0 && best[curry-1][currx] == i32::MAX {
+            if !has_seen(currx, curry-1, &seen) {
+                togo.push((currx, curry-1));
+                seen.push((currx, curry-1));
+            }
+        }
+
+        // Go south
+        if curry < best.len()-1 && best[curry+1][currx] == i32::MAX {
+            if !has_seen(currx, curry+1, &seen) {
+                togo.push((currx, curry+1));
+                seen.push((currx, curry+1));
+            }
+        }
+    }
+
+    return false;
+}
+
+pub fn solve_day10_part2(data: String) -> i32 {
+    let (best, pipes) = build_best(data);
+
+    let mut escapes = 0;
+
+    for (posy, row) in  best.iter().enumerate() {
+        for (posx, val) in row.iter().enumerate() {
+            if *val == i32::MAX  {
+               if !can_escape(posx, posy, best.clone()) {
+                println!("ESCAPE {} {}", posx, posy);
+                escapes+=1;
+               } else {
+                println!("NO_ESCAPE {} {}", posx, posy);
+               }
+            }
+        }
+    }
+
+    return escapes;
+}
+
+fn build_best(data: String) -> (Vec<Vec<i32>>, Pipes) {
     let pipes = build_pipes(data);
 
     let (mut startx, mut starty) = (0,0);
@@ -16,18 +112,15 @@ pub fn solve_day10_part1(data: String) -> i32 {
         best.push(rbest);
     }
 
-    println!("FOUND START AT {} {}", startx,starty);
   
     best[starty][startx] = 0;
     let mut process = Vec::new();
     process.push((startx,starty,0));
 
-    println!("HERE {:?}", best);
-
+  
 
     while process.len() > 0 {
         let (currx,curry,val) = process.pop().unwrap();
-        println!("TRAVERSE {},{} -> {}", currx,curry, pipes.board[curry][currx]);
         match pipes.board[curry][currx] {
             'S' => {
                 if curry > 0 && (pipes.board[curry-1][currx] == '|' || pipes.board[curry-1][currx] == 'F' || pipes.board[curry-1][currx] == '7') {
@@ -119,18 +212,7 @@ pub fn solve_day10_part1(data: String) -> i32 {
         }
     }
 
-    println!("RES {:?}", best);
-
-    let mut bestv = 0;
-    for row in best {
-        for val in row {
-            if val > bestv && val < i32::MAX{
-                bestv = val;
-            }
-        }
-    }
-
-    return bestv;
+  return (best, pipes);
 }
 
 fn build_pipes(data: String) -> Pipes {
@@ -178,4 +260,36 @@ fn part1_test_second() {
    let score = solve_day10_part1(test_case);
    assert_eq!(score, 8)
 }
+
+#[test]
+fn part2_test_first() {
+    let test_case = "...........
+    .S-------7.
+    .|F-----7|.
+    .||.....||.
+    .||.....||.
+    .|L-7.F-J|.
+    .|..|.|..|.
+    .L--J.L--J.
+    ...........".to_string();
+ 
+    let score = solve_day10_part2(test_case);
+    assert_eq!(score, 4)
+ }
+
+ #[test]
+ fn part2_test_second() {
+     let test_case = "..........
+     .S------7.
+     .|F----7|.
+     .||....||.
+     .||....||.
+     .|L-7F-J|.
+     .|..||..|.
+     .L--JL--J.
+     ..........".to_string();
+  
+     let score = solve_day10_part2(test_case);
+     assert_eq!(score, 4)
+  }
 }
