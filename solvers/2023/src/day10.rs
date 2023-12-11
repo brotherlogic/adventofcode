@@ -13,9 +13,9 @@ pub fn solve_day10_part1(data: String) -> i32 {
     return bestv;
 }
 
-fn has_seen(x: usize, y: usize, seen: &Vec<(usize,usize)>) -> bool {
-    for (xe, ye) in seen {
-        if *xe == x && *ye == y {
+fn has_seen(x: usize, y: usize, pipe_dir: char, seen: &Vec<(usize,usize, char)>) -> bool {
+    for (xe, ye, c) in seen {
+        if *xe == x && *ye == y && pipe_dir == *c {
             return true;
         }
     }
@@ -23,49 +23,94 @@ fn has_seen(x: usize, y: usize, seen: &Vec<(usize,usize)>) -> bool {
     return false;
 }
 
-fn can_escape(x: usize, y: usize, best: Vec<Vec<i32>>, map: Vec<Vec<String>>) -> bool {
+fn can_escape(x: usize, y: usize, best: Vec<Vec<i32>>, map: &Vec<Vec<char>>) -> bool {
+    println!("STARTING {} {}", x, y);
     let mut seen = Vec::new();
     let mut togo = Vec::new();
 
-    togo.push((x, y));
-    seen.push((x, y));
+    togo.push((x, y, '.'));
+    seen.push((x, y, '.'));
 
     while togo.len() > 0 {
-        let (currx,curry) = togo.pop().unwrap();
+        let (currx,curry, pipe_dir) = togo.pop().unwrap();
 
         if currx == 0 || currx == best[0].len()-1 || curry == 0 || curry == best.len()-1 {
+            println!("REACHED END {},{}", currx, curry);
             return true;
         }
 
         // Go west
-        if currx > 0 && best[curry][currx-1] == i32::MAX {
-            if !has_seen(currx-1, curry, &seen) {
-                togo.push((currx-1, curry));
-                seen.push((currx-1, curry));
+        if pipe_dir == '.' && currx > 0 && best[curry][currx-1] == i32::MAX {
+            if !has_seen(currx-1, curry, pipe_dir, &seen) {
+                println!("PUSHW {} {}", currx-1, curry);
+                togo.push((currx-1, curry, '.'));
+                seen.push((currx-1, curry, '.'));
             }
         }
 
         // Go east
-        if currx < best[0].len()-1 && best[curry][currx+1] == i32::MAX {
-            if !has_seen(currx+1, curry, &seen) {
-                togo.push((currx+1, curry));
-                seen.push((currx+1, curry));
+        if pipe_dir == '.' && currx < best[0].len()-1 && best[curry][currx+1] == i32::MAX {
+            if !has_seen(currx+1, curry,  pipe_dir, &seen) {
+                println!("PUSHE {} {}", currx+1, curry);
+                togo.push((currx+1, curry, '.'));
+                seen.push((currx+1, curry, '.'));
             }
         }
 
         // Go north
-        if curry > 0 && best[curry-1][currx] == i32::MAX {
-            if !has_seen(currx, curry-1, &seen) {
-                togo.push((currx, curry-1));
-                seen.push((currx, curry-1));
+        if pipe_dir == '.' && curry > 0 && best[curry-1][currx] == i32::MAX {
+            if !has_seen(currx, curry-1,  pipe_dir, &seen) {
+                println!("PUSHN {} {}", currx, curry-1);
+                togo.push((currx, curry-1, '.'));
+                seen.push((currx, curry-1, '.'));
+            }
+        }
+
+        // Go north in-between
+        if curry > 0 && currx < best[0].len() {
+            let left = map[curry-1][currx];
+            let right = map[curry-1][currx+1];
+
+             if (left == 'J' || left == '|' || left == '7' || left == 'L' || left == 'F') && (right == 'J' || right == '|' || right == '7' || right == 'L' || right == 'F') {
+                println!("IN BETWEEN {},{} -> {} {} ({:?}) -> {},{}", currx, curry, left, right, map[curry-1],currx, curry-1);
+
+                if !has_seen(currx, curry-1,  pipe_dir, &seen) {
+                    togo.push((currx, curry-1, '|'));
+                    seen.push((currx, curry-1, '|'));
+                }
             }
         }
 
         // Go south
-        if curry < best.len()-1 && best[curry+1][currx] == i32::MAX {
-            if !has_seen(currx, curry+1, &seen) {
-                togo.push((currx, curry+1));
-                seen.push((currx, curry+1));
+        if pipe_dir == '.' && curry < best.len()-1 && best[curry+1][currx] == i32::MAX {
+            if !has_seen(currx, curry+1,  pipe_dir, &seen) {
+                println!("PUSHS {} {}", currx, curry+1);
+                togo.push((currx, curry+1, '.'));
+                seen.push((currx, curry+1, '.'));
+            }
+        }
+
+        // Go south in-between
+        if curry < best.len()-1 && currx < best[0].len(){
+            let left = map[curry+1][currx];
+            let right = map[curry+1][currx+1];
+
+          
+            if (left == 'J' || left == '|' || left == '7' || left == 'L' || left == 'F') && (right == 'J' || right == '|' || right == '7' || right == 'L' || right == 'F') {
+                if !has_seen(currx, curry+1, pipe_dir,  &seen) {
+                    togo.push((currx, curry+1, '|'));
+                    seen.push((currx, curry+1, '|'));
+                }
+            } else if left == '.'  {
+                if !has_seen(currx, curry+1, '.', &seen) {
+                    togo.push((currx, curry+1, '.'));
+                    seen.push((currx, curry+1, '.'));
+                }
+            } else if right == '.' {
+                if !has_seen(currx+1, curry+1, '.', &seen) {
+                    togo.push((currx+1, curry+1, '.'));
+                    seen.push((currx+1, curry+1, '.'));
+                }
             }
         }
     }
@@ -81,7 +126,7 @@ pub fn solve_day10_part2(data: String) -> i32 {
     for (posy, row) in  best.iter().enumerate() {
         for (posx, val) in row.iter().enumerate() {
             if *val == i32::MAX  {
-               if !can_escape(posx, posy, best.clone()) {
+               if !can_escape(posx, posy, best.clone(), &pipes.board) {
                 println!("ESCAPE {} {}", posx, posy);
                 escapes+=1;
                } else {
