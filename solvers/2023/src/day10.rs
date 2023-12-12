@@ -121,6 +121,9 @@ pub fn solve_day10_part2(data: String) -> i32 {
                 if start.0 > 0 && filled[start.1][start.0-1] == '.' {
                     filled[start.1][start.0-1] = 'O';
                 }
+                if currpos == 'F' && start.0 > 0 && start.1 > 0 && filled[start.1-1][start.0-1] == '.' {
+                    filled[start.1-1][start.0-1] = 'O'
+                }
                 if currpos == '|' {
                     start.1 -=1;
                 } else if currpos == 'F' {
