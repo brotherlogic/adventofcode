@@ -45,7 +45,7 @@ pub fn solve_day10_part2(data: String) -> i32 {
     let mut investigate = Vec::new();
     for (posy, row) in filled.iter().enumerate() {
         for (posx, c) in row.iter().enumerate() {
-            if posy == 0 || posy == filled.len()-1 || posx == 0 || posx == filled[0].len() {
+            if posy == 0 || posy == filled.len()-1 || posx == 0 || posx == filled[0].len() - 1 {
                 if *c == '.' {
                     investigate.push((posx,posy));
                 }
@@ -208,7 +208,9 @@ pub fn solve_day10_part2(data: String) -> i32 {
         }
     }
 
-    println!("{:?}", filled);
+    for row in &filled {
+    println!("{:?}", row);
+    }
 
     let mut found = 0;
     for row in filled {
@@ -463,5 +465,24 @@ fn part2_test_first() {
       let score = solve_day10_part2(test_case);
       assert_eq!(score, 8)
    }
+
+   #[test]
+   fn part2_test_fourth() {
+       let test_case = "FF7FSF7F7F7F7F7F---7
+       L|LJ||||||||||||F--J
+       FL-7LJLJ||||||LJL-77
+       F--JF--7||LJLJ7F7FJ-
+       L---JF-JLJ.||-FJLJJ7
+       |F|F-JF---7F7-L7L|7|
+       |FFJF7L7F-JF7|JL---7
+       7-L-JL7||F7|L7F-7F7|
+       L.L7LFJ|||||FJL7||LJ
+       L7JLJL-JLJLJL--JLJ.L".to_string();
+    
+       let score = solve_day10_part2(test_case);
+       assert_eq!(score, 10)
+    }
 }
+
+
 
