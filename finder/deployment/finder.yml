@@ -10,7 +10,7 @@ spec:
         spec:
           containers:
             - name: adventofcode-finder
-              image: registry.brotherlogic-backend.com/brotherlogic/adventofcode-finder:0.237.0 # {"$imagepolicy": "flux-system:adventofcode-finder"}
+              image: registry.brotherlogic-backend.com/brotherlogic/adventofcode-finder:0.238.0 # {"$imagepolicy": "flux-system:adventofcode-finder"}
           restartPolicy: OnFailure
           imagePullSecrets:
             - name: regcred
