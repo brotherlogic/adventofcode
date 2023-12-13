@@ -61,20 +61,8 @@ pub fn solve_day13_part2(data: String) -> i32 {
             let rboard = rotate(board.clone());
 
             let h = symmetry(rboard.clone());
-            println!("HERE {},{} -> {},{}", h,v,ih,iv);
             if (h > 0  && (ih == 0 || ih != h)) || (v > 0 && (iv == 0 || iv != v)) {
-                println!("GOT {} and {} vs {} and {}", h, v, ih, iv);
-         
-                println!("BOARD");
-                for row in &board {
-                    println!("{}", row);
-                }
-
-                println!("RBOARD");
-                for row in &rboard {
-                    println!("{}", row);
-                }
-                
+                println!("GOT {} and {} vs {} and {}", h, v, ih, iv);       
                 if ih == 0 || iv != v {
                     total += v*100;
                 } else {
