@@ -28,17 +28,17 @@ fn build_races(data: String) -> Vec<Race> {
 
 fn build_race(data: String) -> Race {
     let mut elems = data.split("\n");
-    let mut line1 = elems.next().unwrap().trim();
-    let mut line2 = elems.next().unwrap().trim();
+    let  line1 = elems.next().unwrap().trim();
+    let  line2 = elems.next().unwrap().trim();
     
     let mut timel = line1.split(":");
     timel.next();
-    let mut time = timel.next().unwrap(); 
+    let  time = timel.next().unwrap(); 
     let timestr: String = time.chars().filter(|c| !c.is_whitespace()).collect();
 
     let mut distancel = line2.split(":");
     distancel.next();
-    let mut distance = distancel.next().unwrap();
+    let  distance = distancel.next().unwrap();
     let distancestr: String = distance.chars().filter(|c| !c.is_whitespace()).collect();
 
     return Race{time: timestr.parse::<i64>().unwrap(), distance: distancestr.parse::<i64>().unwrap()};

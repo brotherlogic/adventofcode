@@ -8,8 +8,8 @@ pub fn solve_day12_part1(data: String) -> i32 {
 
 fn run_calc(line: String) -> i32 {
     let mut elems = line.split_whitespace();
-    let mut base = elems.next().unwrap();
-    let mut groups = elems.next().unwrap();
+    let  base = elems.next().unwrap();
+    let groups = elems.next().unwrap();
 
     let mut nums = Vec::new();
     for num in groups.split(",") {

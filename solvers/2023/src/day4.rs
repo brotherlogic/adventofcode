@@ -9,7 +9,7 @@ struct Scratch {
 fn build_scratch(data: String) -> Vec<Scratch> {
     let mut all = Vec::new();
 
-    let mut lines = data.split("\n");
+    let  lines = data.split("\n");
     for line in lines {
         let mut s = Scratch{
             card_number: 0,
@@ -24,13 +24,13 @@ fn build_scratch(data: String) -> Vec<Scratch> {
         let gn = first_bits.next().unwrap();
         s.card_number = gn.parse::<u32>().unwrap();
 
-        let mut other = bits.next().unwrap().trim();
+        let  other = bits.next().unwrap().trim();
         let mut halves = other.split("|");
-        let mut wins = halves.next().unwrap().trim();
+        let  wins = halves.next().unwrap().trim();
         for w in wins.split_whitespace() {
             s.winners.push(w.parse::<u32>().unwrap());
         }
-        let mut haves = halves.next().unwrap().trim();
+        let  haves = halves.next().unwrap().trim();
         for h in haves.split_whitespace() {
             s.hand.push(h.parse::<u32>().unwrap());
         }
@@ -88,7 +88,7 @@ pub fn solve_day4_part2(data: String) -> u32 {
  
     }
 
-    for (key, value) in mapper {
+    for (_key, value) in mapper {
         total += value;
     }
 
