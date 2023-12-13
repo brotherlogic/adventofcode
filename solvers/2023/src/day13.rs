@@ -6,18 +6,83 @@ pub fn solve_day13_part1(data: String) -> i32 {
         let v = symmetry(board.clone());
         let rboard = rotate(board.clone());
 
-        println!("BOARD");
-        for row in &board {
-            println!("{}", row);
+        let h = symmetry(rboard.clone());
+        if h > 0 || v > 0 {
+            for row in &board {
+                println!("{}", row);
+            }
+            for row in &rboard {
+                println!("{}", row);
+            }    
         }
-        println!("RBOARD");
-        for row in &rboard {
-            println!("{}", row);
-        }
-
-        let h = symmetry(rboard);
-        println!("GOT {} and {}", h, v);
         total += v*100 + h;
+    }
+
+    return total;
+}
+
+fn smudge(board: Vec<String>) -> Vec<Vec<String>> {
+    let mut boards = Vec::new();
+    for (xpos, row) in board.iter().enumerate() {
+        for (ypos, _ch) in row.chars().enumerate() {
+            let mut nboard = Vec::new();
+            let mut nrow = "".to_string();
+            for (xp, rrow) in board.iter().enumerate() {
+                for (yp, ch) in rrow.chars().enumerate() {
+                    if xpos == xp && ypos == yp {
+                        if ch == '#' {
+                            nrow += ".";
+                        } else {
+                            nrow += "#";
+                        }
+                    } else {
+                        nrow += &ch.to_string();
+                    }
+                }
+                nboard.push(nrow);
+                nrow = "".to_string();
+            }
+            boards.push(nboard);
+        }
+    }
+    return boards;
+}
+
+pub fn solve_day13_part2(data: String) -> i32 {
+    let all = get_boards(data);
+
+    let mut total = 0;
+    for tboard in all {
+        let iv = symmetry(tboard.clone());
+        let ih = symmetry(rotate(tboard.clone()));
+        for board in smudge(tboard) {
+           
+            let v = symmetry(board.clone());
+            let rboard = rotate(board.clone());
+
+            let h = symmetry(rboard.clone());
+            println!("HERE {},{} -> {},{}", h,v,ih,iv);
+            if (h > 0  && (ih == 0 || ih != h)) || (v > 0 && (iv == 0 || iv != v)) {
+                println!("GOT {} and {} vs {} and {}", h, v, ih, iv);
+         
+                println!("BOARD");
+                for row in &board {
+                    println!("{}", row);
+                }
+
+                println!("RBOARD");
+                for row in &rboard {
+                    println!("{}", row);
+                }
+                
+                if ih == 0 || iv != v {
+                    total += v*100;
+                } else {
+                    total += h;
+                }
+                break;
+            }
+        }
     }
 
     return total;
@@ -45,7 +110,7 @@ fn symmetry(board: Vec<String>) -> i32 {
         let mut m = true;
         if y > 0 {
             for t in 0..y {
-                if (y+t) < board.len() && y-t-1 >= 0 && board[y+t] != board[y-t-1] {
+                if (y+t) < board.len() && board[y+t] != board[y-t-1] {
                     m = false;
                     break;
                 }
@@ -104,5 +169,27 @@ fn part1_test_first() {
 
    let score = solve_day13_part1(test_case);
    assert_eq!(score, 405)
+}
+
+#[test]
+fn part2_test_first() {
+   let test_case = "#.##..##.
+   ..#.##.#.
+   ##......#
+   ##......#
+   ..#.##.#.
+   ..##..##.
+   #.#.##.#.
+   
+   #...##..#
+   #....#..#
+   ..##..###
+   #####.##.
+   #####.##.
+   ..##..###
+   #....#..#".to_string();
+
+   let score = solve_day13_part2(test_case);
+   assert_eq!(score, 400)
 }
 }
