@@ -64,8 +64,10 @@ pub fn solve_day13_part2(data: String) -> i32 {
             if (h > 0  && (ih == 0 || ih != h)) || (v > 0 && (iv == 0 || iv != v)) {
                 println!("GOT {} and {} vs {} and {}", h, v, ih, iv);       
                 if ih == 0 || iv != v {
+                    println!("RESOLVED TO {}", v);
                     total += v*100;
                 } else {
+                    println!("RESOLVED TO {}", h);
                     total += h;
                 }
                 break;
