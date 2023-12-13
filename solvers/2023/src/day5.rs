@@ -20,7 +20,7 @@ fn build_data(data: String) -> (Vec<Seed>, Vec<Mapper>) {
     let mut base = "";
     let mut result = "";
 
-    let mut lines = data.split("\n");
+    let lines = data.split("\n");
     for line in lines {
         if line.trim().len() == 0 {
             continue;
@@ -61,8 +61,7 @@ fn build_data(data: String) -> (Vec<Seed>, Vec<Mapper>) {
 
 #[derive(Debug)]
 struct Range {
-    base: i64,
-    end: i64,
+
 }
 #[derive(Debug)]
 struct SeedRange {
@@ -149,7 +148,7 @@ fn process_range(s: SeedRange, mappers: &Vec<Mapper>) -> i64 {
 pub fn path_part_1(data: String) -> i64 {
     let (seeds, mappers) = build_data(data);
     let mut lowest: i64 = i64::MAX;
-    for seed in seeds {
+    for _seed in seeds {
         let nl = process_range(SeedRange{stype: "seed".to_string(),base: 13, end: 13}, &mappers);
         if nl < lowest {
             lowest = nl;
@@ -162,7 +161,7 @@ pub fn path_part_2(data: String) -> i64 {
     let (seeds, mappers) = build_data(data);
     let mut lowest: i64 = i64::MAX;
     let mut first = 0;
-    let mut second = 0;
+    let  _second = 0;
     for seed in seeds {
         if first == 0 {
             first = seed.value
@@ -176,189 +175,6 @@ pub fn path_part_2(data: String) -> i64 {
         }
     }
     return lowest;
-}
-
-fn overlap(r: Range, m: Mapper) -> Range {
-    let mut base = 0;
-    let mut end = 0;
-    if r.base < m.map_start {
-        base = m.map_start;
-    }  else {
-        base = r.base
-    }
-
-    if r.end > m.map_end {
-        end = m.map_end;
-    } else {
-        end = r.end
-    }
-
-    if base < end {
-        return Range{base: base, end: end};
-    }
-    return Range{base: 0, end: 0};
-}
-
-fn run_range(r: Range, mappers: &Vec<Mapper>, curr: &str) -> i64 {
-    let mut best = i64::MAX;
-    for mapper in mappers {
-        if mapper.base == curr {
-            let mut base = 0;
-            let mut end = 0;
-            if r.base < mapper.map_start {
-                base = mapper.map_start;
-            }  else {
-                base = r.base
-            }
-        
-            if r.end > mapper.map_end {
-                end = mapper.map_end;
-            } else {
-                end = r.end
-            }
-
-         
-            let mut overlap = Range{base: r.base, end: r.end};
-            if base <= end {
-                overlap =  Range{base: base, end: end};
-            }
-             
-       
-            if overlap.base != 0 && overlap.end != 0 {
-                let nbest = run_range(overlap, mappers, &mapper.result);
-                if nbest < best {
-                    best = nbest;
-                }
-            }
-        }
-    }
-
-    return best;
-}
-
-fn reverse_solve(data: String) -> i32 {
-    let (seeds, mappers) = build_data(data);
-    let mut start = 0;
-    loop {
-        let value = reverse(start, &mappers);
-        for s in &seeds {
-            if value == s.value {
-                return start.try_into().unwrap();
-            }
-        }
-        start+=1
-    }
-}
-
-pub fn reverse_solve_part2(data: String) -> i32 {
-    let (seeds, mappers) = build_data(data);
-    let mut start = 0;
-    loop {
-        let value = reverse(start, &mappers);
-        let mut first: i64 = 0;
-        let mut second: i64 = 0;
-        for s in &seeds {
-            if first == 0 {
-                first = s.value;
-            } else {
-                if value >= first && value <= first+s.value {
-                    return start.try_into().unwrap();
-                }
-                first = 0;
-                second = 0;
-            }
-        }
-        start+=1
-    }
-}
-
-fn reverse(result: i64, mappers: &Vec<Mapper>) -> i64 {
-    let mut bs = Seed{stype: "location".to_string(), value: result};
-
-    let mut lc = 0;
-    while bs.stype != "seed" {
-        let mut done = false;
-        lc += 1;
-        if lc > 100 {
-            return 99;
-        }
-        for mapper in mappers {
-            if mapper.result == bs.stype && mapper.map_start <= bs.value-mapper.adjustment && mapper.map_end >= bs.value-mapper.adjustment {
-                bs = Seed{
-                    stype: mapper.base.to_string(),
-                    value: bs.value - mapper.adjustment,
-                };
-                done = true;
-            }
-        }
-        if !done {
-            for mapper in mappers {
-                if mapper.result == bs.stype {
-                    bs = Seed{
-                        stype: mapper.base.to_string(),
-                        value: bs.value,
-                    };
-                    break;
-                }
-            }
-        }
-    }
-
-    return bs.value;
-}
-
-pub fn solve_day5_part2(data: String) -> i32 {
-    let (seeds, mappers) = build_data(data);
-
-    let mut lowest = i64::MAX;
-    let mut start: i64 = 0;
-    let mut end: i64 = 0;
- 
-    for  tseed in seeds {
-        if start == 0 {
-            start = tseed.value;
-            continue;
-        }
-        if end == 0 {
-            end = tseed.value;
-        }
-
-        for sv in start..start+end {
-            let mut seed = Seed{value: sv, stype: "seed".to_string()};
-            while seed.stype != "location" {
-           
-                let mut done = false;
-                for mapper in &mappers {
-                    if mapper.base == seed.stype && mapper.map_start <= seed.value && mapper.map_end >= seed.value {
-                        seed = Seed{
-                            stype: mapper.result.to_string(),
-                            value: seed.value + mapper.adjustment,
-                        };
-                        done = true
-                    }
-                }
-                if !done {
-                    for mapper in &mappers {
-                        if mapper.base == seed.stype {
-                            seed = Seed{
-                                stype: mapper.result.to_string(),
-                                value: seed.value,
-                            };
-                            break;
-                        }
-                    }
-                }
-            }
-            if seed.value < lowest {
-                lowest = seed.value;
-            }
-        }
-
-        start = 0;
-        end = 0;
-    }
-
-    return lowest.try_into().unwrap();
 }
 
 pub fn solve_day5_part1(data: String) -> i32 {
@@ -439,7 +255,7 @@ humidity-to-location map:
 60 56 37
 56 93 4".to_string();
     let answer: i64 = 35;
-    let ianswer: i32 = 79;
+    let _ianswer: i32 = 79;
     assert_eq!(path_part_1(data.to_string()), answer);
 }
 

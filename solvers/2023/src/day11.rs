@@ -24,7 +24,7 @@ pub fn solve_day11_part2(data: String, adder: i64) -> i64 {
     let mut cols = Vec::new();
     for row in 0..max_row {
         let mut count = 0;
-        for (gx,gy) in &sgalaxies {
+        for (_gx,gy) in &sgalaxies {
             if *gy == row {
                 count+=1;
             }
@@ -36,7 +36,7 @@ pub fn solve_day11_part2(data: String, adder: i64) -> i64 {
 
     for col in 0..max_col{
         let mut count = 0;
-        for (gx,gy) in &sgalaxies {
+        for (gx,_gy) in &sgalaxies {
             if *gx == col {
                 count+=1;
             }
@@ -101,7 +101,7 @@ pub fn solve_day11_part1(data: String) -> i64 {
     let mut cols = Vec::new();
     for row in 0..max_row {
         let mut count = 0;
-        for (gx,gy) in &sgalaxies {
+        for (_gx,gy) in &sgalaxies {
             if *gy == row {
                 count+=1;
             }
@@ -113,7 +113,7 @@ pub fn solve_day11_part1(data: String) -> i64 {
 
     for col in 0..max_col{
         let mut count = 0;
-        for (gx,gy) in &sgalaxies {
+        for (gx,_gy) in &sgalaxies {
             if *gx == col {
                 count+=1;
             }
