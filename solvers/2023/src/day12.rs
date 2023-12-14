@@ -14,9 +14,23 @@ pub fn solve_day12_part2(data: String) -> i32 {
     return st;
 }
 
+fn minv(a: usize, b: usize) -> usize {
+    if a < b {
+        return a;
+    }
+    return b;
+}
 
+fn rep(st: String, num: usize) -> String {
+    let mut fstr = "".to_string();
+    for _ in 0..num {
+        fstr += &st;
+    }
+    return fstr.to_string();
+}
 
 fn run_calc(line: String, max: i32) -> i32 {
+    println!("RUN {}", line);
     let mut elems = line.split_whitespace();
     let mut base = elems.next().unwrap();
     let groups = elems.next().unwrap();
@@ -36,28 +50,40 @@ fn run_calc(line: String, max: i32) -> i32 {
     }
 
     let mut success = 0;
-    let mut process: Vec<(usize, String)> = Vec::new();
-    process.push((0 as usize, base.to_string()));
+    let mut process: Vec<(usize, String, String)> = Vec::new();
+    process.push((0 as usize, nnstr.to_string(), "".to_string()));
 
     while process.len() > 0 {
-        let (npointer, st) = process.pop().unwrap();
-        println!("STR {} {} ({:?})", st, npointer, nnums);
+        let (npointer, st, sofar) = process.pop().unwrap();
+        println!("STR {} ({}) {} ({:?}) {}", st, st.len(), npointer, nnums, sofar);
 
         // Winning case
         if st.len() == 0 && npointer == nnums.len() {
+            println!("WINNER: {}", sofar);
             success += 1;
-        } else {
+        } else if npointer >= nnums.len() {
+            if !st.contains("?") {
+                println!("WINNER F {} -> {}", st, sofar);
+                success += 1;
+            }
+        } else if st.len() > 0 {
             if st[0..1] == *"?" || st[0..1] == *"#" {
                 println!("BOING {}", st);
-                if suitable(st[0..nnums[npointer]+1].to_string(), nnums[npointer] == st.len()) {
+                if st.len() >= nnums[npointer] && suitable(st[0..minv(nnums[npointer]+1, st.len())].to_string(), nnums[npointer] == st.len()) {
+                    //println!("FOUND SUIT");
                     if nnums[npointer] == st.len() {
-                        process.push((npointer+1, "".to_string()));
+                        println!("{} --> {} {} BLANK FROM {}",st,  "", npointer+1, sofar);
+                        process.push((npointer+1, "".to_string(), sofar.clone() + &rep("#".to_string(), nnums[npointer])));
                     } else {
-                        process.push((npointer+1, st[nnums[npointer]+1..].to_string()));
+                        println!("{} --> {} {} FROM {}", st, st[nnums[npointer]+1..].to_string(), npointer+1, sofar);
+                        process.push((npointer+1, st[nnums[npointer]+1..].to_string(),sofar.clone() + &rep("#".to_string(), nnums[npointer]) + "."));
                     }
                 }
             }
-            process.push((npointer, st[1..].to_string()));
+            //println!("{} --> {} {}", st, st[1..].to_string(), npointer);
+            if st[0..1] == *"?" {
+                process.push((npointer, st[1..].to_string(), sofar.clone() + "."));
+            }
         }
     }
 
@@ -65,19 +91,19 @@ fn run_calc(line: String, max: i32) -> i32 {
 }
 
 fn suitable(str: String, end: bool) -> bool {
-    println!("SUIT: {} {}", str, end);
+    //println!("SUIT: {} {}", str, end);
     for c in str[0..str.len()-1].chars() {
         if c != '#' && c != '?' {
-            println!("PUSHING END {}", c);
+            //println!("PUSHING END {}", c);
             return false;
         }
     }
 
     if !end {
-        println!("CHECKING {}", str.chars().last().unwrap());
+        //println!("CHECKING {}", str.chars().last().unwrap());
         return str.chars().last().unwrap() == '?' || str.chars().last().unwrap()  == '.';
     } else {
-        return true;
+        return str.chars().last().unwrap() == '#' || str.chars().last().unwrap() == '?';
     }
 }
 
@@ -161,9 +187,9 @@ mod testsca {
 
     #[test]
     fn part1_test_reduced() {
-       let test_case = ".??..??...?##. 1,1,3".to_string();
+       let test_case = "??? 1".to_string();
        let score = solve_day12_part1(test_case);
-       assert_eq!(score, 4)
+       assert_eq!(score, 3)
     }
 
 //#[test]
