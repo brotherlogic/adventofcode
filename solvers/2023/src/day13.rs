@@ -79,7 +79,7 @@ pub fn solve_day13_part2(data: String) -> i32 {
                     println!("{}", line);
                 }
 
-                if iv != v {
+                if iv != v && v != 0 {
                     println!("RESOLVED TO v {}", v);
                     total += v*100;
                 } else {
@@ -216,5 +216,29 @@ fn part2_test_edge() {
    let score = solve_day13_part2(test_case);
    assert_eq!(score, 900)
 }
+
+#[test]
+fn part2_test_edge2() {
+   let test_case = "#..#..#
+   ######.
+   .....#.
+   #..####
+   .##....
+   ....###
+   #..##.#
+   #..###.
+   ####.#.
+   .##.#.#
+   #..#.#.
+   ....###
+   .###.#.
+   .##..#.
+   .##..#.".to_string();
+
+   let score = solve_day13_part2(test_case);
+   assert_eq!(score, 2)
+}
+
+
 }
 
