@@ -63,7 +63,7 @@ pub fn solve_day13_part2(data: String) -> i32 {
             let h = symmetry(rboard.clone());
             if (h > 0  && (ih == 0 || ih != h)) || (v > 0 && (iv == 0 || iv != v)) {
                 println!("GOT {} and {} vs {} and {}", h, v, ih, iv);       
-                if ih == 0 || iv != v {
+                if iv != v {
                     println!("RESOLVED TO {}", v);
                     total += v*100;
                 } else {
@@ -182,4 +182,29 @@ fn part2_test_first() {
    let score = solve_day13_part2(test_case);
    assert_eq!(score, 400)
 }
+
+#[test]
+fn part2_test_edge() {
+   let test_case = "##.#......#.##.
+   ###........####
+   ###..#..#..####
+   .###..##..###.#
+   .#.###..###...#
+   .....####.....#
+   #.###.##.###.##
+   #............#.
+   ..###.##.###..#
+   ##.#.#..#.#.###
+   ...#..##..#....
+   ##.#.####.#.##.
+   ###.#.##.#.###.
+   ....######.....
+   ####......#####
+   ####......#####
+   ....######.....".to_string();
+
+   let score = solve_day13_part2(test_case);
+   assert_eq!(score, 7)
 }
+}
+
