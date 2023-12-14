@@ -51,7 +51,7 @@ pub fn solve_day14_part2(data: String) -> i32 {
     let mut weight_map: HashMap<String, i32> = HashMap::new();
 
     let mut iboard = get_board(data);
-    for i in 0..10000 {
+    for i in 1..10000 {
         iboard = tilt(rotate(iboard));
         iboard = tilt(rotate(iboard));
         iboard = flip(tilt(flip(rotate(iboard))));
@@ -60,7 +60,7 @@ pub fn solve_day14_part2(data: String) -> i32 {
         let flat = flatten(iboard.clone());
         if seen_map.contains_key(&flat) {
             println!("SEEN {} {} -> {}", i, seen_map.get(&flat).unwrap(), weight_map.get(&flat).unwrap());
-            let value = (1000000000 - (i-1)) % (i - seen_map.get(&flat).unwrap());
+            let value = (1000000000 -  seen_map.get(&flat).unwrap()) % (i - seen_map.get(&flat).unwrap()) + seen_map.get(&flat).unwrap();
             println!("VALUE = {} FROM {} and {}", value, i-1, seen_map.len());
             for (key, val) in &seen_map {
                 if *val == value as i32{
@@ -68,6 +68,7 @@ pub fn solve_day14_part2(data: String) -> i32 {
                 }
             }
         } else {
+            println!("SEEN {} {}", i, weight(rotate(iboard.clone())));
             seen_map.insert(flat.clone(), i as i32);
             weight_map.insert(flat, weight(rotate(iboard.clone())));
         }
