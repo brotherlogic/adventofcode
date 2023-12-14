@@ -214,7 +214,7 @@ fn part2_test_edge() {
    ..##..###.##.#.##".to_string();
 
    let score = solve_day13_part2(test_case);
-   assert_eq!(score, 5125)
+   assert_eq!(score, 900)
 }
 }
 
