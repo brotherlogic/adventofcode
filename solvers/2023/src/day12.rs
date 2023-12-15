@@ -23,7 +23,7 @@ fn minv(a: usize, b: usize) -> usize {
 
 fn rep(st: String, num: usize) -> String {
     let mut fstr = "".to_string();
-    for _ in 0..num {
+    for i in 0..num {
         fstr += &st;
     }
     return fstr.to_string();
@@ -46,7 +46,12 @@ fn run_calc(line: String, max: i32) -> i32 {
         for num in &nums {
             nnums.push(*num);
         }
+        if i < max-1 {
         nnstr += base;
+        nnstr += "?";
+        } else {
+            nnstr += base;
+        }
     }
 
     let mut success = 0;
@@ -55,33 +60,31 @@ fn run_calc(line: String, max: i32) -> i32 {
 
     while process.len() > 0 {
         let (npointer, st, sofar) = process.pop().unwrap();
-        println!("STR {} ({}) {} ({:?}) {}", st, st.len(), npointer, nnums, sofar);
+        //println!("STR {} ({}) {} ({:?}) {}", st, st.len(), npointer, nnums, sofar);
 
         // Winning case
         if st.len() == 0 && npointer == nnums.len() {
-            println!("WINNER: {}", sofar);
+            //println!("WINNER: {}", sofar);
             success += 1;
         } else if npointer >= nnums.len() {
-            if !st.contains("?") {
-                println!("WINNER F {} -> {}", st, sofar);
+                //println!("WINNER F {} -> {}", st, sofar);
                 success += 1;
-            }
         } else if st.len() > 0 {
             if st[0..1] == *"?" || st[0..1] == *"#" {
-                println!("BOING {}", st);
+             //   println!("BOING {}", st);
                 if st.len() >= nnums[npointer] && suitable(st[0..minv(nnums[npointer]+1, st.len())].to_string(), nnums[npointer] == st.len()) {
                     //println!("FOUND SUIT");
                     if nnums[npointer] == st.len() {
-                        println!("{} --> {} {} BLANK FROM {}",st,  "", npointer+1, sofar);
+                        //println!("{} --> {} {} BLANK FROM {}",st,  "", npointer+1, sofar);
                         process.push((npointer+1, "".to_string(), sofar.clone() + &rep("#".to_string(), nnums[npointer])));
                     } else {
-                        println!("{} --> {} {} FROM {}", st, st[nnums[npointer]+1..].to_string(), npointer+1, sofar);
+                        //println!("{} --> {} {} FROM {}", st, st[nnums[npointer]+1..].to_string(), npointer+1, sofar);
                         process.push((npointer+1, st[nnums[npointer]+1..].to_string(),sofar.clone() + &rep("#".to_string(), nnums[npointer]) + "."));
                     }
                 }
             }
             //println!("{} --> {} {}", st, st[1..].to_string(), npointer);
-            if st[0..1] == *"?" {
+            if st[0..1] == *"?" || st[0..1] == *"." {
                 process.push((npointer, st[1..].to_string(), sofar.clone() + "."));
             }
         }
@@ -187,12 +190,12 @@ mod testsca {
 
     #[test]
     fn part1_test_reduced() {
-       let test_case = "??? 1".to_string();
-       let score = solve_day12_part1(test_case);
-       assert_eq!(score, 3)
+       let test_case = "???.### 1,1,3".to_string();
+       let score = solve_day12_part2(test_case);
+       assert_eq!(score, 1)
     }
 
-//#[test]
+#[test]
 fn part1_test_first() {
    let test_case = "???.### 1,1,3
    .??..??...?##. 1,1,3
@@ -205,7 +208,7 @@ fn part1_test_first() {
    assert_eq!(score, 21)
 }
 
-//#[test]
+#[test]
 fn part2_test_first() {
    let test_case = "???.### 1,1,3
    .??..??...?##. 1,1,3
