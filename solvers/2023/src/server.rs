@@ -236,6 +236,15 @@ impl SolverService for RServer {
                 answer:tanswer,
          }));
         }
+        if rq.year == 2023 && rq.day == 12 && rq.part == 2 {
+            let tanswer = day12::solve_day12_part2(rq.data);
+            println!("Returning {}", tanswer);
+            return Ok(Response::new(SolveResponse{
+                string_answer:"".to_string(),
+                big_answer:0,
+                answer:tanswer,
+         }));
+        }
         if rq.year == 2023 && rq.day == 13 && rq.part == 1 {
             let tanswer = day13::solve_day13_part1(rq.data);
             println!("Returning {}", tanswer);
