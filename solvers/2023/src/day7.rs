@@ -2,7 +2,6 @@ use std::collections::HashMap;
 
 #[derive(Debug)]
 struct Hand {
-    cards: String,
     bid: i64,
     ordering: String,
     part2_ordering: String,
@@ -81,7 +80,7 @@ fn get_rank(cards: String) -> String {
     }
 
     if mapper.keys().len() == 2 {
-        for (key, val) in &mapper {
+        for (_key, val) in &mapper {
             if *val == 1 || *val == 4 {
                 return "F".to_string(); // Four of a kind
             }
@@ -90,7 +89,7 @@ fn get_rank(cards: String) -> String {
     }
 
     if mapper.keys().len() == 3 {
-        for (key, val) in &mapper {
+        for (_key, val) in &mapper {
             if *val == 3 {
                 return "D".to_string(); // Three of a kind
             } else if *val == 2 {
@@ -120,7 +119,7 @@ fn build_hands(data: String) -> Vec<Hand> {
         let cards = elems.next().unwrap().to_string();
         let bid = elems.next().unwrap().parse::<i64>().unwrap();
 
-        hands.push(Hand{cards: cards.clone(), bid: bid, ordering: get_ordering(cards.clone()), part2_ordering: get_part2_ordering(cards.clone())});
+        hands.push(Hand{bid: bid, ordering: get_ordering(cards.clone()), part2_ordering: get_part2_ordering(cards.clone())});
     }
 
     return hands;

@@ -32,7 +32,7 @@ fn rep(st: String, num: usize) -> String {
 fn run_calc(line: String, max: i32) -> i32 {
     println!("RUN {}", line);
     let mut elems = line.split_whitespace();
-    let mut base = elems.next().unwrap();
+    let  base = elems.next().unwrap();
     let groups = elems.next().unwrap();
 
     let mut nums = Vec::new();

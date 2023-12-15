@@ -48,14 +48,6 @@ pub fn solve_day8_part1(data: String) -> i32 {
     return steps.try_into().unwrap();
 }
 
-fn allz(starts: &Vec<String>) -> bool {
-    for start in starts {
-        if &start[2..3] != "Z" {
-            return false;
-        }
-    }
-    return true;
-}
 
 #[derive(Debug)]
 struct Looper {
@@ -80,13 +72,13 @@ fn build_looper(start: String, path: String, routes: &Vec<Route>) -> Looper {
     let mut steps = 0;
     let mut nstate = "".to_string()+&start;
 
-    let mut loops = 0;
-    let mut jump = 0;
+    let  _loops = 0;
+    let  _jump = 0;
     loop {
         if nstate[2..3] == *"Z" {
-            for (pos, (st, nu, _)) in done.iter().enumerate() {
+            for (_pos, (st, nu, _)) in done.iter().enumerate() {
                 if st == &nstate && nu == &(steps%path.len() as i64){
-                    for (npos, (_st, nu2, steps)) in done.iter().enumerate() {
+                    for (_npos, (_st, _nu2, steps)) in done.iter().enumerate() {
                         return Looper{round: *steps};
                     }
                 }
@@ -126,9 +118,9 @@ pub fn solve_day8_part2(data: String) -> i64 {
     }
 
     let mut pointer:i64 = 0;
-    let mut loops = 0;
+    let mut _loops = 0;
     loop {
-        loops += 1;
+        _loops += 1;
      
         let mut highest = 0;
         for looper in &loopers {

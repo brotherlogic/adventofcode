@@ -25,7 +25,7 @@ fn build_board(board: String) -> Board {
         symbols:  Vec::new(),
     };
 
-    let mut elems = board.split("\n");
+    let  elems = board.split("\n");
     let mut y: u32 = 0;
     for elem in elems {
         let mut x: u32 = 0;
@@ -59,7 +59,7 @@ fn build_board(board: String) -> Board {
             let xval = u32::try_from(curr_num.len()).ok().unwrap();
             let gnum = curr_num.parse::<u32>().unwrap();
             b.nums.push(Number{value: gnum, x: x-xval, xe: x-1,y: y});
-            curr_num = "".to_string();
+            //curr_num = "".to_string();
         }
 
         y+=1
