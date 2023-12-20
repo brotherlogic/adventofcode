@@ -134,16 +134,16 @@ fn run_split(st: String, nums: Vec<usize>) -> i64 {
             spoint -= (nums[npointer]-1);
         }
 
-        println!("WORKING FROM {} -> {}", spoint, npointer);
+        //println!("WORKING FROM {} -> {}", spoint, npointer);
 
         while spoint >= 0 {
             let nstr = &st[spoint..];
-            println!("TRYING {}", nstr);
+            //println!("TRYING {}", nstr);
             if fits(st.clone(), spoint, nums[npointer]) {
                 let nns = &st[0..spoint];
-                println!("UP TO {}", nns);
+                //println!("UP TO {}", nns);
                 if npointer != 0 || !any(st[0..spoint].to_string(), '#') {
-                    println!("SUPERMAP");
+                    //println!("SUPERMAP");
                     supermap[npointer][spoint] = smap_sum(st.clone(), supermap.clone(), npointer+1, spoint+nums[npointer] + 1, npointer == nums.len()-1);
                 }
             }
@@ -156,7 +156,7 @@ fn run_split(st: String, nums: Vec<usize>) -> i64 {
              spoint -= 1;
         }
 
-        println!("ROW {:?}", supermap[npointer]);
+        //println!("ROW {:?}", supermap[npointer]);
 
        if npointer == 0 {
         break;
@@ -177,7 +177,7 @@ fn run_split(st: String, nums: Vec<usize>) -> i64 {
 
 fn smap_sum(st: String, smap: Vec<Vec<i64>>, row: usize, spoint: usize, mrow: bool) -> i64 {
     if mrow && spoint >= smap[0].len() {
-        println!("FASTSUM");
+        //println!("FASTSUM");
         return 1;
     }
 
@@ -191,7 +191,7 @@ fn smap_sum(st: String, smap: Vec<Vec<i64>>, row: usize, spoint: usize, mrow: bo
                     return 0;
                 }
             } else if in_hash {
-                println!("HASHSUM {}", sval);
+                //println!("HASHSUM {}", sval);
                 return sval;
             }
            
@@ -199,7 +199,7 @@ fn smap_sum(st: String, smap: Vec<Vec<i64>>, row: usize, spoint: usize, mrow: bo
         }
     }
 
-    println!("SMAPSUM {}", sval);
+    //println!("SMAPSUM {}", sval);
     return sval;
 }
 
@@ -289,7 +289,7 @@ fn calculate_orgs(line: String, goals: &Vec<i32>) -> i32 {
     }
 
 
-    println!("FOUND {}", line);
+    //println!("FOUND {}", line);
     return 1;
 }
 
