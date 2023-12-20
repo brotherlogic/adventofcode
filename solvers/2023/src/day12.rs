@@ -53,7 +53,6 @@ fn run_calc(line: String, max: i32) -> i32 {
         }
     }
 
-    println!("{} -> {:?}", nnstr, nnums);
     return run_split(nnstr, nnums);
 }
 
@@ -72,10 +71,8 @@ fn find_highest(map: Vec<Vec<i32>>) -> (usize,usize) {
 }
 
 fn fits(st: String, sp: usize, len: usize) -> bool {
-    println!("FITS {:?} with {:?} {}", st, sp, len);
-  
+   
     if any(st[sp..sp+len].to_string(), '.') {
-        println!("NO FIT");
         return false;
     }
     
@@ -90,7 +87,6 @@ fn fits(st: String, sp: usize, len: usize) -> bool {
 
     // value to the left must be a '.' or ?
     let val = &st[sp-1..sp];
-    println!("NOT A FIT if hash {}", val);
     return !(st[sp-1..sp] == *"#")
 }
 
@@ -111,15 +107,13 @@ fn run_split(st: String, nums: Vec<usize>) -> i32 {
                 spoint = xpos;
             }
         }
-        println!("FOUND SPOINT {} with {}", spoint, npointer);
         if npointer != nums.len()-1 {
             spoint -= (1+nums[npointer]);
         } else {
             spoint -= (nums[npointer]-1);
         }
 
-        println!("SEARCHING BACK FROM {} {} {}", spoint, npointer, nums[npointer]);
-   
+    
         while spoint >= 0 {
             let nstr = &st[spoint..];
             if fits(st.clone(), spoint, nums[npointer]) {
@@ -135,7 +129,6 @@ fn run_split(st: String, nums: Vec<usize>) -> i32 {
         }
              spoint -= 1;
         }
-        println!("ROW: {:?}", supermap[npointer]);
        if npointer == 0 {
         break;
        }
@@ -149,8 +142,7 @@ fn run_split(st: String, nums: Vec<usize>) -> i32 {
 stotal += *num;
    }
 
-   println!("FOUND {} -> {}", st, stotal);
-
+ 
    return stotal;
 }
 
@@ -159,8 +151,6 @@ fn smap_sum(st: String, smap: Vec<Vec<i32>>, row: usize, spoint: usize, mrow: bo
         return 1;
     }
 
-    println!("SMAP: {}", spoint);
-
     let mut sval = 0;
     let mut in_hash = false;
     for (xpos, val) in smap[row].iter().enumerate() {
@@ -168,7 +158,6 @@ fn smap_sum(st: String, smap: Vec<Vec<i32>>, row: usize, spoint: usize, mrow: bo
             if st[xpos..xpos+1] == *"#" {
                 in_hash = true;
             } else if in_hash {
-                println!("BREAKING EARLY");
                 return sval;
             }
            
@@ -179,16 +168,13 @@ fn smap_sum(st: String, smap: Vec<Vec<i32>>, row: usize, spoint: usize, mrow: bo
 }
 
 fn suitable(str: String, end: bool) -> bool {
-    //println!("SUIT: {} {}", str, end);
     for c in str[0..str.len()-1].chars() {
         if c != '#' && c != '?' {
-            //println!("PUSHING END {}", c);
             return false;
         }
     }
 
     if !end {
-        //println!("CHECKING {}", str.chars().last().unwrap());
         return str.chars().last().unwrap() == '?' || str.chars().last().unwrap()  == '.';
     } else {
         return str.chars().last().unwrap() == '#' || str.chars().last().unwrap() == '?';
