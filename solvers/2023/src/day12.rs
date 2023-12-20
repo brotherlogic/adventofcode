@@ -1,4 +1,4 @@
-pub fn solve_day12_part1(data: String) -> i32 {
+pub fn solve_day12_part1(data: String) -> i64 {
     let mut st = 0;
     for line in data.split("\n") {
     st +=  run_calc(line.to_string(), 1);
@@ -6,7 +6,7 @@ pub fn solve_day12_part1(data: String) -> i32 {
     return st;
 }
 
-pub fn solve_day12_part2(data: String) -> i32 {
+pub fn solve_day12_part2(data: String) -> i64 {
     let mut st = 0;
     for line in data.split("\n") {
     st +=  run_calc(line.to_string(), 5);
@@ -29,7 +29,7 @@ fn rep(st: String, num: usize) -> String {
     return fstr.to_string();
 }
 
-fn run_calc(line: String, max: i32) -> i32 {
+fn run_calc(line: String, max: i64) -> i64 {
     let mut elems = line.split_whitespace();
     let  base = elems.next().unwrap();
     let groups = elems.next().unwrap();
@@ -90,8 +90,8 @@ fn fits(st: String, sp: usize, len: usize) -> bool {
     return !(st[sp-1..sp] == *"#")
 }
 
-fn run_split(st: String, nums: Vec<usize>) -> i32 {
-    let mut supermap: Vec<Vec<i32>> = Vec::new();
+fn run_split(st: String, nums: Vec<usize>) -> i64 {
+    let mut supermap: Vec<Vec<i64>> = Vec::new();
     for _ in &nums {
         supermap.push(vec![0; st.len()]);
     }
@@ -139,14 +139,14 @@ fn run_split(st: String, nums: Vec<usize>) -> i32 {
 
     let mut stotal = 0;
    for num in &supermap[0] {
-stotal += *num;
+        stotal += *num;
    }
 
  
    return stotal;
 }
 
-fn smap_sum(st: String, smap: Vec<Vec<i32>>, row: usize, spoint: usize, mrow: bool) -> i32 {
+fn smap_sum(st: String, smap: Vec<Vec<i64>>, row: usize, spoint: usize, mrow: bool) -> i64 {
     if mrow && spoint >= smap[0].len() {
         return 1;
     }
@@ -290,5 +290,6 @@ fn part2_test_first() {
    let score = solve_day12_part2(test_case);
    assert_eq!(score, 525152)
 }
+
 }
 
