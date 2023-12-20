@@ -30,7 +30,6 @@ fn rep(st: String, num: usize) -> String {
 }
 
 fn run_calc(line: String, max: i32) -> i32 {
-    println!("RUN {}", line);
     let mut elems = line.split_whitespace();
     let  base = elems.next().unwrap();
     let groups = elems.next().unwrap();
@@ -54,43 +53,129 @@ fn run_calc(line: String, max: i32) -> i32 {
         }
     }
 
-    let mut success = 0;
-    let mut process: Vec<(usize, String, String)> = Vec::new();
-    process.push((0 as usize, nnstr.to_string(), "".to_string()));
+    println!("{} -> {:?}", nnstr, nnums);
+    return run_split(nnstr, nnums);
+}
 
-    while process.len() > 0 {
-        let (npointer, st, sofar) = process.pop().unwrap();
-        //println!("STR {} ({}) {} ({:?}) {}", st, st.len(), npointer, nnums, sofar);
-
-        // Winning case
-        if st.len() == 0 && npointer == nnums.len() {
-            //println!("WINNER: {}", sofar);
-            success += 1;
-        } else if npointer >= nnums.len() {
-                //println!("WINNER F {} -> {}", st, sofar);
-                success += 1;
-        } else if st.len() > 0 {
-            if st[0..1] == *"?" || st[0..1] == *"#" {
-             //   println!("BOING {}", st);
-                if st.len() >= nnums[npointer] && suitable(st[0..minv(nnums[npointer]+1, st.len())].to_string(), nnums[npointer] == st.len()) {
-                    //println!("FOUND SUIT");
-                    if nnums[npointer] == st.len() {
-                        //println!("{} --> {} {} BLANK FROM {}",st,  "", npointer+1, sofar);
-                        process.push((npointer+1, "".to_string(), sofar.clone() + &rep("#".to_string(), nnums[npointer])));
-                    } else {
-                        //println!("{} --> {} {} FROM {}", st, st[nnums[npointer]+1..].to_string(), npointer+1, sofar);
-                        process.push((npointer+1, st[nnums[npointer]+1..].to_string(),sofar.clone() + &rep("#".to_string(), nnums[npointer]) + "."));
-                    }
-                }
-            }
-            //println!("{} --> {} {}", st, st[1..].to_string(), npointer);
-            if st[0..1] == *"?" || st[0..1] == *"." {
-                process.push((npointer, st[1..].to_string(), sofar.clone() + "."));
+fn find_highest(map: Vec<Vec<i32>>) -> (usize,usize) {
+    let mut highest:i32 = -1;
+    let mut hv = (0,0);
+    for (xpos, row) in map.iter().enumerate() {
+        for(pos,value) in row.iter().enumerate() {
+            if value > &highest {
+                hv = (xpos, pos);
+                highest = *value;
             }
         }
     }
+    return hv;
+}
 
-    return success;
+fn fits(st: String, sp: usize, len: usize) -> bool {
+    println!("FITS {:?} with {:?} {}", st, sp, len);
+  
+    if any(st[sp..sp+len].to_string(), '.') {
+        println!("NO FIT");
+        return false;
+    }
+    
+    // Return true if we're at the start of the string and the right most char is eligibl
+    if sp == 0 {
+        return st[sp+len..sp+len+1] != *"#";
+    }
+
+    if sp+len < st.len() && st[sp+len..sp+len+1] == *"#" {
+        return false;
+    }
+
+    // value to the left must be a '.' or ?
+    let val = &st[sp-1..sp];
+    println!("NOT A FIT if hash {}", val);
+    return !(st[sp-1..sp] == *"#")
+}
+
+fn run_split(st: String, nums: Vec<usize>) -> i32 {
+    let mut supermap: Vec<Vec<i32>> = Vec::new();
+    for _ in &nums {
+        supermap.push(vec![0; st.len()]);
+    }
+    supermap.push(vec![0; st.len()]);
+    supermap[nums.len()][st.len()-1] = 1;
+   
+    // Work backwards through the nums
+    let mut npointer = nums.len()-1;
+    while npointer >= 0 {
+        let mut spoint = 0;
+        for (xpos, entry) in supermap[npointer+1].iter().enumerate() {
+            if entry > &0 { 
+                spoint = xpos;
+            }
+        }
+        println!("FOUND SPOINT {} with {}", spoint, npointer);
+        if npointer != nums.len()-1 {
+            spoint -= (1+nums[npointer]);
+        } else {
+            spoint -= (nums[npointer]-1);
+        }
+
+        println!("SEARCHING BACK FROM {} {} {}", spoint, npointer, nums[npointer]);
+   
+        while spoint >= 0 {
+            let nstr = &st[spoint..];
+            if fits(st.clone(), spoint, nums[npointer]) {
+                if npointer != 0 || !any(st[0..spoint].to_string(), '#') {
+                    supermap[npointer][spoint] = smap_sum(st.clone(), supermap.clone(), npointer+1, spoint+nums[npointer] + 1, npointer == nums.len()-1);
+                }
+            }
+            //if st[spoint+nums[npointer]-1..spoint+nums[npointer]] ==  *"#" {
+            //    break;
+            //}
+        if spoint == 0 {
+            break;
+        }
+             spoint -= 1;
+        }
+        println!("ROW: {:?}", supermap[npointer]);
+       if npointer == 0 {
+        break;
+       }
+       npointer -= 1;
+    }
+
+  
+
+    let mut stotal = 0;
+   for num in &supermap[0] {
+stotal += *num;
+   }
+
+   println!("FOUND {} -> {}", st, stotal);
+
+   return stotal;
+}
+
+fn smap_sum(st: String, smap: Vec<Vec<i32>>, row: usize, spoint: usize, mrow: bool) -> i32 {
+    if mrow && spoint >= smap[0].len() {
+        return 1;
+    }
+
+    println!("SMAP: {}", spoint);
+
+    let mut sval = 0;
+    let mut in_hash = false;
+    for (xpos, val) in smap[row].iter().enumerate() {
+        if xpos >= spoint {
+            if st[xpos..xpos+1] == *"#" {
+                in_hash = true;
+            } else if in_hash {
+                println!("BREAKING EARLY");
+                return sval;
+            }
+           
+            sval += val;
+        }
+    }
+    return sval;
 }
 
 fn suitable(str: String, end: bool) -> bool {
@@ -190,11 +275,10 @@ mod testsca {
 
     #[test]
     fn part1_test_reduced() {
-       let test_case = "???.### 1,1,3".to_string();
+       let test_case = "?###???????? 3,2,1".to_string();
        let score = solve_day12_part2(test_case);
-       assert_eq!(score, 1)
+       assert_eq!(score, 506250)
     }
-
 #[test]
 fn part1_test_first() {
    let test_case = "???.### 1,1,3
@@ -221,3 +305,4 @@ fn part2_test_first() {
    assert_eq!(score, 525152)
 }
 }
+
