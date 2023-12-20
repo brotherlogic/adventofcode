@@ -1,7 +1,14 @@
 pub fn solve_day12_part1(data: String) -> i64 {
     let mut st = 0;
     for line in data.split("\n") {
-    st +=  run_calc(line.to_string(), 1);
+   // let val1 = run_calc_old(line.to_string());
+    let val2 = run_calc(line.to_string(), 1);
+    //if val1 as i64 != val2 {
+    //    println!("BAD LINE: {} ({} vs {})", line, val1, val2);
+    //    return 0;
+    //} else {
+        st += val2;
+    //}
     }
     return st;
 }
@@ -19,6 +26,19 @@ fn minv(a: usize, b: usize) -> usize {
         return a;
     }
     return b;
+}
+
+fn run_calc_old(line: String) -> i32 {
+    let mut elems = line.split_whitespace();
+    let mut base = elems.next().unwrap();
+    let mut groups = elems.next().unwrap();
+
+    let mut nums = Vec::new();
+    for num in groups.split(",") {
+        nums.push(num.parse::<i32>().unwrap());
+    }
+
+    return calculate_orgs(base.to_string().clone(), &nums);
 }
 
 fn rep(st: String, num: usize) -> String {
@@ -71,10 +91,11 @@ fn find_highest(map: Vec<Vec<i32>>) -> (usize,usize) {
 }
 
 fn fits(st: String, sp: usize, len: usize) -> bool {
-   
+  
     if any(st[sp..sp+len].to_string(), '.') {
         return false;
     }
+
     
     // Return true if we're at the start of the string and the right most char is eligibl
     if sp == 0 {
@@ -113,11 +134,16 @@ fn run_split(st: String, nums: Vec<usize>) -> i64 {
             spoint -= (nums[npointer]-1);
         }
 
-    
+        println!("WORKING FROM {} -> {}", spoint, npointer);
+
         while spoint >= 0 {
             let nstr = &st[spoint..];
+            println!("TRYING {}", nstr);
             if fits(st.clone(), spoint, nums[npointer]) {
+                let nns = &st[0..spoint];
+                println!("UP TO {}", nns);
                 if npointer != 0 || !any(st[0..spoint].to_string(), '#') {
+                    println!("SUPERMAP");
                     supermap[npointer][spoint] = smap_sum(st.clone(), supermap.clone(), npointer+1, spoint+nums[npointer] + 1, npointer == nums.len()-1);
                 }
             }
@@ -129,6 +155,9 @@ fn run_split(st: String, nums: Vec<usize>) -> i64 {
         }
              spoint -= 1;
         }
+
+        println!("ROW {:?}", supermap[npointer]);
+
        if npointer == 0 {
         break;
        }
@@ -148,6 +177,7 @@ fn run_split(st: String, nums: Vec<usize>) -> i64 {
 
 fn smap_sum(st: String, smap: Vec<Vec<i64>>, row: usize, spoint: usize, mrow: bool) -> i64 {
     if mrow && spoint >= smap[0].len() {
+        println!("FASTSUM");
         return 1;
     }
 
@@ -157,13 +187,19 @@ fn smap_sum(st: String, smap: Vec<Vec<i64>>, row: usize, spoint: usize, mrow: bo
         if xpos >= spoint {
             if st[xpos..xpos+1] == *"#" {
                 in_hash = true;
+                if mrow {
+                    return 0;
+                }
             } else if in_hash {
+                println!("HASHSUM {}", sval);
                 return sval;
             }
            
             sval += val;
         }
     }
+
+    println!("SMAPSUM {}", sval);
     return sval;
 }
 
@@ -241,7 +277,7 @@ fn calculate_orgs(line: String, goals: &Vec<i32>) -> i32 {
     }
 
     // If we've reached here then there's nothing left to fill
-    let counts = run_count(line);
+    let counts = run_count(line.clone());
     if counts.len() != goals.len() {
         return 0;
     }
@@ -252,6 +288,8 @@ fn calculate_orgs(line: String, goals: &Vec<i32>) -> i32 {
         }
     }
 
+
+    println!("FOUND {}", line);
     return 1;
 }
 
@@ -261,9 +299,9 @@ mod testsca {
 
     #[test]
     fn part1_test_reduced() {
-       let test_case = "?###???????? 3,2,1".to_string();
-       let score = solve_day12_part2(test_case);
-       assert_eq!(score, 506250)
+       let test_case = "??????#??#?.?# 2,2,2,1".to_string();
+       let score = solve_day12_part1(test_case);
+       assert_eq!(score, 10)
     }
 #[test]
 fn part1_test_first() {
@@ -292,4 +330,6 @@ fn part2_test_first() {
 }
 
 }
+
+
 
