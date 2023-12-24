@@ -1,5 +1,5 @@
 pub fn solve_day24_part1(data: String) -> i64 {
-    return 0;
+    return -1;
 }
 
 #[cfg(test)]
