@@ -102,7 +102,7 @@ func (f *finder) loadExistingIssue(ctx context.Context) (*pb.Issue, error) {
 }
 
 func (f *finder) raiseIssue(ctx context.Context, year, day, part int32, err error) error {
-	issue, err := f.ghclient.CreateIssue(ctx, &ghbpb.CreateIssueRequest{Title: fmt.Sprintf("Solve %v - %v - %v (%v)", year, day, part, err), Repo: "adventofcode", User: "brotherlogic"})
+	issue, err := f.ghclient.CreateIssue(ctx, &ghbpb.CreateIssueRequest{Title: fmt.Sprintf("Solve %v - %v - %v", year, day, part), Repo: "adventofcode", User: "brotherlogic"})
 	if err != nil {
 		return err
 	}
