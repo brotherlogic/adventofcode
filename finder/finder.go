@@ -309,7 +309,7 @@ func main() {
 
 	log.Println("Not running for the current year - trying other years")
 
-	// If we're not in a set, work days at a time
+	// If we're not in a set, work days at a time.
 	for day := int32(1); day <= 25; day++ {
 		for year := 2015; year < time.Now().Year(); year++ {
 			if f.runYear(ctx, ghclient, rstore, int32(year), day, issue) != nil {
