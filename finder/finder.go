@@ -255,6 +255,13 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 	return nil
 }
 
+func min(a, b int32) int32 {
+	if a < b {
+		return a
+	}
+	return b
+}
+
 func main() {
 	log.Print("Running finder script")
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
@@ -296,9 +303,9 @@ func main() {
 	ctime := time.Now().In(loc)
 
 	// If we're in a set, run this
-	if ctime.Month() == time.December && ctime.Day() <= 25 {
+	if ctime.Month() == time.December {
 		log.Printf("In a set: %v", ctime.Day())
-		err = f.runYear(ctx, ghclient, rstore, int32(ctime.Year()), int32(ctime.Day()), issue)
+		err = f.runYear(ctx, ghclient, rstore, int32(ctime.Year()), min(25, int32(ctime.Day())), issue)
 		if err != nil {
 			log.Printf("Result: %v", err)
 			return
