@@ -1,4 +1,4 @@
-pub fn solve_day24_part1(data: String, low: i64, high: i64) -> i64 {
+pub fn solve_day24_part1(data: String, low: f64, high: f64) -> i64 {
     let mut hailstones = build_hailstones(data);
 
     println!("Found {} hailstones", hailstones.len());
@@ -19,14 +19,14 @@ pub fn solve_day24_part1(data: String, low: i64, high: i64) -> i64 {
     return ccount;
 }
 
-fn cross(h1: Hailstone, h2: Hailstone) -> i64 {
+fn cross(h1: Hailstone, h2: Hailstone) -> f64 {
     let top =
         h2.dx * h2.y * h1.dx - h2.dy * h2.x * h1.dx + h1.dy * h1.x * h2.dx - h1.dx * h1.y * h2.dx;
     let bottom = h2.dx * h1.dy - h1.dx * h2.dy;
 
     if bottom == 0 {
         println!("NO CROSS {:?} {:?}", h1, h2);
-        return 0;
+        return 0.0;
     }
 
     let cross_point = top as f64 / bottom as f64;
@@ -34,10 +34,10 @@ fn cross(h1: Hailstone, h2: Hailstone) -> i64 {
     let tval2 = (cross_point - h2.x as f64) / h2.dx as f64;
     println!("CROSS {} -> {} {}", cross_point, tval, tval2);
     if tval > 0.0 && tval2 > 0.0 {
-        return top / bottom;
+        return top as f64 / bottom as f64;
     }
 
-    return 0;
+    return 0.0;
 }
 
 #[derive(Clone, Debug)]
@@ -130,7 +130,7 @@ mod testsca {
         20, 19, 15 @  1, -5, -3"
             .to_string();
 
-        let pulses = solve_day24_part1(test_case, 7, 27);
+        let pulses = solve_day24_part1(test_case, 7.0, 27.0);
         assert_eq!(pulses, 2)
     }
 }

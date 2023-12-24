@@ -321,7 +321,7 @@ impl SolverService for RServer {
          }));
         }
         if rq.year == 2023 && rq.day == 24 && rq.part == 1 {
-            let tanswer = day24::solve_day24_part1(rq.data, 200000000000000, 400000000000000);
+            let tanswer = day24::solve_day24_part1(rq.data, 200000000000000.0, 400000000000000.0);
             println!("Returning {}", tanswer);
             return Ok(Response::new(SolveResponse{
                 string_answer:"".to_string(),
