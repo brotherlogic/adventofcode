@@ -292,10 +292,13 @@ func main() {
 
 	log.Printf("Running for the current year")
 
+	loc, _ := time.LoadLocation("America/New_York")
+	ctime := time.Now().In(loc)
+
 	// If we're in a set, run this
-	if time.Now().Month() == time.December && time.Now().Day() <= 25 {
-		log.Printf("In a set: %v", time.Now().Day())
-		err = f.runYear(ctx, ghclient, rstore, int32(time.Now().Year()), int32(time.Now().Day()), issue)
+	if ctime.Month() == time.December && ctime.Day() <= 25 {
+		log.Printf("In a set: %v", ctime.Day())
+		err = f.runYear(ctx, ghclient, rstore, int32(ctime.Year()), int32(ctime.Day()), issue)
 		if err != nil {
 			log.Printf("Result: %v", err)
 			return
@@ -306,7 +309,7 @@ func main() {
 
 	log.Println("Not running for the current year - trying other years")
 
-	// If we're not in a set, work days at a time
+	// If we're not in a set, work days at a time.
 	for day := int32(1); day <= 25; day++ {
 		for year := 2015; year < time.Now().Year(); year++ {
 			if f.runYear(ctx, ghclient, rstore, int32(year), day, issue) != nil {
