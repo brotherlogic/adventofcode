@@ -17,6 +17,7 @@ prost = "0.12"
 tokio = { version = "1.19.2", features = ["macros", "rt-multi-thread"] }
 tokio-cron-scheduler = "*"
 axum = "0.5.17"
+num-bigfloat = "*"
 
 [build-dependencies]
 tonic-build = "0.10.0"
