@@ -1,3 +1,6 @@
+use num_bigfloat::BigFloat;
+use num_bigfloat::ZERO;
+
 pub fn solve_day24_part1(data: String, low: f64, high: f64) -> i64 {
     let mut hailstones = build_hailstones(data);
 
@@ -9,7 +12,7 @@ pub fn solve_day24_part1(data: String, low: f64, high: f64) -> i64 {
 
         for hailstone in &hailstones {
             let crossover = cross(chail.clone(), hailstone.clone());
-            if crossover >= low && crossover <= high {
+            if crossover >= BigFloat::from_f64(low) && crossover <= BigFloat::from_f64(high) {
                 println!("{:?} crosses {:?} at {}", chail, hailstone, crossover);
                 ccount += 1;
             }
@@ -19,35 +22,35 @@ pub fn solve_day24_part1(data: String, low: f64, high: f64) -> i64 {
     return ccount;
 }
 
-fn cross(h1: Hailstone, h2: Hailstone) -> f64 {
+fn cross(h1: Hailstone, h2: Hailstone) -> BigFloat {
     let top =
         h2.dx * h2.y * h1.dx - h2.dy * h2.x * h1.dx + h1.dy * h1.x * h2.dx - h1.dx * h1.y * h2.dx;
     let bottom = h2.dx * h1.dy - h1.dx * h2.dy;
 
-    if bottom == 0 {
+    if bottom == ZERO {
         println!("NO CROSS {:?} {:?}", h1, h2);
-        return 0.0;
+        return ZERO;
     }
 
-    let cross_point = top as f64 / bottom as f64;
-    let tval = (cross_point - h1.x as f64) / h1.dx as f64;
-    let tval2 = (cross_point - h2.x as f64) / h2.dx as f64;
+    let cross_point = top / bottom;
+    let tval = (cross_point - h1.x) / h1.dx;
+    let tval2 = (cross_point - h2.x) / h2.dx;
     println!("CROSS {} -> {} {}", cross_point, tval, tval2);
-    if tval > 0.0 && tval2 > 0.0 {
-        return top as f64 / bottom as f64;
+    if tval > ZERO && tval2 > ZERO {
+        return top / bottom;
     }
 
-    return 0.0;
+    return ZERO;
 }
 
 #[derive(Clone, Debug)]
 struct Hailstone {
-    x: i64,
-    y: i64,
-    z: i64,
-    dx: i64,
-    dy: i64,
-    dz: i64,
+    x: BigFloat,
+    y: BigFloat,
+    z: BigFloat,
+    dx: BigFloat,
+    dy: BigFloat,
+    dz: BigFloat,
 }
 
 fn build_hailstones(data: String) -> Vec<Hailstone> {
@@ -105,12 +108,12 @@ fn build_hailstones(data: String) -> Vec<Hailstone> {
             .unwrap();
 
         hailstones.push(Hailstone {
-            x: x,
-            y: y,
-            z: z,
-            dx: dx,
-            dy: dy,
-            dz: dz,
+            x: BigFloat::from_i64(x),
+            y: BigFloat::from_i64(y),
+            z: BigFloat::from_i64(z),
+            dx: BigFloat::from_i64(dx),
+            dy: BigFloat::from_i64(dy),
+            dz: BigFloat::from_i64(dz),
         })
     }
 
