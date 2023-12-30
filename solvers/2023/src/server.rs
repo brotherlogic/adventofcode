@@ -4,6 +4,9 @@ use solver::advent_of_code_internal_service_client::AdventOfCodeInternalServiceC
 use solver::RegisterRequest;
 use std::thread;
 use tokio::time::{ Duration};
+use num_bigfloat::BigFloat;
+
+
 pub mod solver {
     tonic::include_proto!("adventofcode");
 }
@@ -321,7 +324,7 @@ impl SolverService for RServer {
          }));
         }
         if rq.year == 2023 && rq.day == 24 && rq.part == 1 {
-            let tanswer = day24::solve_day24_part1(rq.data, 200000000000000.0, 400000000000000.0);
+            let tanswer = day24::solve_day24_part1(rq.data, BigFloat::parse("200000000000000.0").unwrap(), BigFloat::parse("400000000000000.0").unwrap());
             println!("Returning {}", tanswer);
             return Ok(Response::new(SolveResponse{
                 string_answer:"".to_string(),
