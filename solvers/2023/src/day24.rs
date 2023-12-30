@@ -1,7 +1,7 @@
 use num_bigfloat::BigFloat;
 use num_bigfloat::ZERO;
 
-pub fn solve_day24_part1(data: String, low: f64, high: f64) -> i64 {
+pub fn solve_day24_part1(data: String, low: BigFloat, high: BigFloat) -> i64 {
     let mut hailstones = build_hailstones(data);
 
     println!("Found {} hailstones", hailstones.len());
@@ -11,9 +11,8 @@ pub fn solve_day24_part1(data: String, low: f64, high: f64) -> i64 {
         let chail = hailstones.remove(0);
 
         for hailstone in &hailstones {
-            let crossover = cross(chail.clone(), hailstone.clone());
-            if crossover >= BigFloat::from_f64(low) && crossover <= BigFloat::from_f64(high) {
-                println!("{:?} crosses {:?} at {}", chail, hailstone, crossover);
+            let (crossoverx, crossovery) = cross(chail.clone(), hailstone.clone());
+            if crossoverx >= low && crossoverx <= high && crossovery >= low && crossovery <= high {
                 ccount += 1;
             }
         }
@@ -22,25 +21,24 @@ pub fn solve_day24_part1(data: String, low: f64, high: f64) -> i64 {
     return ccount;
 }
 
-fn cross(h1: Hailstone, h2: Hailstone) -> BigFloat {
+fn cross(h1: Hailstone, h2: Hailstone) -> (BigFloat, BigFloat) {
     let top =
         h2.dx * h2.y * h1.dx - h2.dy * h2.x * h1.dx + h1.dy * h1.x * h2.dx - h1.dx * h1.y * h2.dx;
     let bottom = h2.dx * h1.dy - h1.dx * h2.dy;
 
     if bottom == ZERO {
-        println!("NO CROSS {:?} {:?}", h1, h2);
-        return ZERO;
+        return (ZERO, ZERO);
     }
 
     let cross_point = top / bottom;
     let tval = (cross_point - h1.x) / h1.dx;
     let tval2 = (cross_point - h2.x) / h2.dx;
-    println!("CROSS {} -> {} {}", cross_point, tval, tval2);
     if tval > ZERO && tval2 > ZERO {
-        return top / bottom;
+        let ny = h1.y + h1.dy * tval;
+        return (top / bottom, ny);
     }
 
-    return ZERO;
+    return (ZERO, ZERO);
 }
 
 #[derive(Clone, Debug)]
@@ -133,7 +131,11 @@ mod testsca {
         20, 19, 15 @  1, -5, -3"
             .to_string();
 
-        let pulses = solve_day24_part1(test_case, 7.0, 27.0);
+        let pulses = solve_day24_part1(
+            test_case,
+            BigFloat::parse("7.0").unwrap(),
+            BigFloat::parse("27.0").unwrap(),
+        );
         assert_eq!(pulses, 2)
     }
 }
