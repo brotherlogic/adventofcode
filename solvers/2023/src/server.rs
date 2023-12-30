@@ -29,6 +29,7 @@ mod day15;
 mod day20;
 mod day22;
 mod day24;
+mod day25;
 
 // defining a struct for our service
 #[derive(Default)]
@@ -330,6 +331,15 @@ impl SolverService for RServer {
                 string_answer:"".to_string(),
                 big_answer:tanswer,
                 answer:0,
+         }));
+        }
+        if rq.year == 2023 && rq.day == 25 && rq.part == 1 {
+            let tanswer = day25::solve_day25_part1(rq.data);
+            println!("Returning {}", tanswer);
+            return Ok(Response::new(SolveResponse{
+                string_answer:"".to_string(),
+                big_answer:0,
+                answer:tanswer,
          }));
         }
        Err(Status::unimplemented("Solution is not implemented yet"))
