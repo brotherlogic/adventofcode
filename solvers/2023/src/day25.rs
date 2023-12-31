@@ -96,6 +96,7 @@ pub fn solve_day25_part1(data: String) -> i32 {
                     if cnt > 0 {
                         return cnt;
                     }
+                    return 0;
                 }
             }
         }
@@ -135,6 +136,10 @@ fn count_groups<T>(
     s2: (String, String, T),
     s3: (String, String, T),
 ) -> i32 {
+    println!(
+        "TRYING {},{} {},{} {},{}",
+        s1.0, s1.1, s2.0, s2.1, s3.0, s3.1
+    );
     let mut ccount = Vec::new();
     let mut tcount = HashMap::new();
     let mut mult = 1;
@@ -184,11 +189,9 @@ fn count_groups<T>(
             }
 
             loops += 1;
-            if loops > 50 {
-                return 0;
-            }
         }
 
+        println!("HERE {}", seen);
         mult *= seen;
         seen = 0;
     }
