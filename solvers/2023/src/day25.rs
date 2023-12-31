@@ -96,7 +96,6 @@ pub fn solve_day25_part1(data: String) -> i32 {
                     if cnt > 0 {
                         return cnt;
                     }
-                    return 0;
                 }
             }
         }
