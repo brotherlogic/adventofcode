@@ -127,6 +127,9 @@ func (f *finder) raiseIssue(ctx context.Context, year, day, part int32, err erro
 func (f *finder) runYear(ctx context.Context, ghclient ghb_client.GithubridgeClient, rsclient rstore_client.RStoreClient, year, db int32, issue *pb.Issue) error {
 	for day := int32(db); day >= 1; day-- {
 		for part := int32(1); part <= 2; part++ {
+			if day == 25 && part == 2 {
+				continue
+			}
 			err := f.solve(ctx, int32(year), int32(day), int32(part), issue)
 			log.Printf("Solved %v %v %v -> %v", year, day, part, err)
 			if status.Code(err) != codes.OK {
