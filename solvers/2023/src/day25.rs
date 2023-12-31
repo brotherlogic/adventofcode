@@ -9,7 +9,6 @@ struct GNode {
 pub fn solve_day25_part1(data: String) -> i32 {
     let circuit = build_circuit(data);
 
-    // println!("HERE {}", circuit.raw.len());
     let mut table = Vec::new();
     for i in 0..circuit.entries.len() {
         table.push(vec![0; circuit.entries.len()]);
@@ -20,7 +19,6 @@ pub fn solve_day25_part1(data: String) -> i32 {
         for end in &circuit.entries {
             if start != end {
                 loop_count += 1;
-                //println!("TRYING {} -> {}", start, end);
                 let mut search = Vec::new();
                 let mut startv = Vec::new();
                 startv.push(start.to_string());
@@ -37,7 +35,6 @@ pub fn solve_day25_part1(data: String) -> i32 {
                     seen.insert(curr.curr_node.clone(), true);
                     if curr.curr_node == *end {
                         // Update the table and break out
-                        //println!("FOUND {:?}", curr.seen);
 
                         // Update the table
                         for i in 1..curr.seen.len() {
@@ -68,7 +65,6 @@ pub fn solve_day25_part1(data: String) -> i32 {
                         }
                     }
                 }
-                //println!("SEARCH {} IN {}", nodes, now.elapsed().as_millis());
 
                 if loop_count % 1000 == 0 {
                     let now2 = Instant::now();
@@ -135,10 +131,6 @@ fn count_groups<T>(
     s2: (String, String, T),
     s3: (String, String, T),
 ) -> i32 {
-    println!(
-        "TRYING {},{} {},{} {},{}",
-        s1.0, s1.1, s2.0, s2.1, s3.0, s3.1
-    );
     let mut ccount = Vec::new();
     let mut tcount = HashMap::new();
     let mut mult = 1;
@@ -190,7 +182,6 @@ fn count_groups<T>(
             loops += 1;
         }
 
-        println!("HERE {}", seen);
         mult *= seen;
         seen = 0;
     }
