@@ -206,7 +206,6 @@ fn count_groups<T>(
 #[derive(Clone, Debug)]
 struct Circuit {
     wires: HashMap<String, Vec<String>>,
-    raw: Vec<(String, String)>,
     entries: Vec<String>,
 }
 
@@ -256,7 +255,6 @@ fn build_circuit(data: String) -> Circuit {
 
     return Circuit {
         wires: fin,
-        raw: twires,
         entries: entries,
     };
 }
