@@ -15,9 +15,11 @@ pub fn solve_day25_part1(data: String) -> i32 {
         table.push(vec![0; circuit.entries.len()]);
     }
 
+    let mut loop_count = 0;
     for start in &circuit.entries {
         for end in &circuit.entries {
             if start != end {
+                loop_count += 1;
                 //println!("TRYING {} -> {}", start, end);
                 let mut search = Vec::new();
                 let mut startv = Vec::new();
@@ -26,11 +28,16 @@ pub fn solve_day25_part1(data: String) -> i32 {
                     curr_node: start.to_string(),
                     seen: startv,
                 });
+                let now = Instant::now();
+                let mut nodes = 0;
+                let mut seen = HashMap::new();
                 while search.len() > 0 {
+                    nodes += 1;
                     let curr = search.remove(0);
+                    seen.insert(curr.curr_node.clone(), true);
                     if curr.curr_node == *end {
                         // Update the table and break out
-                        // println!("FOUND {:?}", curr.seen);
+                        //println!("FOUND {:?}", curr.seen);
 
                         // Update the table
                         for i in 1..curr.seen.len() {
@@ -50,50 +57,73 @@ pub fn solve_day25_part1(data: String) -> i32 {
                     }
 
                     for next in &circuit.wires[&curr.curr_node] {
-                        let mut found = false;
-                        for entry in &curr.seen {
-                            if entry == next {
-                                found = true;
-                                break;
-                            }
-                        }
-
-                        if !found {
+                        if !seen.contains_key(next) {
                             let mut nseen = curr.seen.clone();
                             nseen.push(next.clone());
                             search.push(GNode {
                                 curr_node: next.to_string(),
                                 seen: nseen,
-                            })
+                            });
+                            seen.insert(next.to_string(), true);
                         }
                     }
                 }
+                //println!("SEARCH {} IN {}", nodes, now.elapsed().as_millis());
 
-                let mut scores = Vec::new();
-                for sn in 0..circuit.entries.len() {
-                    for en in 0..circuit.entries.len() {
-                        scores.push(
-                            ((
-                                circuit.entries[sn].clone(),
-                                circuit.entries[en].clone(),
-                                table[sn][en],
-                            )),
-                        );
+                if loop_count % 1000 == 0 {
+                    let now2 = Instant::now();
+                    let mut scores = Vec::new();
+                    for sn in 0..circuit.entries.len() {
+                        for en in 0..circuit.entries.len() {
+                            scores.push(
+                                ((
+                                    circuit.entries[sn].clone(),
+                                    circuit.entries[en].clone(),
+                                    table[sn][en],
+                                )),
+                            );
+                        }
                     }
-                }
 
-                scores.sort_unstable_by(|a, b| b.2.cmp(&a.2));
-                let cnt = count_groups(
-                    circuit.clone(),
-                    scores[0].clone(),
-                    scores[2].clone(),
-                    scores[4].clone(),
-                );
-                if cnt > 0 {
-                    return cnt;
+                    scores.sort_unstable_by(|a, b| b.2.cmp(&a.2));
+                    let cnt = count_groups(
+                        circuit.clone(),
+                        scores[0].clone(),
+                        scores[2].clone(),
+                        scores[4].clone(),
+                    );
+
+                    if cnt > 0 {
+                        return cnt;
+                    }
                 }
             }
         }
+    }
+
+    let mut scores = Vec::new();
+    for sn in 0..circuit.entries.len() {
+        for en in 0..circuit.entries.len() {
+            scores.push(
+                ((
+                    circuit.entries[sn].clone(),
+                    circuit.entries[en].clone(),
+                    table[sn][en],
+                )),
+            );
+        }
+    }
+
+    scores.sort_unstable_by(|a, b| b.2.cmp(&a.2));
+    let cnt = count_groups(
+        circuit.clone(),
+        scores[0].clone(),
+        scores[2].clone(),
+        scores[4].clone(),
+    );
+
+    if cnt > 0 {
+        return cnt;
     }
 
     return 0;
