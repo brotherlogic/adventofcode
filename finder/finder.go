@@ -264,7 +264,7 @@ func min(a, b int32) int32 {
 
 func main() {
 	log.Print("Running finder script")
-	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Minute*5)
 	defer cancel()
 
 	ghclient, err := ghb_client.GetClient()
