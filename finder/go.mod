@@ -7,7 +7,7 @@ require (
 	github.com/brotherlogic/githubridge v0.813.0
 	github.com/brotherlogic/rstore v0.35.0
 	google.golang.org/grpc v1.59.0
-	google.golang.org/protobuf v1.31.0
+	google.golang.org/protobuf v1.33.0
 )
 
 require (
