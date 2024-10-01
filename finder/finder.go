@@ -138,7 +138,7 @@ func (f *finder) runYear(ctx context.Context, ghclient ghb_client.GithubridgeCli
 					log.Printf("Processing error: %v", err)
 					return nil
 				}
-				log.Printf("Raising issue for error: %v", err)
+				log.Printf("Raising issue for this error: %v", err)
 				//Raise the issue to solve this problem
 				err2 := f.raiseIssue(ctx, year, day, part, err)
 				if err2 != nil {
