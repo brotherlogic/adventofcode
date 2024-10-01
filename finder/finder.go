@@ -322,7 +322,9 @@ func main() {
 	// If we're not in a set, work days at a time.
 	for day := int32(1); day <= 25; day++ {
 		for year := 2015; year < time.Now().Year(); year++ {
-			if f.runYear(ctx, ghclient, rstore, int32(year), day, issue) != nil {
+			err = f.runYear(ctx, ghclient, rstore, int32(year), day, issue)
+			if err != nil {
+				log.Printf("Result: %v", err)
 				return
 			}
 		}
