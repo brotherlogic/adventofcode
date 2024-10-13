@@ -26,6 +26,7 @@ type Server struct {
 	years    map[int32]bool
 	solvers  map[string]bool
 	rsclient rstore_client.RStoreClient
+	mapLock  *sync.Mutex
 }
 
 func NewServer(rsclient rstore_client.RStoreClient) *Server {
@@ -33,6 +34,7 @@ func NewServer(rsclient rstore_client.RStoreClient) *Server {
 		years:    make(map[int32]bool),
 		solvers:  make(map[string]bool),
 		rsclient: rsclient,
+		mapLock:  &sync.Mutex{},
 	}
 }
 
@@ -207,8 +209,10 @@ func (s *Server) Solve(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResp
 }
 
 func (s *Server) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.RegisterResponse, error) {
+	s.mapLock.Lock()
 	s.years[req.GetYear()] = true
 	s.solvers[req.GetCallback()] = true
+	s.mapLock.Unlock()
 
 	return &pb.RegisterResponse{}, s.updateMetrics()
 }
