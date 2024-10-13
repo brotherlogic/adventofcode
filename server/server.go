@@ -141,7 +141,11 @@ func (s *Server) Upload(ctx context.Context, req *pb.UploadRequest) (*pb.UploadR
 		Value: &anypb.Any{Value: []byte(req.GetData())},
 	})
 
-	return &pb.UploadResponse{}, fmt.Errorf("bad write: %w", err)
+	if err != nil {
+		return &pb.UploadResponse{}, fmt.Errorf("bad write: %w", err)
+	}
+
+	return &pb.UploadResponse{}, nil
 }
 
 func (s *Server) Solve(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResponse, error) {
