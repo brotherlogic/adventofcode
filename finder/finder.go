@@ -138,7 +138,7 @@ func (f *finder) runYear(ctx context.Context, ghclient ghb_client.GithubridgeCli
 					log.Printf("Processing error: %v", err)
 					return nil
 				}
-				log.Printf("Raising issue for error: %v", err)
+				log.Printf("Raising issue for this error: %v", err)
 				//Raise the issue to solve this problem
 				err2 := f.raiseIssue(ctx, year, day, part, err)
 				if err2 != nil {
@@ -250,7 +250,7 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 		_, err := f.ghclient.CloseIssue(ctx, &ghbpb.CloseIssueRequest{
 			User: "brotherlogic",
 			Repo: "adventofcode",
-			Id:   int32(issue.GetId()),
+			Id:   int64(issue.GetId()),
 		})
 		return err
 	}
@@ -270,7 +270,7 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute*5)
 	defer cancel()
 
-	ghclient, err := ghb_client.GetClient()
+	ghclient, err := ghb_client.GetClientInternal()
 	if err != nil {
 		log.Fatalf("unable to get ghb client: %v", err)
 	}
@@ -322,7 +322,9 @@ func main() {
 	// If we're not in a set, work days at a time.
 	for day := int32(1); day <= 25; day++ {
 		for year := 2015; year < time.Now().Year(); year++ {
-			if f.runYear(ctx, ghclient, rstore, int32(year), day, issue) != nil {
+			err = f.runYear(ctx, ghclient, rstore, int32(year), day, issue)
+			if err != nil {
+				log.Printf("Result: %v", err)
 				return
 			}
 		}
