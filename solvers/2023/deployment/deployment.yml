@@ -13,13 +13,14 @@ spec:
       labels:
         app: adventofcode-solver-2023
     spec:
+      nodeName: klust1
       containers:
-      - name: adventofcode
-        image: registry.brotherlogic-backend.com/brotherlogic/adventofcode-solver-2023:0.288.0 # {"$imagepolicy": "flux-system:adventofcode-solver-2023"}
-        ports:
-        - containerPort: 8080
+        - name: adventofcode
+          image: registry.brotherlogic-backend.com/brotherlogic/adventofcode-solver-2023:0.288.0 # {"$imagepolicy": "flux-system:adventofcode-solver-2023"}
+          ports:
+            - containerPort: 8080
       imagePullSecrets:
-      - name: regcred
+        - name: regcred
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
