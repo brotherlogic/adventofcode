@@ -8,7 +8,7 @@ import (
 	"net/http"
 
 	"github.com/brotherlogic/adventofcode/server"
-	rstore_client "github.com/brotherlogic/rstore/client"
+	pstore_client "github.com/brotherlogic/pstore/client"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"google.golang.org/grpc"
 
@@ -24,9 +24,9 @@ var (
 func main() {
 	flag.Parse()
 
-	client, err := rstore_client.GetClient()
+	client, err := pstore_client.GetClient()
 	if err != nil {
-		log.Fatalf("Unable to get rstore client: %v", err)
+		log.Fatalf("Unable to get pstore client: %v", err)
 	}
 	s := server.NewServer(client)
 

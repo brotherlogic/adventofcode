@@ -13,11 +13,11 @@ import (
 	"google.golang.org/protobuf/types/known/anypb"
 
 	ghb_client "github.com/brotherlogic/githubridge/client"
-	rstore_client "github.com/brotherlogic/rstore/client"
+	pstore_client "github.com/brotherlogic/pstore/client"
 
 	pb "github.com/brotherlogic/adventofcode/proto"
 	ghbpb "github.com/brotherlogic/githubridge/proto"
-	rspb "github.com/brotherlogic/rstore/proto"
+	pspb "github.com/brotherlogic/pstore/proto"
 )
 
 var (
@@ -27,7 +27,7 @@ var (
 
 type finder struct {
 	ghclient ghb_client.GithubridgeClient
-	rsclient rstore_client.RStoreClient
+	psclient pstore_client.PStoreClient
 }
 
 func (f *finder) solve(ctx context.Context, year, day, part int32, issue *pb.Issue) error {
@@ -87,7 +87,7 @@ func (f *finder) solveInternal(sctx context.Context, year, day, part int32, issu
 }
 
 func (f *finder) loadExistingIssue(ctx context.Context) (*pb.Issue, error) {
-	data, err := f.rsclient.Read(ctx, &rspb.ReadRequest{Key: "brotherlogic/adventofcode/finder/cissue"})
+	data, err := f.psclient.Read(ctx, &pspb.ReadRequest{Key: "brotherlogic/adventofcode/finder/cissue"})
 	if err != nil {
 		return nil, err
 	}
@@ -119,12 +119,12 @@ func (f *finder) raiseIssue(ctx context.Context, year, day, part int32, err erro
 		return err
 	}
 
-	_, err = f.rsclient.Write(ctx, &rspb.WriteRequest{Key: "brotherlogic/adventofcode/finder/cissue", Value: &anypb.Any{Value: bytes}})
+	_, err = f.psclient.Write(ctx, &pspb.WriteRequest{Key: "brotherlogic/adventofcode/finder/cissue", Value: &anypb.Any{Value: bytes}})
 	log.Printf("Written issue: %v", err)
 	return err
 }
 
-func (f *finder) runYear(ctx context.Context, ghclient ghb_client.GithubridgeClient, rsclient rstore_client.RStoreClient, year, db int32, issue *pb.Issue) error {
+func (f *finder) runYear(ctx context.Context, ghclient ghb_client.GithubridgeClient, psclient pstore_client.PStoreClient, year, db int32, issue *pb.Issue) error {
 	for day := int32(db); day >= 1; day-- {
 		for part := int32(1); part <= 2; part++ {
 			if day == 25 && part == 2 {
@@ -169,7 +169,7 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 
 	if rissue.GetState() == "closed" {
 		log.Printf("Deleting issue - marked as clsoed")
-		_, err := f.rsclient.Delete(ctx, &rspb.DeleteRequest{Key: "brotherlogic/adventofcode/finder/cissue"})
+		_, err := f.psclient.Delete(ctx, &pspb.DeleteRequest{Key: "brotherlogic/adventofcode/finder/cissue"})
 		return err
 	}
 
@@ -232,7 +232,7 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 			if err != nil {
 				return err
 			}
-			_, err = f.rsclient.Write(ctx, &rspb.WriteRequest{Key: "brotherlogic/adventofcode/finder/cissue", Value: &anypb.Any{Value: data}})
+			_, err = f.psclient.Write(ctx, &pspb.WriteRequest{Key: "brotherlogic/adventofcode/finder/cissue", Value: &anypb.Any{Value: data}})
 			if err != nil {
 				return err
 			}
@@ -275,14 +275,14 @@ func main() {
 		log.Fatalf("unable to get ghb client: %v", err)
 	}
 
-	rstore, err := rstore_client.GetClient()
+	pstore, err := pstore_client.GetClient()
 	if err != nil {
-		log.Fatalf("unable to get rstore client: %v", err)
+		log.Fatalf("unable to get pstore client: %v", err)
 	}
 
 	f := &finder{
 		ghclient: ghclient,
-		rsclient: rstore,
+		psclient: pstore,
 	}
 
 	// Check on the existing issue
@@ -308,7 +308,7 @@ func main() {
 	// If we're in a set, run this
 	if ctime.Month() == time.December {
 		log.Printf("In a set: %v", ctime.Day())
-		err = f.runYear(ctx, ghclient, rstore, int32(ctime.Year()), min(25, int32(ctime.Day())), issue)
+		err = f.runYear(ctx, ghclient, pstore, int32(ctime.Year()), min(25, int32(ctime.Day())), issue)
 		if err != nil {
 			log.Printf("Result: %v", err)
 			return
@@ -322,7 +322,7 @@ func main() {
 	// If we're not in a set, work days at a time.
 	for day := int32(1); day <= 25; day++ {
 		for year := 2015; year < time.Now().Year(); year++ {
-			err = f.runYear(ctx, ghclient, rstore, int32(year), day, issue)
+			err = f.runYear(ctx, ghclient, pstore, int32(year), day, issue)
 			if err != nil {
 				log.Printf("Result: %v", err)
 				return

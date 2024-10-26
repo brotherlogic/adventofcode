@@ -8,9 +8,9 @@ import (
 	"time"
 
 	pb "github.com/brotherlogic/adventofcode/proto"
-	rspb "github.com/brotherlogic/rstore/proto"
+	pspb "github.com/brotherlogic/pstore/proto"
 
-	rstore_client "github.com/brotherlogic/rstore/client"
+	pstore_client "github.com/brotherlogic/pstore/client"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
@@ -25,15 +25,15 @@ import (
 type Server struct {
 	years    map[int32]bool
 	solvers  map[string]bool
-	rsclient rstore_client.RStoreClient
+	psclient pstore_client.PStoreClient
 	mapLock  *sync.Mutex
 }
 
-func NewServer(rsclient rstore_client.RStoreClient) *Server {
+func NewServer(psclient pstore_client.PStoreClient) *Server {
 	return &Server{
 		years:    make(map[int32]bool),
 		solvers:  make(map[string]bool),
-		rsclient: rsclient,
+		psclient: psclient,
 		mapLock:  &sync.Mutex{},
 	}
 }
@@ -57,7 +57,7 @@ var (
 )
 
 func (s *Server) GetSolution(ctx context.Context, req *pb.GetSolutionRequest) (*pb.GetSolutionResponse, error) {
-	data, err := s.rsclient.Read(ctx, &rspb.ReadRequest{Key: "github.com/brotherlogic/adventofcode/solutions"})
+	data, err := s.psclient.Read(ctx, &pspb.ReadRequest{Key: "github.com/brotherlogic/adventofcode/solutions"})
 	if err != nil {
 		return nil, err
 	}
@@ -94,7 +94,7 @@ func (s *Server) GetSolution(ctx context.Context, req *pb.GetSolutionRequest) (*
 }
 
 func (s *Server) AddSolution(ctx context.Context, req *pb.AddSolutionRequest) (*pb.AddSolutionResponse, error) {
-	data, err := s.rsclient.Read(ctx, &rspb.ReadRequest{Key: "github.com/brotherlogic/adventofcode/solutions"})
+	data, err := s.psclient.Read(ctx, &pspb.ReadRequest{Key: "github.com/brotherlogic/adventofcode/solutions"})
 	if err != nil && status.Code(err) != codes.NotFound {
 		return nil, err
 	}
@@ -113,7 +113,7 @@ func (s *Server) AddSolution(ctx context.Context, req *pb.AddSolutionRequest) (*
 		return nil, err
 	}
 
-	_, err = s.rsclient.Write(ctx, &rspb.WriteRequest{
+	_, err = s.psclient.Write(ctx, &pspb.WriteRequest{
 		Key:   "github.com/brotherlogic/adventofcode/solutions",
 		Value: &anypb.Any{Value: ndata},
 	})
@@ -129,14 +129,14 @@ func (s *Server) updateMetrics() error {
 }
 
 func (s *Server) Upload(ctx context.Context, req *pb.UploadRequest) (*pb.UploadResponse, error) {
-	conn, err := grpc.Dial("rstore.rstore:8080", grpc.WithInsecure())
+	conn, err := grpc.Dial("pstore.pstore:8080", grpc.WithInsecure())
 	if err != nil {
-		return nil, fmt.Errorf("dial error on rstore: %w", err)
+		return nil, fmt.Errorf("dial error on pstore: %w", err)
 	}
 
-	client := rspb.NewRStoreServiceClient(conn)
+	client := pspb.NewPStoreServiceClient(conn)
 
-	_, err = client.Write(ctx, &rspb.WriteRequest{
+	_, err = client.Write(ctx, &pspb.WriteRequest{
 		Key:   fmt.Sprintf("adventofcode/data/%v-%v-%v", req.GetYear(), req.GetDay(), req.GetPart()),
 		Value: &anypb.Any{Value: []byte(req.GetData())},
 	})
@@ -150,14 +150,14 @@ func (s *Server) Upload(ctx context.Context, req *pb.UploadRequest) (*pb.UploadR
 
 func (s *Server) Solve(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResponse, error) {
 	puzzle := fmt.Sprintf("%v-%v-%v", req.GetYear(), req.GetDay(), req.GetPart())
-	conn, err := grpc.Dial("rstore.rstore:8080", grpc.WithInsecure())
+	conn, err := grpc.Dial("pstore.pstore:8080", grpc.WithInsecure())
 	if err != nil {
 		solveRequest.With(prometheus.Labels{"puzzle": puzzle, "result": fmt.Sprintf("Dial %v", status.Code(err))}).Inc()
-		return nil, fmt.Errorf("cannot dial rstore: %w", err)
+		return nil, fmt.Errorf("cannot dial pstore: %w", err)
 	}
 
-	client := rspb.NewRStoreServiceClient(conn)
-	resp, err := client.Read(ctx, &rspb.ReadRequest{
+	client := pspb.NewPStoreServiceClient(conn)
+	resp, err := client.Read(ctx, &pspb.ReadRequest{
 		Key: fmt.Sprintf("adventofcode/data/%v-%v-1", req.GetYear(), req.GetDay()),
 	})
 	if err != nil {
