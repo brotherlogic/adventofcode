@@ -98,7 +98,7 @@ func (f *finder) addLabel(ctx context.Context, label string, issue *pb.Issue) er
 }
 
 func (f *finder) removeLabel(ctx context.Context, label string, issue *pb.Issue) error {
-	_, err := f.ghclient.DeleteLabel(ctx, &ghbpb.AddLabelRequest{
+	_, err := f.ghclient.DeleteLabel(ctx, &ghbpb.DeleteLabelRequest{
 		User:  "brotherlogic",
 		Repo:  "adventofcode",
 		Id:    int32(issue.GetId()),
