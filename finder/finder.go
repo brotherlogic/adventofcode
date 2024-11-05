@@ -264,7 +264,8 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 
 	// This means we can't find the data to run the solution
 	if status.Code(err) == codes.NotFound {
-		f.addLabel(ctx, "Needs Data", issue)
+		err = f.addLabel(ctx, "Needs Data", issue)
+		log.Printf("Added label: %v", err)
 	}
 
 	// If we haven't got a solution yet, we need to keep working
