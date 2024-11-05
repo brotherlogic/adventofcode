@@ -97,6 +97,17 @@ func (f *finder) addLabel(ctx context.Context, label string, issue *pb.Issue) er
 	return err
 }
 
+func (f *finder) removeLabel(ctx context.Context, label string, issue *pb.Issue) error {
+	/*_, err := f.ghclient.DeleteLabel(ctx, &ghbpb.AddLabelRequest{
+		User:  "brotherlogic",
+		Repo:  "adventofcode",
+		Id:    int32(issue.GetId()),
+		Label: label,
+	})
+	return err*/
+	return nil
+}
+
 func (f *finder) solve(ctx context.Context, year, day, part int32, issue *pb.Issue) error {
 
 	log.Printf("Solving %v %v %v", year, day, part)
@@ -271,6 +282,9 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 			log.Printf("Data miss: %v", err)
 			f.addLabel(ctx, "Data Issue", issue)
 		}
+	} else {
+		f.removeLabel(ctx, "Needs Data", issue)
+		f.removeLabel(ctx, "Data Issue", issue)
 	}
 
 	// If we haven't got a solution yet, we need to keep working
