@@ -128,6 +128,19 @@ func (s *Server) updateMetrics() error {
 	return nil
 }
 
+func (s *Server) SetCookie(ctx context.Context, req *pb.SetCookieRequest) (*pb.SetCookieResponse, error) {
+	conn, err := grpc.Dial("pstore.pstore:8080", grpc.WithInsecure())
+	if err != nil {
+		return nil, fmt.Errorf("dial error on pstore: %w", err)
+	}
+
+	client := pspb.NewPStoreServiceClient(conn)
+	client.Write(ctx, &pspb.WriteRequest{
+		Key: "brotherlogic/adventofcode/finder/cookie",
+		Value: &anypb.Any{Value: []byte(req.GetCookie()},
+	})
+}
+
 func (s *Server) Upload(ctx context.Context, req *pb.UploadRequest) (*pb.UploadResponse, error) {
 	conn, err := grpc.Dial("pstore.pstore:8080", grpc.WithInsecure())
 	if err != nil {
