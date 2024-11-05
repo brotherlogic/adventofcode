@@ -87,7 +87,7 @@ func (f *finder) getData(ctx context.Context, year, day int32) error {
 	return err
 }
 
-func (f *finder) addLabel(ctx context.Context, label string, year, day int32, issue *pb.Issue) error {
+func (f *finder) addLabel(ctx context.Context, label string, issue *pb.Issue) error {
 	_, err := f.ghclient.AddLabel(ctx, &ghbpb.AddLabelRequest{
 		User:  "brotherlogic",
 		Repo:  "adventofcode",
@@ -107,7 +107,7 @@ func (f *finder) solve(ctx context.Context, year, day, part int32, issue *pb.Iss
 		}
 
 		if status.Code(err) == codes.Unimplemented {
-			f.addLabel(ctx, issue, fmt.Sprintf("Requires Implementation", year, day))
+			f.addLabel(ctx, "Requires Implementation", issue)
 		}
 
 		log.Printf("Solve fail: %v", err)
@@ -261,6 +261,11 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 		Day:  issue.GetDay(),
 		Part: issue.GetPart(),
 	})
+
+	// This means we can't find the data to run the solution
+	if status.Code(err) == codes.NotFound {
+		f.addLabel(ctx, "Needs Data", issue)
+	}
 
 	// If we haven't got a solution yet, we need to keep working
 	if err != nil {
