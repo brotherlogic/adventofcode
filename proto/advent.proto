@@ -87,11 +87,17 @@ service AdventOfCodeService {
     rpc Solve(SolveRequest) returns (SolveResponse) {};
 }
 
+message SetCookieRequest {
+    string cookie = 1;
+}
+message SetCookieResponse{}
+
 service AdventOfCodeInternalService {
     rpc Upload(UploadRequest) returns (UploadResponse) {};
     rpc Register(RegisterRequest) returns (RegisterResponse) {};
     rpc AddSolution(AddSolutionRequest) returns (AddSolutionResponse) {};
     rpc GetSolution(GetSolutionRequest) returns (GetSolutionResponse) {};
+    rpc SetCookie(SetCookieRequest) returns (SetCookieResponse) {};
 }
 
 service SolverService {

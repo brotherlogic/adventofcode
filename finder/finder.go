@@ -98,14 +98,13 @@ func (f *finder) addLabel(ctx context.Context, label string, issue *pb.Issue) er
 }
 
 func (f *finder) removeLabel(ctx context.Context, label string, issue *pb.Issue) error {
-	/*_, err := f.ghclient.DeleteLabel(ctx, &ghbpb.AddLabelRequest{
+	_, err := f.ghclient.DeleteLabel(ctx, &ghbpb.AddLabelRequest{
 		User:  "brotherlogic",
 		Repo:  "adventofcode",
 		Id:    int32(issue.GetId()),
 		Label: label,
 	})
-	return err*/
-	return nil
+	return err
 }
 
 func (f *finder) solve(ctx context.Context, year, day, part int32, issue *pb.Issue) error {
