@@ -280,10 +280,15 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 		if err != nil {
 			log.Printf("Data miss: %v", err)
 			f.addLabel(ctx, "Data Issue", issue)
+
+			if status.Code(err) == codes.NotFound {
+				f.addLabel(ctx, "Cookie Missing", issue)
+			}
 		}
 	} else {
 		f.removeLabel(ctx, "Needs Data", issue)
 		f.removeLabel(ctx, "Data Issue", issue)
+		f.removeLabel(ctx, "Cookie Missing", issue)
 	}
 
 	// If we haven't got a solution yet, we need to keep working
