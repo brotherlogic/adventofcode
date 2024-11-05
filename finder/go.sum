@@ -2,10 +2,14 @@ github.com/brotherlogic/adventofcode v0.289.0 h1:u9UAXkSz26Ic/Na+Qr+CP0uTQtIBNdU
 github.com/brotherlogic/adventofcode v0.289.0/go.mod h1:96DgmwynXBtHbyYLDQyL1AZ/KJVgjUjLpTIT+b27KvI=
 github.com/brotherlogic/adventofcode v0.295.0 h1:MCeaGsFYF+LoMk9/dOWGuvA6hBSK2xF5aynIzMCGSOk=
 github.com/brotherlogic/adventofcode v0.295.0/go.mod h1:t5bDxwX7swGXnhE1bM4Fv2j6ZP31H5IJjqsq4rkh3Jw=
+github.com/brotherlogic/adventofcode v0.296.0 h1:ITfL699WN3wppvjeAM6mSpu6kZh6pFX3uce6w/2HG+k=
+github.com/brotherlogic/adventofcode v0.296.0/go.mod h1:4rNYrwkEoKEMAmiAKe/h4wgs48ghFoTgYAOzHlJ7YPw=
 github.com/brotherlogic/githubridge v0.2802.0 h1:9Dz8jzHYNNGheax3eZxLP7itjMnWjReukNafNa/U76E=
 github.com/brotherlogic/githubridge v0.2802.0/go.mod h1:XTxap90/th23AU2BWYFxnSyiQFwDYyBI0PWxDZTCQpo=
 github.com/brotherlogic/githubridge v0.2804.0 h1:tBghCkNQyi2bc+CAh9brBsmaSAvV8Zxk3rP6b5TV1eA=
 github.com/brotherlogic/githubridge v0.2804.0/go.mod h1:XTxap90/th23AU2BWYFxnSyiQFwDYyBI0PWxDZTCQpo=
+github.com/brotherlogic/githubridge v0.2805.0 h1:MZYc50DVIc+1CSQSxRGAvXKizETMKJhG5cvuRFyIpYo=
+github.com/brotherlogic/githubridge v0.2805.0/go.mod h1:XTxap90/th23AU2BWYFxnSyiQFwDYyBI0PWxDZTCQpo=
 github.com/brotherlogic/pstore v0.18.0 h1:6ZBG2/kZajLV2JazKbc3hA1XTts80A9Gslocz14SDBE=
 github.com/brotherlogic/pstore v0.18.0/go.mod h1:stga41yC3MG/dwIMYXHFvVfSglffMUAipgajP+gQ1hs=
 github.com/brotherlogic/pstore v0.23.0 h1:efnQGN/+ayErtk41qPDfnElV1iCik+rPD+WaO4k9I20=
