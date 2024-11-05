@@ -2,8 +2,11 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"io"
 	"log"
+	"net/http"
 	"time"
 
 	"google.golang.org/grpc"
@@ -30,6 +33,70 @@ type finder struct {
 	psclient pstore_client.PStoreClient
 }
 
+func download(year, day int32, c string) (string, error) {
+	client := new(http.Client)
+
+	req, err := http.NewRequest("GET", fmt.Sprintf("https://adventofcode.com/%d/day/%d/input", year, day), nil)
+	if err != nil {
+		return "", err
+	}
+
+	req.Header.Set("User-Agent", "github.com/brotherlogic/advent-of-code-finder")
+
+	cookie := new(http.Cookie)
+	cookie.Name, cookie.Value = "session", c
+	req.AddCookie(cookie)
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return "", err
+	}
+
+	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		return "", errors.New(resp.Status)
+	}
+
+	b, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	return (string(b)), nil
+}
+
+func (f *finder) getData(ctx context.Context, year, day int32) error {
+	log.Printf("Retrieving data for %v / %v", year, day)
+
+	cookie, err := f.psclient.Read(ctx, &pspb.ReadRequest{Key: "brotherlogic/adventofcode/finder/cookie"})
+	if err != nil {
+		return err
+	}
+
+	data, err := download(year, day, string(cookie.GetValue().GetValue()))
+	if err != nil {
+		return err
+	}
+
+	connm, err := grpc.Dial("adventofcode.adventofcode:8082", grpc.WithInsecure())
+	if err != nil {
+		return fmt.Errorf("unable to dial aoc: %w", err)
+	}
+	client := pb.NewAdventOfCodeInternalServiceClient(connm)
+	_, err = client.Upload(ctx, &pb.UploadRequest{Day: day, Year: year, Data: data})
+	return err
+}
+
+func (f *finder) addLabel(ctx context.Context, label string, year, day int32, issue *pb.Issue) error {
+	_, err := f.ghclient.AddLabel(ctx, &ghbpb.AddLabelRequest{
+		User:  "brotherlogic",
+		Repo:  "adventofcode",
+		Id:    int32(issue.GetId()),
+		Label: label,
+	})
+	return err
+}
+
 func (f *finder) solve(ctx context.Context, year, day, part int32, issue *pb.Issue) error {
 
 	log.Printf("Solving %v %v %v", year, day, part)
@@ -38,6 +105,11 @@ func (f *finder) solve(ctx context.Context, year, day, part int32, issue *pb.Iss
 		if err == nil {
 			return err
 		}
+
+		if status.Code(err) == codes.Unimplemented {
+			f.addLabel(ctx, issue, fmt.Sprintf("Requires Implementation", year, day))
+		}
+
 		log.Printf("Solve fail: %v", err)
 	}
 
