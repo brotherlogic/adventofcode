@@ -95,6 +95,11 @@ class AdventOfCodeInternalServiceStub(object):
                 request_serializer=advent__pb2.GetSolutionRequest.SerializeToString,
                 response_deserializer=advent__pb2.GetSolutionResponse.FromString,
                 )
+        self.SetCookie = channel.unary_unary(
+                '/adventofcode.AdventOfCodeInternalService/SetCookie',
+                request_serializer=advent__pb2.SetCookieRequest.SerializeToString,
+                response_deserializer=advent__pb2.SetCookieResponse.FromString,
+                )
 
 
 class AdventOfCodeInternalServiceServicer(object):
@@ -124,6 +129,12 @@ class AdventOfCodeInternalServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def SetCookie(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_AdventOfCodeInternalServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -146,6 +157,11 @@ def add_AdventOfCodeInternalServiceServicer_to_server(servicer, server):
                     servicer.GetSolution,
                     request_deserializer=advent__pb2.GetSolutionRequest.FromString,
                     response_serializer=advent__pb2.GetSolutionResponse.SerializeToString,
+            ),
+            'SetCookie': grpc.unary_unary_rpc_method_handler(
+                    servicer.SetCookie,
+                    request_deserializer=advent__pb2.SetCookieRequest.FromString,
+                    response_serializer=advent__pb2.SetCookieResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -222,6 +238,23 @@ class AdventOfCodeInternalService(object):
         return grpc.experimental.unary_unary(request, target, '/adventofcode.AdventOfCodeInternalService/GetSolution',
             advent__pb2.GetSolutionRequest.SerializeToString,
             advent__pb2.GetSolutionResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def SetCookie(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/adventofcode.AdventOfCodeInternalService/SetCookie',
+            advent__pb2.SetCookieRequest.SerializeToString,
+            advent__pb2.SetCookieResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 

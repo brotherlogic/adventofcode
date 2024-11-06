@@ -136,3 +136,13 @@ class GetSolutionResponse(_message.Message):
     SOLUTION_FIELD_NUMBER: _ClassVar[int]
     solution: Solution
     def __init__(self, solution: _Optional[_Union[Solution, _Mapping]] = ...) -> None: ...
+
+class SetCookieRequest(_message.Message):
+    __slots__ = ["cookie"]
+    COOKIE_FIELD_NUMBER: _ClassVar[int]
+    cookie: str
+    def __init__(self, cookie: _Optional[str] = ...) -> None: ...
+
+class SetCookieResponse(_message.Message):
+    __slots__ = []
+    def __init__(self) -> None: ...

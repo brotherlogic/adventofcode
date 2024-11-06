@@ -110,6 +110,7 @@ type AdventOfCodeInternalServiceClient interface {
 	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 	AddSolution(ctx context.Context, in *AddSolutionRequest, opts ...grpc.CallOption) (*AddSolutionResponse, error)
 	GetSolution(ctx context.Context, in *GetSolutionRequest, opts ...grpc.CallOption) (*GetSolutionResponse, error)
+	SetCookie(ctx context.Context, in *SetCookieRequest, opts ...grpc.CallOption) (*SetCookieResponse, error)
 }
 
 type adventOfCodeInternalServiceClient struct {
@@ -156,6 +157,15 @@ func (c *adventOfCodeInternalServiceClient) GetSolution(ctx context.Context, in 
 	return out, nil
 }
 
+func (c *adventOfCodeInternalServiceClient) SetCookie(ctx context.Context, in *SetCookieRequest, opts ...grpc.CallOption) (*SetCookieResponse, error) {
+	out := new(SetCookieResponse)
+	err := c.cc.Invoke(ctx, "/adventofcode.AdventOfCodeInternalService/SetCookie", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AdventOfCodeInternalServiceServer is the server API for AdventOfCodeInternalService service.
 // All implementations should embed UnimplementedAdventOfCodeInternalServiceServer
 // for forward compatibility
@@ -164,6 +174,7 @@ type AdventOfCodeInternalServiceServer interface {
 	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
 	AddSolution(context.Context, *AddSolutionRequest) (*AddSolutionResponse, error)
 	GetSolution(context.Context, *GetSolutionRequest) (*GetSolutionResponse, error)
+	SetCookie(context.Context, *SetCookieRequest) (*SetCookieResponse, error)
 }
 
 // UnimplementedAdventOfCodeInternalServiceServer should be embedded to have forward compatible implementations.
@@ -181,6 +192,9 @@ func (UnimplementedAdventOfCodeInternalServiceServer) AddSolution(context.Contex
 }
 func (UnimplementedAdventOfCodeInternalServiceServer) GetSolution(context.Context, *GetSolutionRequest) (*GetSolutionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetSolution not implemented")
+}
+func (UnimplementedAdventOfCodeInternalServiceServer) SetCookie(context.Context, *SetCookieRequest) (*SetCookieResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetCookie not implemented")
 }
 
 // UnsafeAdventOfCodeInternalServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -266,6 +280,24 @@ func _AdventOfCodeInternalService_GetSolution_Handler(srv interface{}, ctx conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AdventOfCodeInternalService_SetCookie_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetCookieRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdventOfCodeInternalServiceServer).SetCookie(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/adventofcode.AdventOfCodeInternalService/SetCookie",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdventOfCodeInternalServiceServer).SetCookie(ctx, req.(*SetCookieRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AdventOfCodeInternalService_ServiceDesc is the grpc.ServiceDesc for AdventOfCodeInternalService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -288,6 +320,10 @@ var AdventOfCodeInternalService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetSolution",
 			Handler:    _AdventOfCodeInternalService_GetSolution_Handler,
+		},
+		{
+			MethodName: "SetCookie",
+			Handler:    _AdventOfCodeInternalService_SetCookie_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
