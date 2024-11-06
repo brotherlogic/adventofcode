@@ -395,7 +395,7 @@ func main() {
 	}
 	log.Printf("Loaded existing issue: %v %v", issue, err)
 
-	// We have no solved the current issue
+	// We have not solved the current issue
 	if issue != nil && issue.GetOpen() {
 		log.Printf("Issue exists: %v", issue)
 		log.Printf("Processed: %v", f.processNewIssue(ctx, issue))
