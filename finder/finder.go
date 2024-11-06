@@ -273,6 +273,7 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 	})
 
 	// This means we can't find the data to run the solution
+	log.Printf("Solve error: %v", err)
 	if status.Code(err) == codes.NotFound {
 		err = f.addLabel(ctx, "Needs Data", issue)
 		log.Printf("Added needs data label: %v", err)
