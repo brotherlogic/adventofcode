@@ -288,7 +288,8 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 	} else {
 		f.removeLabel(ctx, "Needs Data", issue)
 		f.removeLabel(ctx, "Data Issue", issue)
-		f.removeLabel(ctx, "Cookie Missing", issue)
+		err = f.removeLabel(ctx, "Cookie Missing", issue)
+		log.Printf("Removed label: %v", err)
 	}
 
 	// If we haven't got a solution yet, we need to keep working
