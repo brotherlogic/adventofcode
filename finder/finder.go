@@ -84,6 +84,7 @@ func (f *finder) getData(ctx context.Context, year, day int32) error {
 	}
 	client := pb.NewAdventOfCodeInternalServiceClient(connm)
 	_, err = client.Upload(ctx, &pb.UploadRequest{Day: day, Year: year, Data: data})
+	log.Printf("Uploaded: %v -> %v", data, err)
 	return err
 }
 
