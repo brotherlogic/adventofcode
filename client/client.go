@@ -27,6 +27,11 @@ func main() {
 	iclient := pb.NewAdventOfCodeInternalServiceClient(conn)
 
 	switch os.Args[2] {
+	case "cookie":
+		_, err := iclient.SetCookie(ctx, &pb.SetCookieRequest{Cookie: os.Args[3]})
+		if err != nil {
+			fmt.Printf("Unable to set cookie: %v\n", err)
+		}
 	case "solve":
 		sflags := flag.NewFlagSet("solve", flag.ExitOnError)
 		year := sflags.Int("year", -1, "year")

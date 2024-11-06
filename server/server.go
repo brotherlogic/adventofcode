@@ -135,10 +135,11 @@ func (s *Server) SetCookie(ctx context.Context, req *pb.SetCookieRequest) (*pb.S
 	}
 
 	client := pspb.NewPStoreServiceClient(conn)
-	client.Write(ctx, &pspb.WriteRequest{
-		Key: "brotherlogic/adventofcode/finder/cookie",
-		Value: &anypb.Any{Value: []byte(req.GetCookie()},
+	_, err = client.Write(ctx, &pspb.WriteRequest{
+		Key:   "brotherlogic/adventofcode/finder/cookie",
+		Value: &anypb.Any{Value: []byte(req.GetCookie())},
 	})
+	return &pb.SetCookieResponse{}, err
 }
 
 func (s *Server) Upload(ctx context.Context, req *pb.UploadRequest) (*pb.UploadResponse, error) {
