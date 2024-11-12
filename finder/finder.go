@@ -127,6 +127,21 @@ func (f *finder) solve(ctx context.Context, year, day, part int32, issue *pb.Iss
 	return status.Errorf(codes.ResourceExhausted, "Unable to solve with retries")
 }
 
+func (f *finder) validateYear(ctx context.Context, year int32) error {
+	ctx, cancel := context.WithTimeout(context.Background(), solvingDuration)
+	defer cancel()
+
+	conn, err := grpc.Dial("adventofcode.adventofcode:8080", grpc.WithInsecure())
+	if err != nil {
+		return fmt.Errorf("unable to dial aoc: %w", err)
+	}
+	defer conn.Close()
+
+	client := pb.NewAdventOfCodeServiceClient(conn)
+	_, err = client.Solve(ctx, &pb.SolveRequest{Year: year})
+	return err
+}
+
 func (f *finder) solveInternal(sctx context.Context, year, day, part int32, issue *pb.Issue) error {
 	ctx, cancel := context.WithTimeout(context.Background(), solvingDuration)
 	defer cancel()
@@ -208,6 +223,17 @@ func (f *finder) raiseIssue(ctx context.Context, year, day, part int32, err erro
 }
 
 func (f *finder) runYear(ctx context.Context, ghclient ghb_client.GithubridgeClient, psclient pstore_client.PStoreClient, year, db int32, issue *pb.Issue) error {
+	if db == 0 {
+		err := f.validateYear(ctx, year)
+		if err != nil {
+			err2 := f.raiseIssue(ctx, year, 0, 0, err)
+			if err2 != nil {
+				return err2
+			}
+		}
+		return err
+	}
+
 	for day := int32(db); day >= 1; day-- {
 		for part := int32(1); part <= 2; part++ {
 			if day == 25 && part == 2 {
@@ -424,13 +450,13 @@ func main() {
 	log.Println("Not running for the current year - trying other years")
 
 	// If we're not in a set, work days at a time.
-	for day := int32(1); day <= 25; day++ {
-		for year := 2015; year < time.Now().Year(); year++ {
-			err = f.runYear(ctx, ghclient, pstore, int32(year), day, issue)
-			if err != nil {
-				log.Printf("Result: %v", err)
-				return
-			}
+	// First check that we have all the infrastructure we need
+
+	for year := ctime.Year(); year >= 2015; year-- {
+		err = f.runYear(ctx, ghclient, pstore, int32(year), 0, issue)
+		if err != nil {
+			log.Printf("Result: %v", err)
+			return
 		}
 	}
 
