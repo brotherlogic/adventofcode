@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package adventofcode;
 
+option csharp_namespace = "AdventOfCode";
 option go_package = "github.com/brotherlogic/adventofcode/proto";
 
 message Issue {
