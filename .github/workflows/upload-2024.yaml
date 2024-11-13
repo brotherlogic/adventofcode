@@ -40,4 +40,4 @@ jobs:
           context: "{{defaultContext}}:solvers/2024"
           builder: ${{ steps.buildx.outputs.name }}
           tags: "${{ secrets.REGISTRY_URL }}/${{ steps.meta.outputs.tags }}"
-          platforms: linux/arm64,linux/amd64
+          platforms: linux/amd64
