@@ -163,9 +163,13 @@ func (s *Server) Upload(ctx context.Context, req *pb.UploadRequest) (*pb.UploadR
 }
 
 func (s *Server) Solve(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResponse, error) {
+	log.Printf("%v with %v", req, s.solvers)
 	// Validate existance first
 	for _, solver := range s.solvers {
 		if solver == req.GetYear() {
+			if req.GetDay() == 0 {
+				return &pb.SolveResponse{}, nil
+			}
 			break
 		}
 
