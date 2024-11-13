@@ -24,7 +24,7 @@ import (
 
 type Server struct {
 	years    map[int32]bool
-	solvers  map[string]bool
+	solvers  map[string]int32
 	psclient pstore_client.PStoreClient
 	mapLock  *sync.Mutex
 }
@@ -32,7 +32,7 @@ type Server struct {
 func NewServer(psclient pstore_client.PStoreClient) *Server {
 	return &Server{
 		years:    make(map[int32]bool),
-		solvers:  make(map[string]bool),
+		solvers:  make(map[string]int32),
 		psclient: psclient,
 		mapLock:  &sync.Mutex{},
 	}
@@ -163,6 +163,15 @@ func (s *Server) Upload(ctx context.Context, req *pb.UploadRequest) (*pb.UploadR
 }
 
 func (s *Server) Solve(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResponse, error) {
+	// Validate existance first
+	for _, solver := range s.solvers {
+		if solver == req.GetYear() {
+			break
+		}
+
+		return &pb.SolveResponse{}, status.Errorf(codes.InvalidArgument, "Unable to find solver for %v", req.GetYear())
+	}
+
 	puzzle := fmt.Sprintf("%v-%v-%v", req.GetYear(), req.GetDay(), req.GetPart())
 	conn, err := grpc.Dial("pstore.pstore:8080", grpc.WithInsecure())
 	if err != nil {
@@ -230,7 +239,7 @@ func (s *Server) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.Reg
 	log.Printf("REGISTER: %v", req)
 	s.mapLock.Lock()
 	s.years[req.GetYear()] = true
-	s.solvers[req.GetCallback()] = true
+	s.solvers[req.GetCallback()] = req.GetYear()
 	s.mapLock.Unlock()
 
 	return &pb.RegisterResponse{}, s.updateMetrics()
