@@ -8,7 +8,6 @@ require 'grpc'
 require 'advent_services_pb'
 
 class SolverServer < Adventofcode::SolverService::Service
-    # say_hello implements the SayHello rpc method.
     def solve(solve_req, _unused_call)
       Adventofcode::SolveResponse.new(solution: 1)
     end
