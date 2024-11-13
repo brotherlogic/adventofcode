@@ -236,6 +236,7 @@ func (s *Server) Solve(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResp
 }
 
 func (s *Server) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.RegisterResponse, error) {
+	log.Printf("REGISTER: %v", req)
 	s.mapLock.Lock()
 	s.years[req.GetYear()] = true
 	s.solvers[req.GetCallback()] = req.GetYear()
