@@ -1,4 +1,4 @@
-FROM ruby:2.3.1
+FROM ruby:3.0.1
 
 RUN mkdir /solver
 WORKDIR /solver
