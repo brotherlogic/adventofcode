@@ -7,6 +7,7 @@ COPY Gemfile /solver
 COPY Gemfile.lock /solver
 
 RUN mkdir /solver/lib
+
 COPY lib /solver/lib
 COPY server.rb /solver
 
