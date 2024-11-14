@@ -2,6 +2,7 @@ FROM ruby:3.0.1
 
 RUN mkdir /solver
 WORKDIR /solver
+
 COPY Gemfile /solver
 COPY Gemfile.lock /solver
 
