@@ -235,6 +235,7 @@ func (f *finder) runYear(ctx context.Context, ghclient ghb_client.GithubridgeCli
 	log.Printf("Running for year %v with day %v", year, db)
 	if db == 0 {
 		err := f.validateYear(ctx, year)
+		log.Printf("Validated %v -> %v", year, err)
 		if err != nil {
 			err2 := f.raiseIssue(ctx, year, 0, 0, err)
 			if err2 != nil {
