@@ -4,11 +4,13 @@ RUN mkdir /solver
 WORKDIR /solver
 COPY Gemfile /solver
 COPY Gemfile.lock /solver
-RUN mkdir solver/lib
+
+RUN mkdir /solver/lib
 COPY lib /solver/lib
 COPY server.rb /solver
+
 RUN bundle config --global frozen 1
 RUN bundle install --without development test
+
 EXPOSE 8080
-ENTRYPOINT [ "bundle", "exec"]
-CMD ["server.rb"]
+CMD ["ruby", "server.rb"]

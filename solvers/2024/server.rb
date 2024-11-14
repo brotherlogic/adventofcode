@@ -14,7 +14,7 @@ class Registrar
     begin
      message = stub.register(Adventofcode::RegisterRequest.new(year: 2024)).message
     rescue GRPC::BadStatus => e
-      abort "ERROR: #{e.message}"
+      abort "Register Error: #{e.message}"
     end
   end
 end
