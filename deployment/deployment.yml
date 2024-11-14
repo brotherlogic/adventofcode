@@ -16,7 +16,7 @@ spec:
       nodeName: klust1
       containers:
         - name: adventofcode
-          image: registry.brotherlogic-backend.com/brotherlogic/adventofcode:0.314.0 # {"$imagepolicy": "flux-system:adventofcode"}
+          image: registry.brotherlogic-backend.com/brotherlogic/adventofcode:0.315.0 # {"$imagepolicy": "flux-system:adventofcode"}
           ports:
             - containerPort: 8080
       imagePullSecrets:
