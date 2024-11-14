@@ -12,8 +12,7 @@ class Registrar
     hostname = "adventofcode.adventofcode:8082"
     stub = Adventofcode::AdventOfCodeInternalService::Stub.new(hostname, :this_channel_is_insecure)
     begin
-      message = stub.Register(Adventofcode::RegisterRequest.new(year: 2024)).message
-      p "Greeting: #{message}"
+     message = stub.register(Adventofcode::RegisterRequest.new(year: 2024)).message
     rescue GRPC::BadStatus => e
       abort "ERROR: #{e.message}"
     end
