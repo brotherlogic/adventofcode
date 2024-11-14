@@ -232,6 +232,7 @@ func (f *finder) raiseIssue(ctx context.Context, year, day, part int32, err erro
 }
 
 func (f *finder) runYear(ctx context.Context, ghclient ghb_client.GithubridgeClient, psclient pstore_client.PStoreClient, year, db int32, issue *pb.Issue) error {
+	log.Printf("Running for year %v with day %v", year, db)
 	if db == 0 {
 		err := f.validateYear(ctx, year)
 		if err != nil {
