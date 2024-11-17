@@ -13,7 +13,6 @@ spec:
       labels:
         app: adventofcode-solver-2024
     spec:
-      nodeName: klust1
       containers:
         - name: adventofcode
           image: registry.brotherlogic-backend.com/brotherlogic/adventofcode-solver-2024:0.319.0 # {"$imagepolicy": "flux-system:adventofcode-solver-2024"}
