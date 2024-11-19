@@ -9,6 +9,7 @@ require 'advent_services_pb'
 
 class Registrar
   def Register()
+    puts "Registering"
     hostname = "adventofcode.adventofcode:8082"
     stub = Adventofcode::AdventOfCodeInternalService::Stub.new(hostname, :this_channel_is_insecure)
     begin
