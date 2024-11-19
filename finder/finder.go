@@ -219,12 +219,12 @@ func (f *finder) raiseIssue(ctx context.Context, year, day, part int32, err erro
 	}
 
 	iss := &pb.Issue{
-		Id:            issue.GetIssueId(),
-		Open:          true,
-		Year:          year,
-		Day:           day,
-		Part:          part,
-		LastErrorCode: fmt.Sprintf("%v", status.Code(err)),
+		Id:   issue.GetIssueId(),
+		Open: true,
+		Year: year,
+		Day:  day,
+		Part: part,
+		//LastErrorCode: fmt.Sprintf("%v", status.Code(err)),
 	}
 	bytes, err := proto.Marshal(iss)
 	if err != nil {
