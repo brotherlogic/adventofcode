@@ -197,30 +197,32 @@ func (s *Server) Solve(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResp
 	var solution *pb.SolveResponse
 
 	wg := &sync.WaitGroup{}
-	for callback := range s.solvers {
-		conn, err := grpc.Dial(callback, grpc.WithInsecure())
-		if err != nil {
-			errors = append(errors, err)
-			continue
-		}
-		wg.Add(1)
-		defer conn.Close()
-		go func(conn *grpc.ClientConn, c string, puzzle string) {
-			client := pb.NewSolverServiceClient(conn)
-			t1 := time.Now()
-			tsol, err := client.Solve(ctx, req)
-			log.Printf("Solved %v %v in %v -> %v", puzzle, c, time.Since(t1), err)
-			solveTimes.With(prometheus.Labels{
-				"puzzle": fmt.Sprintf("%v-%v-%v", req.GetYear(), req.GetDay(), req.GetPart()),
-				"result": fmt.Sprintf("%v", status.Code(err)),
-			}).Observe(float64(time.Since(t1).Milliseconds()))
-			wg.Done()
+	for callback, year := range s.solvers {
+		if year == req.GetYear() {
+			conn, err := grpc.Dial(callback, grpc.WithInsecure())
 			if err != nil {
-				errors = append(errors, fmt.Errorf("%v -> %w", c, err))
-				return
+				errors = append(errors, err)
+				continue
 			}
-			solution = tsol
-		}(conn, callback, puzzle)
+			wg.Add(1)
+			defer conn.Close()
+			go func(conn *grpc.ClientConn, c string, puzzle string) {
+				client := pb.NewSolverServiceClient(conn)
+				t1 := time.Now()
+				tsol, err := client.Solve(ctx, req)
+				log.Printf("Solved %v %v in %v -> %v", puzzle, c, time.Since(t1), err)
+				solveTimes.With(prometheus.Labels{
+					"puzzle": fmt.Sprintf("%v-%v-%v", req.GetYear(), req.GetDay(), req.GetPart()),
+					"result": fmt.Sprintf("%v", status.Code(err)),
+				}).Observe(float64(time.Since(t1).Milliseconds()))
+				wg.Done()
+				if err != nil {
+					errors = append(errors, fmt.Errorf("%v -> %w", c, err))
+					return
+				}
+				solution = tsol
+			}(conn, callback, puzzle)
+		}
 	}
 
 	wg.Wait()
@@ -236,6 +238,12 @@ func (s *Server) Solve(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResp
 	}
 
 	solveRequest.With(prometheus.Labels{"puzzle": puzzle, "result": "Internal"}).Inc()
+
+	// Use a special error code for day 0 to indicate that we're missing some infrastructure
+	if req.GetDay() == 0 {
+		return nil, status.Errorf(codes.FailedPrecondition, "Did not get a solution for Day 0 for %v", req.GetYear())
+	}
+
 	return nil, status.Errorf(codes.Internal, "Many errors: %v", errors)
 }
 
