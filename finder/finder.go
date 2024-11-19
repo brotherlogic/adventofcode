@@ -282,7 +282,7 @@ func (f *finder) runYear(ctx context.Context, ghclient ghb_client.GithubridgeCli
 	return nil
 }
 
-func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue, errString string) error {
+func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 	rissue, err := f.ghclient.GetIssue(ctx, &ghbpb.GetIssueRequest{
 		User: "brotherlogic",
 		Repo: "adventofcode",
@@ -352,6 +352,17 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue, errString
 		Day:  issue.GetDay(),
 		Part: issue.GetPart(),
 	})
+
+	/*if issue.GetLastErrorCode() == "INVALID_ARGUMENT" && status.Code(err) != codes.InvalidArgument {
+		// Close the issue
+		_, err := f.ghclient.CloseIssue(ctx, &ghbpb.CloseIssueRequest{
+			User: "brotherlogic",
+			Repo: "adventofcode",
+			Id:   int64(issue.GetId()),
+		})
+		return err
+	}*/
+
 	if status.Code(err) == codes.NotFound {
 		// We have a potential solution, but no confirmation - if this is new, post
 		found := false
