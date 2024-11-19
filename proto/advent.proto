@@ -13,6 +13,8 @@ message Issue {
     int32 year = 4;
     int32 day = 5;
     int32 part = 6;
+
+    string last_error_code = 7;
 }
 
 message Solutions {
