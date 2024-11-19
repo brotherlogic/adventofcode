@@ -224,12 +224,12 @@ func (f *finder) raiseIssue(ctx context.Context, year, day, part int32, err erro
 	}
 
 	iss := &pb.Issue{
-		Id:   issue.GetIssueId(),
-		Open: true,
-		Year: year,
-		Day:  day,
-		Part: part,
-		//LastErrorCode: fmt.Sprintf("%v", status.Code(err)),
+		Id:            issue.GetIssueId(),
+		Open:          true,
+		Year:          year,
+		Day:           day,
+		Part:          part,
+		LastErrorCode: fmt.Sprintf("%v", status.Code(err)),
 	}
 	bytes, err := proto.Marshal(iss)
 	if err != nil {
@@ -353,7 +353,7 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 		Part: issue.GetPart(),
 	})
 
-	/*if issue.GetLastErrorCode() == "INVALID_ARGUMENT" && status.Code(err) != codes.InvalidArgument {
+	if issue.GetLastErrorCode() == "INVALID_ARGUMENT" && status.Code(err) != codes.InvalidArgument {
 		// Close the issue
 		_, err := f.ghclient.CloseIssue(ctx, &ghbpb.CloseIssueRequest{
 			User: "brotherlogic",
@@ -361,7 +361,7 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 			Id:   int64(issue.GetId()),
 		})
 		return err
-	}*/
+	}
 
 	if status.Code(err) == codes.NotFound {
 		// We have a potential solution, but no confirmation - if this is new, post

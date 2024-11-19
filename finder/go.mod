@@ -3,7 +3,7 @@ module github.com/brotherlogic/adventofcode/finder
 go 1.23.2
 
 require (
-	github.com/brotherlogic/adventofcode v0.296.0
+	github.com/brotherlogic/adventofcode v0.323.0
 	github.com/brotherlogic/githubridge v0.2805.0
 	github.com/brotherlogic/pstore v0.23.0
 	google.golang.org/grpc v1.67.1
