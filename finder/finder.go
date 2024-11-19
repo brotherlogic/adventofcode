@@ -203,7 +203,11 @@ func (f *finder) raiseIssue(ctx context.Context, year, day, part int32, err erro
 	var issue *ghbpb.CreateIssueResponse
 	var ierr error
 	if status.Code(err) == codes.InvalidArgument {
-		issue, ierr = f.ghclient.CreateIssue(ctx, &ghbpb.CreateIssueRequest{Title: fmt.Sprintf("Add infrastructure for %v", year), Repo: "adventofcode", User: "brotherlogic"})
+		issue, ierr = f.ghclient.CreateIssue(ctx, &ghbpb.CreateIssueRequest{
+			Title: fmt.Sprintf("Add infrastructure for %v", year),
+			Repo:  "adventofcode",
+			User:  "brotherlogic",
+		})
 		if err != nil {
 			return ierr
 		}
@@ -225,6 +229,7 @@ func (f *finder) raiseIssue(ctx context.Context, year, day, part int32, err erro
 		Year: year,
 		Day:  day,
 		Part: part,
+		//LastErrorCode: fmt.Sprintf("%v", status.Code(err)),
 	}
 	bytes, err := proto.Marshal(iss)
 	if err != nil {
@@ -277,7 +282,7 @@ func (f *finder) runYear(ctx context.Context, ghclient ghb_client.GithubridgeCli
 	return nil
 }
 
-func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
+func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue, errString string) error {
 	rissue, err := f.ghclient.GetIssue(ctx, &ghbpb.GetIssueRequest{
 		User: "brotherlogic",
 		Repo: "adventofcode",
