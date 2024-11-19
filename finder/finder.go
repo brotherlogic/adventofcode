@@ -282,7 +282,7 @@ func (f *finder) runYear(ctx context.Context, ghclient ghb_client.GithubridgeCli
 	return nil
 }
 
-func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
+func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue, errString string) error {
 	rissue, err := f.ghclient.GetIssue(ctx, &ghbpb.GetIssueRequest{
 		User: "brotherlogic",
 		Repo: "adventofcode",
