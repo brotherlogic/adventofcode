@@ -6,7 +6,7 @@ RSpec.describe Day0 do
   describe "part 0" do
     it "returns 10" do
       day0 = Day0.new
-      expect(day0.solvePart1("")).to eq(11)
+      expect(day0.solvePart1("")).to eq(10)
     end
   end
   describe "part 1" do
