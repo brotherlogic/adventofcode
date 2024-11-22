@@ -22,7 +22,8 @@ end
 
 class SolverServer < Adventofcode::SolverService::Service
     def solve(solve_req, _unused_call)
-      Adventofcode::SolveResponse.new(solution: 1)
+      # Find the class solver for the given day
+      
     end
   end
 
