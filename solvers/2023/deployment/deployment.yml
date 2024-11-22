@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: adventofcode
-          image: registry.brotherlogic-backend.com/brotherlogic/adventofcode-solver-2023:0.321.0 # {"$imagepolicy": "flux-system:adventofcode-solver-2023"}
+          image: registry.brotherlogic-backend.com/brotherlogic/adventofcode-solver-2023:0.328.0 # {"$imagepolicy": "flux-system:adventofcode-solver-2023"}
           ports:
             - containerPort: 8080
       imagePullSecrets:
