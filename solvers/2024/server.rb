@@ -45,7 +45,7 @@ def main
 
   registar = Registrar.new
   
-  Thread.start {runRegister}
+  Thread.start {registar.runRegister}
 
   # Runs the server with SIGHUP, SIGINT and SIGTERM signal handlers to
   #   gracefully shutdown.
