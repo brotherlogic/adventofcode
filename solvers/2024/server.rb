@@ -20,6 +20,7 @@ class Registrar
   end
 
   def runRegister()
+    puts "Running Register"
     registrar = Registrar.new
     while true 
        sleep 60
