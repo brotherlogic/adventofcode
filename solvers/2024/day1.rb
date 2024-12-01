@@ -10,8 +10,8 @@ class Day1
     def solvePart1(solve_req)
         arr1 = []
         arr2 = []
-        puts "Hello"
         lines = solve_req.data.split("\n")
+        puts lines
         lines.each do |line|
             pieces = line.strip.split
             arr1.push(pieces[0].to_i)
