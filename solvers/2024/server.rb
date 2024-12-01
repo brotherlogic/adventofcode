@@ -13,7 +13,7 @@ class Registrar
     hostname = "adventofcode.adventofcode:8082"
     stub = Adventofcode::AdventOfCodeInternalService::Stub.new(hostname, :this_channel_is_insecure)
     begin
-      stub.register(Adventofcode::RegisterRequest.new(year: 2024))
+      stub.register(Adventofcode::RegisterRequest.new(callback: "adventofcode-solver-2024.adventofcode:8080", year: 2024))
     rescue GRPC::BadStatus => e
       abort "Register Error: #{e.message}"
     end
@@ -40,6 +40,7 @@ class SolverServer < Adventofcode::SolverService::Service
 end
 
 def main
+  puts "Starting Server"
   s = GRPC::RpcServer.new
   s.add_http2_port('0.0.0.0:8080', :this_port_is_insecure)
   s.handle(SolverServer)
