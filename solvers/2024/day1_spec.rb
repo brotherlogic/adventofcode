@@ -5,7 +5,7 @@ require_relative 'lib/advent_pb'
 
 RSpec.describe Day1 do
   describe "part 1" do
-    it "returns 10" do
+    it "returns 11" do
       day1 = Day1.new
       data = "3   4
       4   3
