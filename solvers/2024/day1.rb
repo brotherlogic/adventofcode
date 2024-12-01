@@ -11,6 +11,9 @@ class Day1
         arr1 = []
         arr2 = []
         lines = solve_req.data.split("\n")
+        puts "What"
+        puts solve_req
+        puts "Help"
         puts lines
         lines.each do |line|
             pieces = line.strip.split
