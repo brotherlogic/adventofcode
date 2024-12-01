@@ -18,6 +18,14 @@ class Registrar
       abort "Register Error: #{e.message}"
     end
   end
+
+  def runRegister()
+    registrar = Registrar.new
+    while true 
+       sleep 60
+       registrar.Register()
+    end
+  end
 end
 
 class SolverServer < Adventofcode::SolverService::Service
@@ -26,14 +34,6 @@ class SolverServer < Adventofcode::SolverService::Service
     if solve_req.Day == 1 && solve_req.Part == 1
         d1 = d1.new
         Adventofcode::SolveResponse.new(answer: d1.solvePart1(solve_req)) 
-    end
-  end
-
-  def runRegister()
-    registrar = Registrar.new
-    while true 
-       sleep 60
-       registrar.Register()
     end
   end
 end
