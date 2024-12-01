@@ -40,6 +40,7 @@ class SolverServer < Adventofcode::SolverService::Service
 end
 
 def main
+  puts "Starting Server"
   s = GRPC::RpcServer.new
   s.add_http2_port('0.0.0.0:8080', :this_port_is_insecure)
   s.handle(SolverServer)
