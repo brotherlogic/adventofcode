@@ -20,7 +20,7 @@ class Day1
         sarr1 = arr1.sort
         sarr2 = arr2.sort
 
-        diff = 0
+        diff = 12
         sarr1.each_with_index do |val, index|
             diff += differ(sarr1[index], sarr2[index])
         end
