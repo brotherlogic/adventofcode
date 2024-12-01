@@ -1,6 +1,5 @@
 # day0_spec.rb
 require 'rspec'
-require 'advent_services_pb'
 require_relative 'day0'
 
 RSpec.describe Day0 do
