@@ -21,9 +21,9 @@ class Registrar
 end
 
 class SolverServer < Adventofcode::SolverService::Service
-    def solve(solve_req, _unused_call)
-      # Find the class solver for the given day
-      if solve_req.Day == 1 && solve_req.Part == 1
+  def solve(solve_req, _unused_call)
+    # Find the class solver for the given day
+    if solve_req.Day == 1 && solve_req.Part == 1
         d1 = d1.new
         Adventofcode::SolveResponse.new(answer: d1.solvePart1(solve_req)) 
     end
