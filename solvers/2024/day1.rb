@@ -14,7 +14,7 @@ class Day1
         lines.each do |line|
             pieces = line.strip.split
             arr1.push(pieces[0].to_i)
-            arr2.push(pieces[0].to_i)
+            arr2.push(pieces[1].to_i)
         end
 
         sarr1 = arr1.sort
