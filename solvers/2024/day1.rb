@@ -11,10 +11,6 @@ class Day1
         arr1 = []
         arr2 = []
         lines = solve_req.data.split("\n")
-        puts "What"
-        puts solve_req
-        puts "Help"
-        puts lines
         lines.each do |line|
             pieces = line.strip.split
             arr1.push(pieces[0].to_i)
@@ -24,7 +20,9 @@ class Day1
         sarr1 = arr1.sort
         sarr2 = arr2.sort
 
-        diff = 12
+        puts sarr1
+
+        diff = 0
         sarr1.each_with_index do |val, index|
             diff += differ(sarr1[index], sarr2[index])
         end
