@@ -36,21 +36,21 @@ class SolverServer < Adventofcode::SolverService::Service
        registrar.Register()
     end
   end
+end
 
-  def main
-    s = GRPC::RpcServer.new
-    s.add_http2_port('0.0.0.0:8080', :this_port_is_insecure)
-    s.handle(SolverServer)
+def main
+  s = GRPC::RpcServer.new
+  s.add_http2_port('0.0.0.0:8080', :this_port_is_insecure)
+  s.handle(SolverServer)
 
-    registar = Registrar.new
-   
-    Thread.start {runRegister}
+  registar = Registrar.new
+  
+  Thread.start {runRegister}
 
-    # Runs the server with SIGHUP, SIGINT and SIGTERM signal handlers to
-    #   gracefully shutdown.
-    # User could also choose to run server via call to run_till_terminated
-    s.run_till_terminated_or_interrupted([1, 'int', 'SIGTERM'])
-  end  
+  # Runs the server with SIGHUP, SIGINT and SIGTERM signal handlers to
+  #   gracefully shutdown.
+  # User could also choose to run server via call to run_till_terminated
+  s.run_till_terminated_or_interrupted([1, 'int', 'SIGTERM'])
 end
 
 main
