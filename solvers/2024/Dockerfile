@@ -1,4 +1,4 @@
-FROM ruby:3.3.6-bookworm
+FROM ruby:3.3.3-bookworm
 
 RUN mkdir /solver
 WORKDIR /solver
