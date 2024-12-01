@@ -2,7 +2,6 @@
 require 'rspec'
 require 'advent_services_pb'
 require_relative 'day0'
-require_relative 'server'
 
 RSpec.describe Day0 do
   #describe "part 0" do
