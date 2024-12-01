@@ -213,12 +213,12 @@ func (f *finder) raiseIssue(ctx context.Context, year, day, part int32, err erro
 		}
 	} else if status.Code(err) == codes.FailedPrecondition {
 		issue, ierr = f.ghclient.CreateIssue(ctx, &ghbpb.CreateIssueRequest{Title: fmt.Sprintf("Add zero day testbed for %v", year), Repo: "adventofcode", User: "brotherlogic"})
-		if err != nil {
+		if ierr != nil {
 			return ierr
 		}
 	} else {
 		issue, ierr = f.ghclient.CreateIssue(ctx, &ghbpb.CreateIssueRequest{Title: fmt.Sprintf("Solve %v - %v - %v", year, day, part), Repo: "adventofcode", User: "brotherlogic"})
-		if err != nil {
+		if ierr != nil {
 			return ierr
 		}
 	}
