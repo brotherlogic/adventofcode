@@ -31,7 +31,7 @@ class SolverServer < Adventofcode::SolverService::Service
     registrar = Registrar.new
     while true 
        sleep 60
-       registar.Register()
+       registrar.Register()
     end
   end
 
