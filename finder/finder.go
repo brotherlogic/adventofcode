@@ -208,7 +208,7 @@ func (f *finder) raiseIssue(ctx context.Context, year, day, part int32, err erro
 			Repo:  "adventofcode",
 			User:  "brotherlogic",
 		})
-		if err != nil {
+		if ierr != nil {
 			return ierr
 		}
 	} else if status.Code(err) == codes.FailedPrecondition {
