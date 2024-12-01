@@ -58,4 +58,5 @@ def main
   s.run_till_terminated_or_interrupted([1, 'int', 'SIGTERM'])
 end
 
+STDOUT.sync = true
 main
