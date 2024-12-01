@@ -27,6 +27,8 @@ class Day1
         diff = 0
         sarr1.each_with_index do |val, index|
             puts "Diff"
+            puts sarr1[index]
+            puts sarr2[index]
             puts differ(sarr1[index], sarr2[index])
             diff += differ(sarr1[index], sarr2[index])
         end
