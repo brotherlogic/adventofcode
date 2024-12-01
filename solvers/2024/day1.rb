@@ -21,6 +21,8 @@ class Day1
         sarr2 = arr2.sort
 
         puts sarr1
+        puts "Break"
+        puts sarr2
 
         diff = 0
         sarr1.each_with_index do |val, index|
