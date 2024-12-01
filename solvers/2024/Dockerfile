@@ -11,7 +11,7 @@ RUN mkdir /solver/lib
 COPY lib /solver/lib
 COPY server.rb /solver
 
-RUN bundle config --global frozen 1
+RUN bundle config --global 
 RUN bundle install --without development test
 
 EXPOSE 8080
