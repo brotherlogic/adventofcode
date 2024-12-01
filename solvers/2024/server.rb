@@ -50,6 +50,7 @@ class SolverServer < Adventofcode::SolverService::Service
     #   gracefully shutdown.
     # User could also choose to run server via call to run_till_terminated
     s.run_till_terminated_or_interrupted([1, 'int', 'SIGTERM'])
-  end
-  
-  main
+  end  
+end
+
+main
