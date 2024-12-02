@@ -36,11 +36,11 @@ class SolverServer < Adventofcode::SolverService::Service
     # Find the class solver for the given day
     if solve_req.day == 1 && solve_req.part == 1
         d1 = Day1.new
-        Adventofcode::SolveResponse.new(answer: d1.solvePart1(solve_req)) 
+        return Adventofcode::SolveResponse.new(answer: d1.solvePart1(solve_req)) 
     end
     if solve_req.day == 1 && solve_req.part == 2
       d1 = Day1.new
-      Adventofcode::SolveResponse.new(answer: d1.solvePart2(solve_req)) 
+      return Adventofcode::SolveResponse.new(answer: d1.solvePart2(solve_req)) 
     end
   end
 end
