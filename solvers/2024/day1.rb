@@ -47,7 +47,7 @@ class Day1
                     count+=1
                 end
             end
-            ocount += count*num
+            ocount += count*num 
         end
         return ocount
     end
