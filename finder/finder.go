@@ -396,7 +396,12 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 
 		if found {
 			// See if this solution is correct
-			if f.hasLabel(ctx, "correct", issue) {
+			labe, err := f.hasLabel(ctx, "correct", issue)
+			if err != nil {
+				log.Fatalf("Bad label: %v", err)
+			}
+
+			if labe {
 				bsol := issue.GetSolutionAttempts()[0]
 				for _, sol := range issue.GetSolutionAttempts() {
 					if sol.GetSolutionMade() > bsol.GetSolutionMade() {
