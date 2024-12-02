@@ -98,6 +98,24 @@ func (f *finder) addLabel(ctx context.Context, label string, issue *pb.Issue) er
 	return err
 }
 
+func (f *finder) hasLabel(ctx context.Context, label string, issue *pb.Issue) (bool, error) {
+	labels, err := f.ghclient.GetLabels(ctx, &ghbpb.GetLabelsRequest{
+		Id:   int32(issue.GetId()),
+		Repo: "adventofcode",
+		User: "brotherlogic",
+	})
+	if err != nil {
+		return false, err
+	}
+
+	for _, flabel := range labels.GetLabels() {
+		if label == flabel {
+			return true, nil
+		}
+	}
+	return false, nil
+}
+
 func (f *finder) removeLabel(ctx context.Context, label string, issue *pb.Issue) error {
 	_, err := f.ghclient.DeleteLabel(ctx, &ghbpb.DeleteLabelRequest{
 		User:  "brotherlogic",
@@ -377,6 +395,18 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 		}
 
 		if found {
+			// See if this solution is correct
+			if f.hasLabel(ctx, "correct", issue) {
+				bsol := issue.GetSolutionAttempts()[0]
+				for _, sol := range issue.GetSolutionAttempts() {
+					if sol.GetSolutionMade() > bsol.GetSolutionMade() {
+						bsol = sol
+					}
+				}
+
+				client.AddSolution(ctx, &pb.AddSolutionRequest{Solution: bsol})
+			}
+
 			return status.Errorf(codes.DataLoss, "Already seen this solution, no support for it or incorrect")
 		}
 

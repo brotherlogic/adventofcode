@@ -29,6 +29,8 @@ message Solution {
     int64 big_answer = 4;
     string string_answer = 5;
     int32 answer = 6;
+
+    int64 solution_made = 7;
 }
 
 message SolveRequest {
