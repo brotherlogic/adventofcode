@@ -38,6 +38,10 @@ class SolverServer < Adventofcode::SolverService::Service
         d1 = Day1.new
         Adventofcode::SolveResponse.new(answer: d1.solvePart1(solve_req)) 
     end
+    if solve_req.day == 1 && solve_req.part == 2
+      d1 = Day1.new
+      Adventofcode::SolveResponse.new(answer: d1.solvePart2(solve_req)) 
+    end
   end
 end
 
