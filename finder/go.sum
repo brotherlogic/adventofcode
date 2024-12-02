@@ -18,6 +18,8 @@ github.com/brotherlogic/githubridge v0.2805.0 h1:MZYc50DVIc+1CSQSxRGAvXKizETMKJh
 github.com/brotherlogic/githubridge v0.2805.0/go.mod h1:XTxap90/th23AU2BWYFxnSyiQFwDYyBI0PWxDZTCQpo=
 github.com/brotherlogic/githubridge v0.2819.0 h1:WzCrEYSwAJmZpH+HlfXF3OYVs9QrD1tz04EVGrcwWeY=
 github.com/brotherlogic/githubridge v0.2819.0/go.mod h1:XTxap90/th23AU2BWYFxnSyiQFwDYyBI0PWxDZTCQpo=
+github.com/brotherlogic/githubridge v0.2821.0 h1:SDsf3XY+1fpvuBTPBWOYSb1Q1A4OHZwz5xOxNtPwX7o=
+github.com/brotherlogic/githubridge v0.2821.0/go.mod h1:XTxap90/th23AU2BWYFxnSyiQFwDYyBI0PWxDZTCQpo=
 github.com/brotherlogic/pstore v0.18.0 h1:6ZBG2/kZajLV2JazKbc3hA1XTts80A9Gslocz14SDBE=
 github.com/brotherlogic/pstore v0.18.0/go.mod h1:stga41yC3MG/dwIMYXHFvVfSglffMUAipgajP+gQ1hs=
 github.com/brotherlogic/pstore v0.23.0 h1:efnQGN/+ayErtk41qPDfnElV1iCik+rPD+WaO4k9I20=
