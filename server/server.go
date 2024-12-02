@@ -94,6 +94,7 @@ func (s *Server) GetSolution(ctx context.Context, req *pb.GetSolutionRequest) (*
 }
 
 func (s *Server) AddSolution(ctx context.Context, req *pb.AddSolutionRequest) (*pb.AddSolutionResponse, error) {
+	log.Printf("Adding solution %v", req)
 	data, err := s.psclient.Read(ctx, &pspb.ReadRequest{Key: "github.com/brotherlogic/adventofcode/solutions"})
 	if err != nil && status.Code(err) != codes.NotFound {
 		return nil, err
