@@ -6,20 +6,22 @@ from typing import ClassVar as _ClassVar, Iterable as _Iterable, Mapping as _Map
 DESCRIPTOR: _descriptor.FileDescriptor
 
 class Issue(_message.Message):
-    __slots__ = ["id", "solution_attempts", "open", "year", "day", "part"]
+    __slots__ = ["id", "solution_attempts", "open", "year", "day", "part", "last_error_code"]
     ID_FIELD_NUMBER: _ClassVar[int]
     SOLUTION_ATTEMPTS_FIELD_NUMBER: _ClassVar[int]
     OPEN_FIELD_NUMBER: _ClassVar[int]
     YEAR_FIELD_NUMBER: _ClassVar[int]
     DAY_FIELD_NUMBER: _ClassVar[int]
     PART_FIELD_NUMBER: _ClassVar[int]
+    LAST_ERROR_CODE_FIELD_NUMBER: _ClassVar[int]
     id: int
     solution_attempts: _containers.RepeatedCompositeFieldContainer[Solution]
     open: bool
     year: int
     day: int
     part: int
-    def __init__(self, id: _Optional[int] = ..., solution_attempts: _Optional[_Iterable[_Union[Solution, _Mapping]]] = ..., open: bool = ..., year: _Optional[int] = ..., day: _Optional[int] = ..., part: _Optional[int] = ...) -> None: ...
+    last_error_code: str
+    def __init__(self, id: _Optional[int] = ..., solution_attempts: _Optional[_Iterable[_Union[Solution, _Mapping]]] = ..., open: bool = ..., year: _Optional[int] = ..., day: _Optional[int] = ..., part: _Optional[int] = ..., last_error_code: _Optional[str] = ...) -> None: ...
 
 class Solutions(_message.Message):
     __slots__ = ["solutions"]
@@ -28,20 +30,22 @@ class Solutions(_message.Message):
     def __init__(self, solutions: _Optional[_Iterable[_Union[Solution, _Mapping]]] = ...) -> None: ...
 
 class Solution(_message.Message):
-    __slots__ = ["year", "day", "part", "big_answer", "string_answer", "answer"]
+    __slots__ = ["year", "day", "part", "big_answer", "string_answer", "answer", "solution_made"]
     YEAR_FIELD_NUMBER: _ClassVar[int]
     DAY_FIELD_NUMBER: _ClassVar[int]
     PART_FIELD_NUMBER: _ClassVar[int]
     BIG_ANSWER_FIELD_NUMBER: _ClassVar[int]
     STRING_ANSWER_FIELD_NUMBER: _ClassVar[int]
     ANSWER_FIELD_NUMBER: _ClassVar[int]
+    SOLUTION_MADE_FIELD_NUMBER: _ClassVar[int]
     year: int
     day: int
     part: int
     big_answer: int
     string_answer: str
     answer: int
-    def __init__(self, year: _Optional[int] = ..., day: _Optional[int] = ..., part: _Optional[int] = ..., big_answer: _Optional[int] = ..., string_answer: _Optional[str] = ..., answer: _Optional[int] = ...) -> None: ...
+    solution_made: int
+    def __init__(self, year: _Optional[int] = ..., day: _Optional[int] = ..., part: _Optional[int] = ..., big_answer: _Optional[int] = ..., string_answer: _Optional[str] = ..., answer: _Optional[int] = ..., solution_made: _Optional[int] = ...) -> None: ...
 
 class SolveRequest(_message.Message):
     __slots__ = ["year", "day", "part", "data"]

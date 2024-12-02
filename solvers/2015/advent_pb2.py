@@ -13,52 +13,52 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0c\x61\x64vent.proto\x12\x0c\x61\x64ventofcode\"}\n\x05Issue\x12\n\n\x02id\x18\x01 \x01(\x03\x12\x31\n\x11solution_attempts\x18\x02 \x03(\x0b\x32\x16.adventofcode.Solution\x12\x0c\n\x04open\x18\x03 \x01(\x08\x12\x0c\n\x04year\x18\x04 \x01(\x05\x12\x0b\n\x03\x64\x61y\x18\x05 \x01(\x05\x12\x0c\n\x04part\x18\x06 \x01(\x05\"6\n\tSolutions\x12)\n\tsolutions\x18\x01 \x03(\x0b\x32\x16.adventofcode.Solution\"n\n\x08Solution\x12\x0c\n\x04year\x18\x01 \x01(\x05\x12\x0b\n\x03\x64\x61y\x18\x02 \x01(\x05\x12\x0c\n\x04part\x18\x03 \x01(\x05\x12\x12\n\nbig_answer\x18\x04 \x01(\x03\x12\x15\n\rstring_answer\x18\x05 \x01(\t\x12\x0e\n\x06\x61nswer\x18\x06 \x01(\x05\"E\n\x0cSolveRequest\x12\x0c\n\x04year\x18\x01 \x01(\x05\x12\x0b\n\x03\x64\x61y\x18\x02 \x01(\x05\x12\x0c\n\x04part\x18\x03 \x01(\x05\x12\x0c\n\x04\x64\x61ta\x18\x04 \x01(\t\"J\n\rSolveResponse\x12\x0e\n\x06\x61nswer\x18\x01 \x01(\x05\x12\x15\n\rstring_answer\x18\x02 \x01(\t\x12\x12\n\nbig_answer\x18\x03 \x01(\x03\"X\n\rUploadRequest\x12\x0c\n\x04year\x18\x01 \x01(\x05\x12\x0b\n\x03\x64\x61y\x18\x02 \x01(\x05\x12\x0c\n\x04\x64\x61ta\x18\x03 \x01(\t\x12\x10\n\x08\x64ual_day\x18\x04 \x01(\x08\x12\x0c\n\x04part\x18\x05 \x01(\x05\"\x10\n\x0eUploadResponse\"9\n\x0eGetDataRequest\x12\x0c\n\x04year\x18\x01 \x01(\x05\x12\x0b\n\x03\x64\x61y\x18\x02 \x01(\x05\x12\x0c\n\x04part\x18\x03 \x01(\x05\"\x1f\n\x0fGetDataResponse\x12\x0c\n\x04\x64\x61ta\x18\x01 \x01(\t\"1\n\x0fRegisterRequest\x12\x10\n\x08\x63\x61llback\x18\x01 \x01(\t\x12\x0c\n\x04year\x18\x02 \x01(\x05\"\x12\n\x10RegisterResponse\">\n\x12\x41\x64\x64SolutionRequest\x12(\n\x08solution\x18\x01 \x01(\x0b\x32\x16.adventofcode.Solution\"\x15\n\x13\x41\x64\x64SolutionResponse\"=\n\x12GetSolutionRequest\x12\x0c\n\x04year\x18\x01 \x01(\x05\x12\x0b\n\x03\x64\x61y\x18\x02 \x01(\x05\x12\x0c\n\x04part\x18\x03 \x01(\x05\"?\n\x13GetSolutionResponse\x12(\n\x08solution\x18\x01 \x01(\x0b\x32\x16.adventofcode.Solution\"\"\n\x10SetCookieRequest\x12\x0e\n\x06\x63ookie\x18\x01 \x01(\t\"\x13\n\x11SetCookieResponse2Y\n\x13\x41\x64ventOfCodeService\x12\x42\n\x05Solve\x12\x1a.adventofcode.SolveRequest\x1a\x1b.adventofcode.SolveResponse\"\x00\x32\xad\x03\n\x1b\x41\x64ventOfCodeInternalService\x12\x45\n\x06Upload\x12\x1b.adventofcode.UploadRequest\x1a\x1c.adventofcode.UploadResponse\"\x00\x12K\n\x08Register\x12\x1d.adventofcode.RegisterRequest\x1a\x1e.adventofcode.RegisterResponse\"\x00\x12T\n\x0b\x41\x64\x64Solution\x12 .adventofcode.AddSolutionRequest\x1a!.adventofcode.AddSolutionResponse\"\x00\x12T\n\x0bGetSolution\x12 .adventofcode.GetSolutionRequest\x1a!.adventofcode.GetSolutionResponse\"\x00\x12N\n\tSetCookie\x12\x1e.adventofcode.SetCookieRequest\x1a\x1f.adventofcode.SetCookieResponse\"\x00\x32S\n\rSolverService\x12\x42\n\x05Solve\x12\x1a.adventofcode.SolveRequest\x1a\x1b.adventofcode.SolveResponse\"\x00\x42,Z*github.com/brotherlogic/adventofcode/protob\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0c\x61\x64vent.proto\x12\x0c\x61\x64ventofcode\"\x96\x01\n\x05Issue\x12\n\n\x02id\x18\x01 \x01(\x03\x12\x31\n\x11solution_attempts\x18\x02 \x03(\x0b\x32\x16.adventofcode.Solution\x12\x0c\n\x04open\x18\x03 \x01(\x08\x12\x0c\n\x04year\x18\x04 \x01(\x05\x12\x0b\n\x03\x64\x61y\x18\x05 \x01(\x05\x12\x0c\n\x04part\x18\x06 \x01(\x05\x12\x17\n\x0flast_error_code\x18\x07 \x01(\t\"6\n\tSolutions\x12)\n\tsolutions\x18\x01 \x03(\x0b\x32\x16.adventofcode.Solution\"\x85\x01\n\x08Solution\x12\x0c\n\x04year\x18\x01 \x01(\x05\x12\x0b\n\x03\x64\x61y\x18\x02 \x01(\x05\x12\x0c\n\x04part\x18\x03 \x01(\x05\x12\x12\n\nbig_answer\x18\x04 \x01(\x03\x12\x15\n\rstring_answer\x18\x05 \x01(\t\x12\x0e\n\x06\x61nswer\x18\x06 \x01(\x05\x12\x15\n\rsolution_made\x18\x07 \x01(\x03\"E\n\x0cSolveRequest\x12\x0c\n\x04year\x18\x01 \x01(\x05\x12\x0b\n\x03\x64\x61y\x18\x02 \x01(\x05\x12\x0c\n\x04part\x18\x03 \x01(\x05\x12\x0c\n\x04\x64\x61ta\x18\x04 \x01(\t\"J\n\rSolveResponse\x12\x0e\n\x06\x61nswer\x18\x01 \x01(\x05\x12\x15\n\rstring_answer\x18\x02 \x01(\t\x12\x12\n\nbig_answer\x18\x03 \x01(\x03\"X\n\rUploadRequest\x12\x0c\n\x04year\x18\x01 \x01(\x05\x12\x0b\n\x03\x64\x61y\x18\x02 \x01(\x05\x12\x0c\n\x04\x64\x61ta\x18\x03 \x01(\t\x12\x10\n\x08\x64ual_day\x18\x04 \x01(\x08\x12\x0c\n\x04part\x18\x05 \x01(\x05\"\x10\n\x0eUploadResponse\"9\n\x0eGetDataRequest\x12\x0c\n\x04year\x18\x01 \x01(\x05\x12\x0b\n\x03\x64\x61y\x18\x02 \x01(\x05\x12\x0c\n\x04part\x18\x03 \x01(\x05\"\x1f\n\x0fGetDataResponse\x12\x0c\n\x04\x64\x61ta\x18\x01 \x01(\t\"1\n\x0fRegisterRequest\x12\x10\n\x08\x63\x61llback\x18\x01 \x01(\t\x12\x0c\n\x04year\x18\x02 \x01(\x05\"\x12\n\x10RegisterResponse\">\n\x12\x41\x64\x64SolutionRequest\x12(\n\x08solution\x18\x01 \x01(\x0b\x32\x16.adventofcode.Solution\"\x15\n\x13\x41\x64\x64SolutionResponse\"=\n\x12GetSolutionRequest\x12\x0c\n\x04year\x18\x01 \x01(\x05\x12\x0b\n\x03\x64\x61y\x18\x02 \x01(\x05\x12\x0c\n\x04part\x18\x03 \x01(\x05\"?\n\x13GetSolutionResponse\x12(\n\x08solution\x18\x01 \x01(\x0b\x32\x16.adventofcode.Solution\"\"\n\x10SetCookieRequest\x12\x0e\n\x06\x63ookie\x18\x01 \x01(\t\"\x13\n\x11SetCookieResponse2Y\n\x13\x41\x64ventOfCodeService\x12\x42\n\x05Solve\x12\x1a.adventofcode.SolveRequest\x1a\x1b.adventofcode.SolveResponse\"\x00\x32\xad\x03\n\x1b\x41\x64ventOfCodeInternalService\x12\x45\n\x06Upload\x12\x1b.adventofcode.UploadRequest\x1a\x1c.adventofcode.UploadResponse\"\x00\x12K\n\x08Register\x12\x1d.adventofcode.RegisterRequest\x1a\x1e.adventofcode.RegisterResponse\"\x00\x12T\n\x0b\x41\x64\x64Solution\x12 .adventofcode.AddSolutionRequest\x1a!.adventofcode.AddSolutionResponse\"\x00\x12T\n\x0bGetSolution\x12 .adventofcode.GetSolutionRequest\x1a!.adventofcode.GetSolutionResponse\"\x00\x12N\n\tSetCookie\x12\x1e.adventofcode.SetCookieRequest\x1a\x1f.adventofcode.SetCookieResponse\"\x00\x32S\n\rSolverService\x12\x42\n\x05Solve\x12\x1a.adventofcode.SolveRequest\x1a\x1b.adventofcode.SolveResponse\"\x00\x42;Z*github.com/brotherlogic/adventofcode/proto\xaa\x02\x0c\x41\x64ventOfCodeb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'advent_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
   DESCRIPTOR._options = None
-  DESCRIPTOR._serialized_options = b'Z*github.com/brotherlogic/adventofcode/proto'
-  _globals['_ISSUE']._serialized_start=30
-  _globals['_ISSUE']._serialized_end=155
-  _globals['_SOLUTIONS']._serialized_start=157
-  _globals['_SOLUTIONS']._serialized_end=211
-  _globals['_SOLUTION']._serialized_start=213
-  _globals['_SOLUTION']._serialized_end=323
-  _globals['_SOLVEREQUEST']._serialized_start=325
-  _globals['_SOLVEREQUEST']._serialized_end=394
-  _globals['_SOLVERESPONSE']._serialized_start=396
-  _globals['_SOLVERESPONSE']._serialized_end=470
-  _globals['_UPLOADREQUEST']._serialized_start=472
-  _globals['_UPLOADREQUEST']._serialized_end=560
-  _globals['_UPLOADRESPONSE']._serialized_start=562
-  _globals['_UPLOADRESPONSE']._serialized_end=578
-  _globals['_GETDATAREQUEST']._serialized_start=580
-  _globals['_GETDATAREQUEST']._serialized_end=637
-  _globals['_GETDATARESPONSE']._serialized_start=639
-  _globals['_GETDATARESPONSE']._serialized_end=670
-  _globals['_REGISTERREQUEST']._serialized_start=672
-  _globals['_REGISTERREQUEST']._serialized_end=721
-  _globals['_REGISTERRESPONSE']._serialized_start=723
-  _globals['_REGISTERRESPONSE']._serialized_end=741
-  _globals['_ADDSOLUTIONREQUEST']._serialized_start=743
-  _globals['_ADDSOLUTIONREQUEST']._serialized_end=805
-  _globals['_ADDSOLUTIONRESPONSE']._serialized_start=807
-  _globals['_ADDSOLUTIONRESPONSE']._serialized_end=828
-  _globals['_GETSOLUTIONREQUEST']._serialized_start=830
-  _globals['_GETSOLUTIONREQUEST']._serialized_end=891
-  _globals['_GETSOLUTIONRESPONSE']._serialized_start=893
-  _globals['_GETSOLUTIONRESPONSE']._serialized_end=956
-  _globals['_SETCOOKIEREQUEST']._serialized_start=958
-  _globals['_SETCOOKIEREQUEST']._serialized_end=992
-  _globals['_SETCOOKIERESPONSE']._serialized_start=994
-  _globals['_SETCOOKIERESPONSE']._serialized_end=1013
-  _globals['_ADVENTOFCODESERVICE']._serialized_start=1015
-  _globals['_ADVENTOFCODESERVICE']._serialized_end=1104
-  _globals['_ADVENTOFCODEINTERNALSERVICE']._serialized_start=1107
-  _globals['_ADVENTOFCODEINTERNALSERVICE']._serialized_end=1536
-  _globals['_SOLVERSERVICE']._serialized_start=1538
-  _globals['_SOLVERSERVICE']._serialized_end=1621
+  DESCRIPTOR._serialized_options = b'Z*github.com/brotherlogic/adventofcode/proto\252\002\014AdventOfCode'
+  _globals['_ISSUE']._serialized_start=31
+  _globals['_ISSUE']._serialized_end=181
+  _globals['_SOLUTIONS']._serialized_start=183
+  _globals['_SOLUTIONS']._serialized_end=237
+  _globals['_SOLUTION']._serialized_start=240
+  _globals['_SOLUTION']._serialized_end=373
+  _globals['_SOLVEREQUEST']._serialized_start=375
+  _globals['_SOLVEREQUEST']._serialized_end=444
+  _globals['_SOLVERESPONSE']._serialized_start=446
+  _globals['_SOLVERESPONSE']._serialized_end=520
+  _globals['_UPLOADREQUEST']._serialized_start=522
+  _globals['_UPLOADREQUEST']._serialized_end=610
+  _globals['_UPLOADRESPONSE']._serialized_start=612
+  _globals['_UPLOADRESPONSE']._serialized_end=628
+  _globals['_GETDATAREQUEST']._serialized_start=630
+  _globals['_GETDATAREQUEST']._serialized_end=687
+  _globals['_GETDATARESPONSE']._serialized_start=689
+  _globals['_GETDATARESPONSE']._serialized_end=720
+  _globals['_REGISTERREQUEST']._serialized_start=722
+  _globals['_REGISTERREQUEST']._serialized_end=771
+  _globals['_REGISTERRESPONSE']._serialized_start=773
+  _globals['_REGISTERRESPONSE']._serialized_end=791
+  _globals['_ADDSOLUTIONREQUEST']._serialized_start=793
+  _globals['_ADDSOLUTIONREQUEST']._serialized_end=855
+  _globals['_ADDSOLUTIONRESPONSE']._serialized_start=857
+  _globals['_ADDSOLUTIONRESPONSE']._serialized_end=878
+  _globals['_GETSOLUTIONREQUEST']._serialized_start=880
+  _globals['_GETSOLUTIONREQUEST']._serialized_end=941
+  _globals['_GETSOLUTIONRESPONSE']._serialized_start=943
+  _globals['_GETSOLUTIONRESPONSE']._serialized_end=1006
+  _globals['_SETCOOKIEREQUEST']._serialized_start=1008
+  _globals['_SETCOOKIEREQUEST']._serialized_end=1042
+  _globals['_SETCOOKIERESPONSE']._serialized_start=1044
+  _globals['_SETCOOKIERESPONSE']._serialized_end=1063
+  _globals['_ADVENTOFCODESERVICE']._serialized_start=1065
+  _globals['_ADVENTOFCODESERVICE']._serialized_end=1154
+  _globals['_ADVENTOFCODEINTERNALSERVICE']._serialized_start=1157
+  _globals['_ADVENTOFCODEINTERNALSERVICE']._serialized_end=1586
+  _globals['_SOLVERSERVICE']._serialized_start=1588
+  _globals['_SOLVERSERVICE']._serialized_end=1671
 # @@protoc_insertion_point(module_scope)
