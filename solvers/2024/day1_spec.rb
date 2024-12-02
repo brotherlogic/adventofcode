@@ -25,7 +25,7 @@ RSpec.describe Day1 do
       1   3
       3   9
       3   3"
-      expect(day1.solvePart2(Adventofcode::SolveRequest.new(year:2024, day: 1, data: data))).to eq(11)
+      expect(day1.solvePart2(Adventofcode::SolveRequest.new(year:2024, day: 1, data: data))).to eq(31)
     end
   end
 end

@@ -20,16 +20,9 @@ class Day1
         sarr1 = arr1.sort
         sarr2 = arr2.sort
 
-        puts sarr1
-        puts "Break"
-        puts sarr2
-
+   
         diff = 0
         sarr1.each_with_index do |val, index|
-            puts "Diff"
-            puts sarr1[index]
-            puts sarr2[index]
-            puts differ(sarr1[index], sarr2[index])
             diff += differ(sarr1[index], sarr2[index])
         end
 
@@ -47,15 +40,15 @@ class Day1
         end
 
         ocount = 0
-        sarr1.each do |num|
+        arr1.each do |num|
             count = 0
-            sarr2.each do |onum|
+            arr2.each do |onum|
                 if onum == num
-                    count++
+                    count+=1
                 end
             end
-            ocunt += count
+            ocount += count*num
         end
-
         return ocount
+    end
 end
