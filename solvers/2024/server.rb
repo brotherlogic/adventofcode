@@ -6,6 +6,7 @@ $LOAD_PATH.unshift(lib_dir) unless $LOAD_PATH.include?(lib_dir)
 
 require 'grpc'
 require 'advent_services_pb'
+require_relative 'day1'
 
 class Registrar
   def Register()
@@ -34,7 +35,7 @@ class SolverServer < Adventofcode::SolverService::Service
   def solve(solve_req, _unused_call)
     # Find the class solver for the given day
     if solve_req.day == 1 && solve_req.part == 1
-        d1 = d1.new
+        d1 = Day1.new
         Adventofcode::SolveResponse.new(answer: d1.solvePart1(solve_req)) 
     end
   end
