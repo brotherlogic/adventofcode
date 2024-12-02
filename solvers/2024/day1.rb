@@ -51,7 +51,7 @@ class Day1
             count = 0
             arr2.each do |onum|
                 if onum == num
-                    count++
+                    count+=1
                 end
             end
             ocunt += count
