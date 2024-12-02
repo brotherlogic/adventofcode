@@ -58,4 +58,5 @@ class Day1
         end
 
         return ocount
+    end
 end
