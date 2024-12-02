@@ -47,9 +47,9 @@ class Day1
         end
 
         ocount = 0
-        sarr1.each do |num|
+        arr1.each do |num|
             count = 0
-            sarr2.each do |onum|
+            arr2.each do |onum|
                 if onum == num
                     count++
                 end
