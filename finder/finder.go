@@ -409,7 +409,8 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 					}
 				}
 
-				client.AddSolution(ctx, &pb.AddSolutionRequest{Solution: bsol})
+				_, err = client.AddSolution(ctx, &pb.AddSolutionRequest{Solution: bsol})
+				log.Printf("Added solution: %v", err)
 			}
 
 			return status.Errorf(codes.DataLoss, "Already seen this solution, no support for it or incorrect")
