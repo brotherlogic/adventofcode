@@ -10,6 +10,7 @@ RUN mkdir /solver/lib
 
 COPY lib /solver/lib
 COPY server.rb /solver
+COPY *.rb /solver
 
 RUN bundle config --global 
 RUN bundle install --without development test
