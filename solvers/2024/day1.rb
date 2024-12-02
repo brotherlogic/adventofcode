@@ -35,4 +35,27 @@ class Day1
 
         return diff
     end
+
+    def solvePart2(solve_req)
+        arr1 = []
+        arr2 = []
+        lines = solve_req.data.split("\n")
+        lines.each do |line|
+            pieces = line.strip.split
+            arr1.push(pieces[0].to_i)
+            arr2.push(pieces[1].to_i)
+        end
+
+        ocount = 0
+        sarr1.each do |num|
+            count = 0
+            sarr2.each do |onum|
+                if onum == num
+                    count++
+                end
+            end
+            ocunt += count
+        end
+
+        return ocount
 end
