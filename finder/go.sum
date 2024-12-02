@@ -8,6 +8,8 @@ github.com/brotherlogic/adventofcode v0.323.0 h1:q5qVTmHhcUG0Oa74f99ZbrCakgoa3bA
 github.com/brotherlogic/adventofcode v0.323.0/go.mod h1:4rNYrwkEoKEMAmiAKe/h4wgs48ghFoTgYAOzHlJ7YPw=
 github.com/brotherlogic/adventofcode v0.348.0 h1:3HOZZO/BQHm7bRtVHPVdRCZ5iQJR4Hz7mRyDNmzm7TA=
 github.com/brotherlogic/adventofcode v0.348.0/go.mod h1:wtYm6ONgFLWG4DRSK3oJWhlErtBMQER5WZAllV2l0pM=
+github.com/brotherlogic/adventofcode v0.353.0 h1:wntlX2ONpcyJWdzUybW5moOL148OdJ5q7d8Q5nxl59o=
+github.com/brotherlogic/adventofcode v0.353.0/go.mod h1:wtYm6ONgFLWG4DRSK3oJWhlErtBMQER5WZAllV2l0pM=
 github.com/brotherlogic/githubridge v0.2802.0 h1:9Dz8jzHYNNGheax3eZxLP7itjMnWjReukNafNa/U76E=
 github.com/brotherlogic/githubridge v0.2802.0/go.mod h1:XTxap90/th23AU2BWYFxnSyiQFwDYyBI0PWxDZTCQpo=
 github.com/brotherlogic/githubridge v0.2804.0 h1:tBghCkNQyi2bc+CAh9brBsmaSAvV8Zxk3rP6b5TV1eA=
@@ -42,6 +44,8 @@ google.golang.org/genproto/googleapis/rpc v0.0.0-20241104194629-dd2ea8efbc28 h1:
 google.golang.org/genproto/googleapis/rpc v0.0.0-20241104194629-dd2ea8efbc28/go.mod h1:GX3210XPVPUjJbTUbvwI8f2IpZDMZuPJWDzDuebbviI=
 google.golang.org/genproto/googleapis/rpc v0.0.0-20241118233622-e639e219e697 h1:LWZqQOEjDyONlF1H6afSWpAL/znlREo2tHfLoe+8LMA=
 google.golang.org/genproto/googleapis/rpc v0.0.0-20241118233622-e639e219e697/go.mod h1:5uTbfoYQed2U9p3KIj2/Zzm02PYhndfdmML0qC3q3FU=
+google.golang.org/genproto/googleapis/rpc v0.0.0-20241202173237-19429a94021a h1:hgh8P4EuoxpsuKMXX/To36nOFD7vixReXgn8lPGnt+o=
+google.golang.org/genproto/googleapis/rpc v0.0.0-20241202173237-19429a94021a/go.mod h1:5uTbfoYQed2U9p3KIj2/Zzm02PYhndfdmML0qC3q3FU=
 google.golang.org/grpc v1.67.1 h1:zWnc1Vrcno+lHZCOofnIMvycFcc0QRGIzm9dhnDX68E=
 google.golang.org/grpc v1.67.1/go.mod h1:1gLDyUQU7CTLJI90u3nXZ9ekeghjeM7pTDZlqFNg2AA=
 google.golang.org/grpc v1.68.0 h1:aHQeeJbo8zAkAa3pRzrVjZlbz6uSfeOXlJNQM0RAbz0=
