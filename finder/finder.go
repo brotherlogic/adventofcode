@@ -410,7 +410,7 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 				}
 
 				_, err = client.AddSolution(ctx, &pb.AddSolutionRequest{Solution: bsol})
-				log.Printf("Added solution: %v (%v)", err, bsol)
+				log.Printf("Added solution: %v (%v) from %v", err, bsol, issue.GetSolutionAttempts())
 			}
 
 			return status.Errorf(codes.DataLoss, "Already seen this solution, no support for it or incorrect")
