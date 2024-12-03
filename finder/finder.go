@@ -404,7 +404,7 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 			if labe {
 				bsol := issue.GetSolutionAttempts()[0]
 				for _, sol := range issue.GetSolutionAttempts() {
-					if sol.GetSolutionMade() > bsol.GetSolutionMade() {
+					if sol.GetSolutionMade() > bsol.GetSolutionMade() || sol.GetAnswer() > 0 {
 						bsol = sol
 					}
 				}
@@ -425,6 +425,7 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 				Year:         issue.GetYear(),
 				Day:          issue.GetDay(),
 				Part:         issue.GetPart(),
+				SolutionMade: time.Now().Unix(),
 			})
 			data, err := proto.Marshal(issue)
 			if err != nil {
