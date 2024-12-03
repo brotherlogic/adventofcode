@@ -19,11 +19,11 @@ class Day2
 
         for i in 1..nums.length()-2
             if direction(nums[0],nums[1]) != direction(nums[i],nums[i+1])
-                puts "unsafe", line
+                #puts "unsafe", line
                 return false
             end
             if diff(nums[i],nums[i+1]) < 1 || diff(nums[i],nums[i+1]) > 3
-                puts "unsafes", line
+                #puts "unsafes", line
                 return false
             end
         end
