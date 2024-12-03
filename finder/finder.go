@@ -404,7 +404,7 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 			if labe {
 				bsol := issue.GetSolutionAttempts()[0]
 				for _, sol := range issue.GetSolutionAttempts() {
-					if sol.GetSolutionMade() > bsol.GetSolutionMade() || sol.GetAnswer() > 0 {
+					if sol.GetSolutionMade() > bsol.GetSolutionMade() {
 						bsol = sol
 					}
 				}
