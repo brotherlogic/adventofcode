@@ -33,6 +33,8 @@ end
 
 class SolverServer < Adventofcode::SolverService::Service
   def solve(solve_req, _unused_call)
+    puts "Solving"
+    puts solve_req
     # Find the class solver for the given day
     if solve_req.day == 1 && solve_req.part == 1
         d1 = Day1.new
