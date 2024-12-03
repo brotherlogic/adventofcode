@@ -7,6 +7,7 @@ $LOAD_PATH.unshift(lib_dir) unless $LOAD_PATH.include?(lib_dir)
 require 'grpc'
 require 'advent_services_pb'
 require_relative 'day1'
+require_relative 'day2'
 
 class Registrar
   def Register()
