@@ -30,11 +30,45 @@ class Day2
     end
 
 
+    def safe2(line)
+        if safe(line)
+            return true
+        end
+
+        nums = line.strip.split
+
+        for drop in 0..nums.length()-1
+            narr = []
+            for i in 0..nums.length()-1
+                if i != drop
+                    narr.push(nums[i])
+                end
+            end
+            if safe(narr.join(" "))
+                return true
+            end
+        end
+
+        return false
+    end
+
+
     def solvePart1(solve_req)
         lines = solve_req.data.split("\n")
         safe = 0
         lines.each do |line|
             if safe(line)
+                safe += 1
+            end
+        end
+        return safe
+    end
+
+    def solvePart2(solve_req)
+        lines = solve_req.data.split("\n")
+        safe = 0
+        lines.each do |line|
+            if safe2(line)
                 safe += 1
             end
         end
