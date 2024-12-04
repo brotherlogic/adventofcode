@@ -50,6 +50,30 @@ class Day4
         findXmas(arr, x, y, finder, i, -1, -1)
     end
 
+    def findXmasSecond(arr, x, y)
+        if arr[y][x] != "A"
+            return 0
+        end
+
+        left = false
+        right = false
+
+        if (findXmas(arr, x-1, y-1, "M", 0, 0, 0) > 0 && findXmas(arr, x+1, y+1, "S", 0, 0, 0) > 0) || (findXmas(arr, x-1, y-1, "S", 0, 0, 0) > 0 && findXmas(arr, x+1, y+1, "M", 0, 0, 0) > 0)
+            left = true
+        end
+
+        if (findXmas(arr, x+1, y-1, "M", 0, 0, 0) > 0 && findXmas(arr, x-1, y+1, "S", 0, 0, 0) > 0) || (findXmas(arr, x+1, y-1, "S", 0, 0, 0) > 0 && findXmas(arr, x-1, y+1, "M", 0, 0, 0) > 0)
+            right = true
+        end
+
+        if left && right
+            return 1
+        end
+
+        return 0
+ 
+    end
+
     def solvePart1(solve_req)
       arr = buildArr(solve_req.data)
 
@@ -63,4 +87,18 @@ class Day4
 
       return count
     end
+
+    def solvePart2(solve_req)
+        arr = buildArr(solve_req.data)
+  
+        count = 0
+  
+        for y in  0..arr.length()-1
+          for x in  0..arr[y].length()-1
+              count += findXmasSecond(arr, x, y)
+          end
+        end
+  
+        return count
+      end
 end
