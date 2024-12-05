@@ -10,6 +10,7 @@ require_relative 'day1'
 require_relative 'day2'
 require_relative 'day3'
 require_relative 'day4'
+require_relative 'day5'
 
 class Registrar
   def Register()
@@ -73,6 +74,10 @@ class SolverServer < Adventofcode::SolverService::Service
       return Adventofcode::SolveResponse.new(answer: d4.solvePart2(solve_req)) 
     end
     
+    if solve_req.day == 5 && solve_req.part == 1
+      d5 = Day5.new
+      return Adventofcode::SolveResponse.new(answer: d5.solvePart1(solve_req)) 
+    end
   end
 end
 
