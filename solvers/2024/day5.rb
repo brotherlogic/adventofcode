@@ -84,9 +84,7 @@ class Day5
                     end
                 end
                 if !safe
-                    print "Unsafe: ", line.strip, "\n"
                     sorted = runSort(elems, map)
-                    print "Sorted: ", sorted, "\n"
                     count += sorted[sorted.length()/2].to_i
                 end
             end
