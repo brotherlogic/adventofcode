@@ -12,6 +12,7 @@ require_relative 'day3'
 require_relative 'day4'
 require_relative 'day5'
 require_relative 'day6'
+require_relative 'day7'
 
 include GRPC::Core::StatusCodes
 
@@ -95,9 +96,9 @@ class SolverServer < Adventofcode::SolverService::Service
       return Adventofcode::SolveResponse.new(answer: d6.solvePart2(solve_req)) 
     end
 
-    if solve_req.day == 6 && solve_req.part == 1
-      d6 = Day6.new
-      return Adventofcode::SolveResponse.new(answer: d6.solvePart1(solve_req)) 
+    if solve_req.day == 7 && solve_req.part == 1
+      d7 = Day7.new
+      return Adventofcode::SolveResponse.new(answer: d7.solvePart1(solve_req)) 
     end
   
 
