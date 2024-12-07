@@ -51,7 +51,7 @@ class Day6
 
         # Have we gone out of bounds?
         if nx < 0 || nx >= map[0].length() || ny < 0 || ny >= map.length()
-            return map,0,false
+            return map,x, y,false
         end
 
         # Have we hit a wall ?
@@ -114,6 +114,17 @@ class Day6
         logger = Logger.new($stdout) 
 
         map = buildMap(solve_req.data)
+        tmap = Marshal.load(Marshal.dump(map))
+        x,y = findMan(tmap)
+        legal = true
+        before = false
+        direction = "NORTH"
+        while legal && !before
+          tmap ,x,y,direction, legal, before = step(tmap, x, y, direction)
+        end
+        print "HERE ", x, y
+        tmap[y][x] = "E"
+        print "TMAP ", tmap, "\n"
 
         count = 0
 
@@ -122,7 +133,7 @@ class Day6
         for y in 0..map.length() - 1
             for x in 0..map[y].length() - 1 
                 nmap = Marshal.load(Marshal.dump(map))
-                if nmap[y][x] != "^" && nmap[y][x] != "#"
+                if nmap[y][x] != "^" && tmap[y][x] != "#" && tmap[y][x] != "."
                     nmap[y][x] = "#"
                     if solveMap(nmap)
                         count += 1
