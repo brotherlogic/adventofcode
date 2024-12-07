@@ -112,6 +112,7 @@ class Day6
 
         count = 0
 
+        print "STARTED\n"
         for y in 0..map.length() - 1
             for x in 0..map[y].length() - 1 
                 nmap = Marshal.load(Marshal.dump(map))
@@ -123,6 +124,7 @@ class Day6
                 end
             end
         end
+        print "FINISHED\n"
         return count
     end
 end
