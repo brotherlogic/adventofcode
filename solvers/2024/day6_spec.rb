@@ -20,4 +20,20 @@ RSpec.describe Day6 do
       expect(day6.solvePart1(Adventofcode::SolveRequest.new(data: data))).to eq(41)
     end
   end
+  describe "part 1" do
+    it "returns 6" do
+      day6 = Day6.new
+      data = "....#.....
+.........#
+..........
+..#.......
+.......#..
+..........
+.#..^.....
+........#.
+#.........
+......#..."
+      expect(day6.solvePart2(Adventofcode::SolveRequest.new(data: data))).to eq(6)
+    end
+  end
 end

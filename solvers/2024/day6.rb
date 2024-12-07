@@ -56,8 +56,16 @@ class Day6
             return step(map, x, y, newDirection(direction))
         end
 
-        map[y][x] = "X"
-        map[ny][nx] = "^"
+        # Have we been in this square before
+        if map[y][x][direction]
+            return map, 0, 0, 0, false, true
+        end
+
+        if map[y][x] == "." || map[y][x] == "^"
+            map[y][x] = "X-" + direction
+        else
+            map[y][x] += direction
+        end
 
         return map, nx, ny, direction, true
     end
@@ -69,7 +77,7 @@ class Day6
         legal = true
         direction = "NORTH"
         while legal
-            nmap, x, y, direction, legal = step(map, x, y, direction)
+            nmap, x, y, direction, legal, before = step(map, x, y, direction)
         end
 
         print nmap, "\n"
@@ -77,12 +85,44 @@ class Day6
         count = 0
         nmap.each do |line|
             line.each do |item|
-                if item == "X"
+                if item[0] == "X"
                     count += 1
                 end
             end
         end
 
         return count + 1
+    end
+
+    def solveMap(map)
+        x,y = findMan(map)
+        legal = true
+        before = false
+        direction = "NORTH"
+        while legal && !before
+            nmap, x, y, direction, legal, before = step(map, x, y, direction)
+        end
+
+       return before
+    end
+
+
+    def solvePart2(solve_req)
+        map = buildMap(solve_req.data)
+
+        count = 0
+
+        for y in 0..map.length() - 1
+            for x in 0..map[y].length() - 1 
+                nmap = Marshal.load(Marshal.dump(map))
+                if nmap[y][x] != "^"
+                    nmap[y][x] = "#"
+                    if solveMap(nmap)
+                        count += 1
+                    end
+                end
+            end
+        end
+        return count
     end
 end
