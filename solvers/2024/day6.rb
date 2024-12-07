@@ -129,12 +129,14 @@ class Day6
         count = 0
 
         logger.info("STARTED")
+        mcount = 0
         start = Time.now
         for y in 0..map.length() - 1
             for x in 0..map[y].length() - 1 
                 nmap = Marshal.load(Marshal.dump(map))
                 if nmap[y][x] != "^" && tmap[y][x] != "#" && tmap[y][x] != "."
                     nmap[y][x] = "#"
+                    mcount += 1
                     if solveMap(nmap)
                         count += 1
                     end
@@ -142,7 +144,7 @@ class Day6
             end
         end
         logger.info("FINISHED")
-        print "FINISHED IN ", Time.now.to_i - start.to_i, "\n"
+        print "FINISHED ", mcount, " MAPS IN ", Time.now.to_i - start.to_i, "\n"
         return count
     end
 end
