@@ -1,4 +1,5 @@
 require 'logger'
+require 'date'
 
 class Day6
 
@@ -117,7 +118,7 @@ class Day6
         count = 0
 
         logger.info("STARTED")
-        start = DateTime.now
+        start = Time.now
         for y in 0..map.length() - 1
             for x in 0..map[y].length() - 1 
                 nmap = Marshal.load(Marshal.dump(map))
@@ -130,7 +131,7 @@ class Day6
             end
         end
         logger.info("FINISHED")
-        print "FINISHED IN ", Datetime.now - start, "\n"
+        print "FINISHED IN ", Time.now.to_i - start.to_i, "\n"
         return count
     end
 end
