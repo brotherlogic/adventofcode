@@ -81,6 +81,28 @@ class Day6
         count = 0
         nmap.each do |line|
             line.each do |item|
+                if item[0] == "X"
+                    count += 1
+                end
+            end
+        end
+
+        return count + 1
+    end
+
+    def solveMap(map)
+        x,y = findMan(map)
+        legal = true
+        direction = "NORTH"
+        while legal
+            nmap, x, y, direction, legal = step(map, x, y, direction)
+        end
+
+        print nmap, "\n"
+
+        count = 0
+        nmap.each do |line|
+            line.each do |item|
                 if item == "X"
                     count += 1
                 end
@@ -88,5 +110,12 @@ class Day6
         end
 
         return count + 1
+    end
+
+
+    def solvePart2(solve_req)
+        map = buildMap(solve_req.data)
+
+        return solveMap(map)
     end
 end
