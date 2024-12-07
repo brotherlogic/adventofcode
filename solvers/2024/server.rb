@@ -13,6 +13,8 @@ require_relative 'day4'
 require_relative 'day5'
 require_relative 'day6'
 
+include GRPC::Core::StatusCodes
+
 class Registrar
   def Register()
     puts "Registering 2024 Solver"
@@ -88,6 +90,8 @@ class SolverServer < Adventofcode::SolverService::Service
       d6 = Day6.new
       return Adventofcode::SolveResponse.new(answer: d6.solvePart1(solve_req)) 
     end
+
+    raise GRPC::BadStatus.new_status_exception(UNIMPLEMENTED, details = 'Solution is not ready')
   end
 end
 
