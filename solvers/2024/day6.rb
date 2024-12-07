@@ -83,8 +83,7 @@ class Day6
             nmap, x, y, direction, legal, before = step(map, x, y, direction)
         end
 
-        print nmap, "\n"
-
+     
         count = 0
         nmap.each do |line|
             line.each do |item|
@@ -122,13 +121,10 @@ class Day6
         while legal && !before
           tmap ,x,y,direction, legal, before = step(tmap, x, y, direction)
         end
-        print "HERE ", x, y
         tmap[y][x] = "E"
-        print "TMAP ", tmap, "\n"
-
+     
         count = 0
 
-        logger.info("STARTED")
         mcount = 0
         start = Time.now
         for y in 0..map.length() - 1
@@ -143,8 +139,6 @@ class Day6
                 end
             end
         end
-        logger.info("FINISHED")
-        print "FINISHED ", mcount, " MAPS IN ", Time.now.to_i - start.to_i, "\n"
         return count
     end
 end
