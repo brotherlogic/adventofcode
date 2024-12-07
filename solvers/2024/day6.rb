@@ -122,7 +122,7 @@ class Day6
         for y in 0..map.length() - 1
             for x in 0..map[y].length() - 1 
                 nmap = Marshal.load(Marshal.dump(map))
-                if nmap[y][x] != "^"
+                if nmap[y][x] != "^" && nmap[y][x] != "#"
                     nmap[y][x] = "#"
                     if solveMap(nmap)
                         count += 1
