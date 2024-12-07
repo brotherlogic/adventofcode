@@ -1,3 +1,5 @@
+require 'logger'
+
 class Day6
 
     def buildMap(data)
@@ -108,11 +110,14 @@ class Day6
 
 
     def solvePart2(solve_req)
+        logger = Logger.new($stdout) 
+
         map = buildMap(solve_req.data)
 
         count = 0
 
-        print "STARTED\n"
+        logger.info("STARTED")
+        start = DateTime.now
         for y in 0..map.length() - 1
             for x in 0..map[y].length() - 1 
                 nmap = Marshal.load(Marshal.dump(map))
@@ -124,7 +129,8 @@ class Day6
                 end
             end
         end
-        print "FINISHED\n"
+        logger.info("FINISHED")
+        print "FINISHED IN ", Datetime.now - start, "\n"
         return count
     end
 end
