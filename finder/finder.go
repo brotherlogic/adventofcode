@@ -440,7 +440,7 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 				User:    "brotherlogic",
 				Repo:    "adventofcode",
 				Id:      int32(issue.GetId()),
-				Comment: fmt.Sprintf("%v", msol),
+				Comment: fmt.Sprintf("Solution: %v", msol),
 			})
 			return err
 		}
