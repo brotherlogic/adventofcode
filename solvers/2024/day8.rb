@@ -19,8 +19,7 @@ class Day8
     end
 
     def addToMap(x, y, nx, ny, finds, count)
-        print x,",",y, " -> ",nx,",",ny,"\n"
-
+      
         for i in 1..count
             a1x = x-i*(nx-x)
             a1y = y-i*(ny-y)
@@ -31,7 +30,6 @@ class Day8
                 break
             end
 
-            print "A1 ", a1x, ",", a1y, "\n"
         end
     
         for i in 1..count
@@ -44,7 +42,6 @@ class Day8
                 break
             end
 
-            print "A2 ", a2x,",",a2y,"\n"
         end
     end
 
@@ -83,7 +80,6 @@ class Day8
     end
 
     def solvePart2(solve_req)
-        print "PART2\n"
         map, finds = buildMap(solve_req.data)
  
     
@@ -107,7 +103,6 @@ class Day8
  
          count = 0
          finds.each do |line|
-            print line,"\n"
              line.each do |elem|
                  if elem == "#"
                      count += 1
