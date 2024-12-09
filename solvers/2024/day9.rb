@@ -48,6 +48,75 @@ class Day9
         return arr
     end
 
+    def compactFull(arr)
+        biggest = 0
+        i = arr.length() - 1
+        while i >= 0
+            if arr[i] != "."
+                biggest = arr[i]
+                break
+            end
+            i -= 1
+        end
+
+    
+        epoint = arr.length()-1
+    
+
+        # Find the first epoint
+        while epoint >= 0
+            while arr[epoint] != biggest
+                epoint -= 1
+                if epoint < 0
+                    break
+                end
+            end
+
+            espoint = epoint-1
+            while arr[espoint] == arr[epoint]
+                espoint -=1
+            end
+            espoint += 1
+
+         
+            numlen = epoint - espoint + 1
+
+            # find a place to put this
+            spoint = 0
+            sspoint = 0
+            while spoint < arr.length()
+                if spoint > espoint 
+                    break
+                end
+                if arr[spoint] != "."
+
+                    if spoint - sspoint >= numlen 
+                        # We can place
+                        for i in sspoint..sspoint+numlen-1
+                            arr[i] = arr[espoint]
+                        end
+
+                        for i in espoint..epoint
+                            arr[i] = "."
+                        end
+
+                        break
+                    end
+
+                    spoint += 1
+                    sspoint = spoint
+                else
+                    spoint += 1
+                end
+            end
+
+            biggest -= 1
+            epoint = espoint-1
+        end
+
+        return arr
+    end
+
     def checksum(arr)
         sum = 0
         for i in 0..arr.length()-1
@@ -61,6 +130,13 @@ class Day9
     def solvePart1(solve_req)
         fstring = convert(solve_req.data)
         comp = compact(fstring)
+        return checksum(comp)
+    end
+
+
+    def solvePart2(solve_req)
+        fstring = convert(solve_req.data)
+        comp = compactFull(fstring)
         return checksum(comp)
     end
 end
