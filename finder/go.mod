@@ -3,16 +3,16 @@ module github.com/brotherlogic/adventofcode/finder
 go 1.23.2
 
 require (
-	github.com/brotherlogic/adventofcode v0.353.0
-	github.com/brotherlogic/githubridge v0.2821.0
+	github.com/brotherlogic/adventofcode v0.389.0
+	github.com/brotherlogic/githubridge v0.2823.0
 	github.com/brotherlogic/pstore v0.31.0
-	google.golang.org/grpc v1.68.0
+	google.golang.org/grpc v1.68.1
 	google.golang.org/protobuf v1.35.2
 )
 
 require (
-	golang.org/x/net v0.31.0 // indirect
-	golang.org/x/sys v0.27.0 // indirect
-	golang.org/x/text v0.20.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20241202173237-19429a94021a // indirect
+	golang.org/x/net v0.32.0 // indirect
+	golang.org/x/sys v0.28.0 // indirect
+	golang.org/x/text v0.21.0 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20241209162323-e6fa225c2576 // indirect
 )
