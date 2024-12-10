@@ -130,6 +130,10 @@ class SolverServer < Adventofcode::SolverService::Service
       d10 = Day10.new
       return Adventofcode::SolveResponse.new(big_answer: d10.solvePart1(solve_req)) 
     end
+    if solve_req.day == 10 && solve_req.part == 2
+      d10 = Day10.new
+      return Adventofcode::SolveResponse.new(big_answer: d10.solvePart2(solve_req)) 
+    end
   
     raise GRPC::BadStatus.new_status_exception(UNIMPLEMENTED, details = 'Solution is not ready')
   end
