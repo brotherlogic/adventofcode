@@ -436,13 +436,16 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 				return err
 			}
 
-			_, err = f.ghclient.CommentOnIssue(ctx, &ghbpb.CommentOnIssueRequest{
-				User:    "brotherlogic",
-				Repo:    "adventofcode",
-				Id:      int32(issue.GetId()),
-				Comment: fmt.Sprintf("Solution: %v", msol),
-			})
-			return err
+			if msol.GetAnswer() > 0 || msol.GetBigAnswer() > 0 || msol.GetStringAnswer() != "" {
+				_, err = f.ghclient.CommentOnIssue(ctx, &ghbpb.CommentOnIssueRequest{
+					User:    "brotherlogic",
+					Repo:    "adventofcode",
+					Id:      int32(issue.GetId()),
+					Comment: fmt.Sprintf("Solution: %v", msol),
+				})
+				return err
+			}
+			return nil
 		}
 	} else if status.Code(err) == codes.OK {
 		// Close the issue
