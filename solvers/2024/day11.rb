@@ -40,4 +40,7 @@ class Day11
     def solvePart1(solve_req)
         return fblink(toarr(solve_req.data), 25)
     end
+    def solvePart2(solve_req)
+        return fblink(toarr(solve_req.data), 75)
+    end
 end
