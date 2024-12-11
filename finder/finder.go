@@ -273,11 +273,29 @@ func (f *finder) runYear(ctx context.Context, ghclient ghb_client.GithubridgeCli
 		return err
 	}
 
+	conn, err := grpc.Dial("adventofcode.adventofcode:8082", grpc.WithInsecure())
+	if err != nil {
+		return fmt.Errorf("unable to dial aoc: %w", err)
+	}
+	client := pb.NewAdventOfCodeInternalServiceClient(conn)
+	defer conn.Close()
+
 	for day := int32(db); day >= 1; day-- {
 		for part := int32(1); part <= 2; part++ {
 			if day == 25 && part == 2 {
 				continue
 			}
+
+			// Look to see if we already have a solution for this
+			_, err = client.GetSolution(ctx, &pb.GetSolutionRequest{
+				Year: year,
+				Day:  day,
+				Part: part,
+			})
+			if status.Code(err) == codes.OK {
+				continue
+			}
+
 			err := f.solve(ctx, int32(year), int32(day), int32(part), issue)
 			log.Printf("Solved %v %v %v -> %v", year, day, part, err)
 			if status.Code(err) != codes.OK {
