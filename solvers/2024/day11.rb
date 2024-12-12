@@ -34,8 +34,6 @@ class Day11
         else
             return rblink(2024*num, count-1)
         end
-
-        print "HUH"
     end
 
     def fblink(arr, count)
@@ -137,7 +135,6 @@ class Day11
     end
     def solvePart2(solve_req)
         map = buildMap(toarr(solve_req.data), 75)
-        print map, "\n"
         return resolve(toarr(solve_req.data), map, 75)
     end
 end
