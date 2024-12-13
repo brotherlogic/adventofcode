@@ -64,8 +64,58 @@ class Day12
         return count, perim
     end
 
+    def followSides(ch, x, y, map)
+        # Set the initial direction
+        direction = "RIGHT"
+        nx = x + 1
+        ny = y
+        if x < map[0].length()-1 || map[y][x+1] != ch
+            direction = "SOUTH"
+            nx = x
+            ny = y+1
+        end
 
-    def buildFence2(ch, x, y, map, perim)
+        turns = 0
+
+        while nx != x || ny != y
+            print nx, ",", ny, " ", direction, "\n"
+            if direction == "RIGHT"
+                if nx >= map[0].length()-1 || map[ny][nx+1] != ch
+                    turns += 1
+                    direction = "SOUTH"
+                else
+                    nx = nx+1
+                end
+            elsif 
+                direction == "SOUTH"
+                if ny >= map.length()-1 || map[ny+1][nx] != ch
+                    turns += 1
+                    direction = "LEFT"
+                else
+                    ny = ny+1
+                end
+            elsif direction == "LEFT"
+                if nx <= 0 || map[ny][nx-1] != ch
+                    turns += 1
+                    direction = "NORTH"
+                else
+                    nx = nx-1
+                end
+            else 
+                if ny <= 0 || map[ny][ny-1] != ch
+                    turns += 1
+                    direction = "RIGHT"
+                else
+                    ny = ny-1
+                end
+            end
+        end
+
+        return turns
+    end
+
+
+    def buildFence2(ch, x, y, map)
         left = x > 0 && map[y][x-1].start_with?(ch)
         right = x < map[0].length()-1 && map[y][x+1].start_with?(ch)
         up = y > 0 && map[y-1][x].start_with?(ch)
@@ -79,33 +129,23 @@ class Day12
         map[y][x] = ch + "."
 
         if left && !map[y][x-1].end_with?(".")
-            c, p = buildFence2(ch, x-1, y, map, perim)
+            c, p = buildFence2(ch, x-1, y, map)
             count += c
-        elsif !left
-            print "SETTING " , x, ",", y, " LEFT " + map[y][x-1] + "\n"
-         
-            perim["x" + (x-1).to_s] = 1
         end
 
         if right && !map[y][x+1].end_with?(".")
-            c, p = buildFence2(ch, x+1, y, map, perim)
+            c, p = buildFence2(ch, x+1, y, map)
             count += c
-        elsif !right
-           perim["x" + (x+1).to_s] = 1
                 end
 
         if up && !map[y-1][x].end_with?(".")
-            c, p = buildFence2(ch, x, y-1, map, perim)
+            c, p = buildFence2(ch, x, y-1, map)
             count += c
-        elsif !up
-            perim["y" + (y-1).to_s] = 1
         end
 
         if down && !map[y+1][x].end_with?(".")
-            c, p = buildFence2(ch, x, y+1, map, perim)
+            c, p = buildFence2(ch, x, y+1, map)
             count += c
-        elsif !down
-            perim["y" + (y+1).to_s] = 1
         end
 
         return count
@@ -118,11 +158,10 @@ class Day12
         for y in 0..map.length()-1
             for x in 0..map[y].length() - 1
                 if !map[y][x].end_with?(".")
-                    perim = Hash.new
-                     count = buildFence2(map[y][x], x, y, map, perim)
-                     print "PERIM ", perim, "\n"
-                    print map[y][x], ": ", sumv, " -> ", perim.length()*2, ",", count, "\n"
-                    sumv += perim.length()*2*count
+                     count = buildFence2(map[y][x], x, y, map)
+                     sides = followSides(map[y][x], x, y, map)
+                     print map[y][x], " ", count, ",", sides, "\n"
+                    sumv += count*sides
                 end
             end
         end
@@ -130,13 +169,11 @@ class Day12
     end
 
     def computeFence(map)
-        print map, "\n"
         sumv = 0
         for y in 0..map.length()-1
             for x in 0..map[y].length() - 1
                 if !map[y][x].end_with?(".")
                     perim, count = buildFence(map[y][x], x, y, map)
-                    print sumv, " -> ", perim, ",", count, "\n"
                     sumv += perim*count
                 end
             end
