@@ -65,14 +65,12 @@ class Day12
     end
 
     def followSides(ch, x, y, map)
-        print "SEARCH ", x, ",", y, "\n" 
         point = "TOPRIGHT" 
         nx = x
         ny = y   
         turns = 1
 
         while nx != x || ny != y || point != "TOPLEFT"
-            print "NOW ", nx, ",", ny , " w ", turns, " -> ", point, "\n"
             if point == "TOPRIGHT"
                 if nx < map[0].length() -1 && ny > 0 && map[ny][nx+1] == ch && map[ny-1][nx+1] == ch
                     turns += 1
@@ -166,14 +164,12 @@ class Day12
 
 
     def computeFence2(map)
-        print map, "\n"
         sumv = 0
         for y in 0..map.length()-1
             for x in 0..map[y].length() - 1
                 if !map[y][x].end_with?(".")
                      count = buildFence2(map[y][x], x, y, map)
                      sides = followSides(map[y][x], x, y, map)
-                     print map[y][x], " ", count, ",", sides, "\n"
                     sumv += count*sides
                 end
             end
