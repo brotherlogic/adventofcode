@@ -78,7 +78,7 @@ class Day12
                     turns += 1
                     nx += 1
                     ny -=1
-                    point = "BOTTOMLEFT"
+                    point = "TOPLEFT"
                 elsif nx < map[0].length()-1 && map[ny][nx+1] == ch
                     nx += 1
                 else
@@ -90,7 +90,7 @@ class Day12
                     turns += 1
                     nx += 1
                     ny +=1
-                    point = "TOPLEFT"
+                    point = "TOPRIGHT"
                 elsif ny < map.length()-1 && map[ny+1][nx] == ch
                     ny += 1
                 else
@@ -102,7 +102,7 @@ class Day12
                     turns += 1
                     nx -= 1
                     ny +=1
-                    point = "TOPRIGHT"
+                    point = "BOTTOMRIGHT"
                 elsif nx > 0 && map[ny][nx-1] == ch
                     nx -= 1
                 else
@@ -114,7 +114,7 @@ class Day12
                     turns += 1
                     nx -= 1
                     ny -=1
-                    point = "BOTTOMRIGHT"
+                    point = "BOTTOMLEFT"
                 elsif ny > 0 && map[ny-1][nx] == ch
                     ny -= 1
                 else
