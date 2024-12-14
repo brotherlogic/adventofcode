@@ -65,48 +65,61 @@ class Day12
     end
 
     def followSides(ch, x, y, map)
-        # Set the initial direction
-        direction = "RIGHT"
-        nx = x + 1
-        ny = y
-        if x < map[0].length()-1 || map[y][x+1] != ch
-            direction = "SOUTH"
-            nx = x
-            ny = y+1
-        end
+        print "SEARCH ", x, ",", y, "\n" 
+        point = "TOPRIGHT" 
+        nx = x
+        ny = y   
+        turns = 1
 
-        turns = 0
-
-        while nx != x || ny != y
-            print nx, ",", ny, " ", direction, "\n"
-            if direction == "RIGHT"
-                if nx >= map[0].length()-1 || map[ny][nx+1] != ch
+        while nx != x || ny != y || point != "TOPLEFT"
+            print "NOW ", nx, ",", ny , " w ", turns, " -> ", point, "\n"
+            if point == "TOPRIGHT"
+                if nx < map[0].length() -1 && ny > 0 && map[ny][nx+1] == ch && map[ny-1][nx+1] == ch
                     turns += 1
-                    direction = "SOUTH"
+                    nx += 1
+                    ny -=1
+                    point = "BOTTOMLEFT"
+                elsif nx < map[0].length()-1 && map[ny][nx+1] == ch
+                    nx += 1
                 else
-                    nx = nx+1
+                    turns += 1
+                    point = "BOTTOMRIGHT"
                 end
-            elsif 
-                direction == "SOUTH"
-                if ny >= map.length()-1 || map[ny+1][nx] != ch
+            elsif point == "BOTTOMRIGHT"
+                if ny < map.length() -1 && nx < map[0].length()-1 && map[ny+1][nx] == ch && map[ny+1][nx+1] == ch
                     turns += 1
-                    direction = "LEFT"
+                    nx += 1
+                    ny +=1
+                    point = "TOPLEFT"
+                elsif ny < map.length()-1 && map[ny+1][nx] == ch
+                    ny += 1
                 else
-                    ny = ny+1
+                    turns += 1
+                    point = "BOTTOMLEFT"
                 end
-            elsif direction == "LEFT"
-                if nx <= 0 || map[ny][nx-1] != ch
+            elsif point == "BOTTOMLEFT"
+                if ny < map.length() -1 && nx >0 && map[ny][nx-1] == ch && map[ny+1][nx-1] == ch
                     turns += 1
-                    direction = "NORTH"
+                    nx -= 1
+                    ny +=1
+                    point = "TOPRIGHT"
+                elsif nx > 0 && map[ny][nx-1] == ch
+                    nx -= 1
                 else
-                    nx = nx-1
+                    turns += 1
+                    point = "TOPLEFT"
                 end
-            else 
-                if ny <= 0 || map[ny][ny-1] != ch
+            elsif point == "TOPLEFT"
+                if ny > 0 -1 && nx > 0 && map[ny-1][nx] == ch && map[ny-1][nx-1] == ch
                     turns += 1
-                    direction = "RIGHT"
+                    nx -= 1
+                    ny -=1
+                    point = "BOTTOMRIGHT"
+                elsif ny > 0 && map[ny-1][nx] == ch
+                    ny -= 1
                 else
-                    ny = ny-1
+                    turns += 1
+                    point = "TOPRIGHT"
                 end
             end
         end
