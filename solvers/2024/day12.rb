@@ -69,15 +69,12 @@ class Day12
     end
 
     def followSides(ch, x, y, map, dmap)
-        print "SEARCH ", x, ",", y, "\n" 
-        print "DMAP ", dmap, "\n"
         point = "TOPRIGHT" 
         nx = x
         ny = y   
         turns = 1
 
         while nx != x || ny != y || point != "TOPLEFT"
-            print "NOW ", nx, ",", ny , " w ", turns, " -> ", point, "\n"
             if point == "TOPRIGHT"
                 dmap[ny][nx] = dmap[ny][nx].tr("T", "")
                 if nx < map[0].length() -1 && ny > 0 && map[ny][nx+1] == ch && map[ny-1][nx+1] == ch
@@ -189,13 +186,11 @@ class Day12
             count += c
         end
 
-        print "RET", fmap, "\n"
         return count
     end
 
 
     def computeFence2(map, fmap)
-        print map, "\n"
         sumv = 0
         for y in 0..map.length()-1
             for x in 0..map[y].length() - 1
@@ -204,8 +199,7 @@ class Day12
                     nmap = Marshal.load(Marshal.dump(fmap))
                      count = buildFence2(map[y][x], x, y, map, nfmap)
                      sides = followSides(map[y][x], x, y, map, nfmap)
-                    print "NFMAP ", nfmap, "\n"
-
+ 
                      found = false
                      for ny in 0..nfmap.length()-1
                         for nx in 0..nfmap.length()-1
@@ -232,8 +226,6 @@ class Day12
                         add += getPerim(nmap, fmap)
                     end
 
-                     print "FMAP ", nfmap, "\n"
-                     print map[y][x], " ", count, ",", sides, "\n"
                     sumv += count*(sides+add)
                 end
             end
@@ -249,25 +241,21 @@ class Day12
                 end
             end
         end
-        print "GET_PERIM ", map, "\n"
-
+    
 
         sumv = 0
         for y in 0..map.length()-1
             for x in 0..map[y].length() - 1
                 if !map[y][x].end_with?(".")
-                    print "PSEARCH ", x, ",",y, "\n"
                     nfmap = Marshal.load(Marshal.dump(fmap))
                     nmap = Marshal.load(Marshal.dump(fmap))
 
                     perim, count = buildFence2(map[y][x], x, y, map, nfmap)
                     sides = followSides(map[y][x], x, y, map, nfmap)
-                    print "BUILD ", sides, "\n"
                     sumv += sides
                 end
             end
         end
-        print "GOT_PERIM ", sumv, "\n"
         return sumv
     end
 
