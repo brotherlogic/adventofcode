@@ -36,4 +36,17 @@ RSpec.describe Day12 do
       expect(day12.solvePart2(Adventofcode::SolveRequest.new(data: data))).to eq(1206)
     end
   end
+  describe "part 2" do
+    it "returns 368" do
+      day12 = Day12.new
+      data = "AAAAAA
+      AAABBA
+      AAABBA
+      ABBAAA
+      ABBAAA
+      AAAAAA"
+      expect(day12.solvePart2(Adventofcode::SolveRequest.new(data: data))).to eq(368)
+    end
+  end
 end
+

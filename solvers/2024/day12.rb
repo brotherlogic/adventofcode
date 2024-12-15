@@ -4,15 +4,19 @@ require 'date'
 class Day12
     def buildMap(data)
         map = []
+        fmap = []
         data.split("\n").each do |line|
             row = []
+            frow = []
             line.strip().split("") do |item|
                 row.push(item)
+                frow.push("")
             end
             map.push(row)
+            fmap.push(frow)
         end
 
-        return map
+        return map, fmap
     end
 
     def buildFence(ch, x, y, map) 
@@ -64,8 +68,9 @@ class Day12
         return count, perim
     end
 
-    def followSides(ch, x, y, map)
+    def followSides(ch, x, y, map, dmap)
         print "SEARCH ", x, ",", y, "\n" 
+        print "DMAP ", dmap, "\n"
         point = "TOPRIGHT" 
         nx = x
         ny = y   
@@ -74,6 +79,7 @@ class Day12
         while nx != x || ny != y || point != "TOPLEFT"
             print "NOW ", nx, ",", ny , " w ", turns, " -> ", point, "\n"
             if point == "TOPRIGHT"
+                dmap[ny][nx] = dmap[ny][nx].tr("T", "")
                 if nx < map[0].length() -1 && ny > 0 && map[ny][nx+1] == ch && map[ny-1][nx+1] == ch
                     turns += 1
                     nx += 1
@@ -86,6 +92,7 @@ class Day12
                     point = "BOTTOMRIGHT"
                 end
             elsif point == "BOTTOMRIGHT"
+                dmap[ny][nx] = dmap[ny][nx].tr("R", "")
                 if ny < map.length() -1 && nx < map[0].length()-1 && map[ny+1][nx] == ch && map[ny+1][nx+1] == ch
                     turns += 1
                     nx += 1
@@ -98,6 +105,7 @@ class Day12
                     point = "BOTTOMLEFT"
                 end
             elsif point == "BOTTOMLEFT"
+                dmap[ny][nx] = dmap[ny][nx].tr("B", "")
                 if ny < map.length() -1 && nx >0 && map[ny][nx-1] == ch && map[ny+1][nx-1] == ch
                     turns += 1
                     nx -= 1
@@ -110,6 +118,7 @@ class Day12
                     point = "TOPLEFT"
                 end
             elsif point == "TOPLEFT"
+                dmap[ny][nx] = dmap[ny][nx].tr("L", "")
                 if ny > 0 -1 && nx > 0 && map[ny-1][nx] == ch && map[ny-1][nx-1] == ch
                     turns += 1
                     nx -= 1
@@ -124,11 +133,15 @@ class Day12
             end
         end
 
+        # Final remove
+        dmap[ny][nx] = dmap[ny][nx].tr("L", "")
+               
+
         return turns
     end
 
 
-    def buildFence2(ch, x, y, map)
+    def buildFence2(ch, x, y, map, fmap)
         left = x > 0 && map[y][x-1].start_with?(ch)
         right = x < map[0].length()-1 && map[y][x+1].start_with?(ch)
         up = y > 0 && map[y-1][x].start_with?(ch)
@@ -140,48 +153,126 @@ class Day12
         # Account for th 
         
         map[y][x] = ch + "."
+        fmap[y][x] = "TRLB"
+
+        if left
+            fmap[y][x] = fmap[y][x].tr("L", "")
+        end
+        if right
+            fmap[y][x] = fmap[y][x].tr("R", "")
+        end
+        if up
+            fmap[y][x] = fmap[y][x].tr("T", "")
+        end
+        if down
+            fmap[y][x] = fmap[y][x].tr("B", "")
+        end
+        
 
         if left && !map[y][x-1].end_with?(".")
-            c, p = buildFence2(ch, x-1, y, map)
+            c, p = buildFence2(ch, x-1, y, map, fmap)
             count += c
         end
 
         if right && !map[y][x+1].end_with?(".")
-            c, p = buildFence2(ch, x+1, y, map)
+            c, p = buildFence2(ch, x+1, y, map, fmap)
             count += c
                 end
 
         if up && !map[y-1][x].end_with?(".")
-            c, p = buildFence2(ch, x, y-1, map)
+            c, p = buildFence2(ch, x, y-1, map, fmap)
             count += c
         end
 
         if down && !map[y+1][x].end_with?(".")
-            c, p = buildFence2(ch, x, y+1, map)
+            c, p = buildFence2(ch, x, y+1, map, fmap)
             count += c
         end
 
+        print "RET", fmap, "\n"
         return count
     end
 
 
-    def computeFence2(map)
+    def computeFence2(map, fmap)
         print map, "\n"
         sumv = 0
         for y in 0..map.length()-1
             for x in 0..map[y].length() - 1
                 if !map[y][x].end_with?(".")
-                     count = buildFence2(map[y][x], x, y, map)
-                     sides = followSides(map[y][x], x, y, map)
+                    nfmap = Marshal.load(Marshal.dump(fmap))
+                    nmap = Marshal.load(Marshal.dump(fmap))
+                     count = buildFence2(map[y][x], x, y, map, nfmap)
+                     sides = followSides(map[y][x], x, y, map, nfmap)
+                    print "NFMAP ", nfmap, "\n"
+
+                     found = false
+                     for ny in 0..nfmap.length()-1
+                        for nx in 0..nfmap.length()-1
+                            if nfmap[ny][nx] != ""
+                                found = true
+                                if nfmap[ny][nx].include?("B")
+                                    nmap[ny+1][nx] = map[ny+1][nx]
+                                end
+                                if nfmap[ny][nx].include?("R")
+                                    nmap[ny][nx+1] = map[ny][nx+1]
+                                end
+                                if nfmap[ny][nx].include?("L")
+                                    nmap[ny][nx-1] = map[ny][nx-1]
+                                end
+                                if nfmap[ny][nx].include?("T")
+                                    nmap[ny-1][nx] = map[ny-1][nx]
+                                end
+                            end
+                        end
+                    end
+                    
+                    add = 0
+                    if found
+                        add += getPerim(nmap, fmap)
+                    end
+
+                     print "FMAP ", nfmap, "\n"
                      print map[y][x], " ", count, ",", sides, "\n"
-                    sumv += count*sides
+                    sumv += count*(sides+add)
                 end
             end
         end
         return sumv
     end
 
+    def getPerim(map, fmap)
+        for y in 0..map.length()-1
+            for x in 0..map[y].length()-1
+                if map[y][x] == ""
+                    map[y][x] = "."
+                end
+            end
+        end
+        print "GET_PERIM ", map, "\n"
+
+
+        sumv = 0
+        for y in 0..map.length()-1
+            for x in 0..map[y].length() - 1
+                if !map[y][x].end_with?(".")
+                    print "PSEARCH ", x, ",",y, "\n"
+                    nfmap = Marshal.load(Marshal.dump(fmap))
+                    nmap = Marshal.load(Marshal.dump(fmap))
+
+                    perim, count = buildFence2(map[y][x], x, y, map, nfmap)
+                    sides = followSides(map[y][x], x, y, map, nfmap)
+                    print "BUILD ", sides, "\n"
+                    sumv += sides
+                end
+            end
+        end
+        print "GOT_PERIM ", sumv, "\n"
+        return sumv
+    end
+
     def computeFence(map)
+
         sumv = 0
         for y in 0..map.length()-1
             for x in 0..map[y].length() - 1
@@ -196,13 +287,13 @@ class Day12
 
 
     def solvePart1(solve_req)
-        map = buildMap(solve_req.data)
+        map, fmap = buildMap(solve_req.data)
         width = computeFence(map)
        return width
     end
     def solvePart2(solve_req)
-        map = buildMap(solve_req.data)
-        width = computeFence2(map)
+        map, fmap = buildMap(solve_req.data)
+        width = computeFence2(map, fmap)
        return width
     end
 end
