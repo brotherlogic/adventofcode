@@ -14,6 +14,8 @@ github.com/brotherlogic/adventofcode v0.389.0 h1:TaawSF+mXh4zhGIoa+BLpD/WQ3QMt+6
 github.com/brotherlogic/adventofcode v0.389.0/go.mod h1:wtYm6ONgFLWG4DRSK3oJWhlErtBMQER5WZAllV2l0pM=
 github.com/brotherlogic/adventofcode v0.397.0 h1:fh1hUNEpBWlcYIto50Z6e6TQSoyBsthSx4qdb03ILA8=
 github.com/brotherlogic/adventofcode v0.397.0/go.mod h1:wtYm6ONgFLWG4DRSK3oJWhlErtBMQER5WZAllV2l0pM=
+github.com/brotherlogic/adventofcode v0.406.0 h1:5pCgenKj8Sb1LAzLaSHqmXMHn0ctMDbZ1UJWJJLZzDU=
+github.com/brotherlogic/adventofcode v0.406.0/go.mod h1:wtYm6ONgFLWG4DRSK3oJWhlErtBMQER5WZAllV2l0pM=
 github.com/brotherlogic/githubridge v0.2802.0 h1:9Dz8jzHYNNGheax3eZxLP7itjMnWjReukNafNa/U76E=
 github.com/brotherlogic/githubridge v0.2802.0/go.mod h1:XTxap90/th23AU2BWYFxnSyiQFwDYyBI0PWxDZTCQpo=
 github.com/brotherlogic/githubridge v0.2804.0 h1:tBghCkNQyi2bc+CAh9brBsmaSAvV8Zxk3rP6b5TV1eA=
@@ -26,6 +28,8 @@ github.com/brotherlogic/githubridge v0.2821.0 h1:SDsf3XY+1fpvuBTPBWOYSb1Q1A4OHZw
 github.com/brotherlogic/githubridge v0.2821.0/go.mod h1:XTxap90/th23AU2BWYFxnSyiQFwDYyBI0PWxDZTCQpo=
 github.com/brotherlogic/githubridge v0.2823.0 h1:VQxn4NyCyW24DXU/C6hzca1BV6NbYREi0GMuGbO6nEg=
 github.com/brotherlogic/githubridge v0.2823.0/go.mod h1:XTxap90/th23AU2BWYFxnSyiQFwDYyBI0PWxDZTCQpo=
+github.com/brotherlogic/githubridge v0.2824.0 h1:LJqWgAgM4lWQwwZft/Aqq33sDXUPHq23FrG7WCOhiGQ=
+github.com/brotherlogic/githubridge v0.2824.0/go.mod h1:SRsJ/bqK7bGMI4Fe3MCJqFwga1ZoSVbrjZMJIaoRUUA=
 github.com/brotherlogic/pstore v0.18.0 h1:6ZBG2/kZajLV2JazKbc3hA1XTts80A9Gslocz14SDBE=
 github.com/brotherlogic/pstore v0.18.0/go.mod h1:stga41yC3MG/dwIMYXHFvVfSglffMUAipgajP+gQ1hs=
 github.com/brotherlogic/pstore v0.23.0 h1:efnQGN/+ayErtk41qPDfnElV1iCik+rPD+WaO4k9I20=
@@ -68,6 +72,8 @@ google.golang.org/grpc v1.68.0 h1:aHQeeJbo8zAkAa3pRzrVjZlbz6uSfeOXlJNQM0RAbz0=
 google.golang.org/grpc v1.68.0/go.mod h1:fmSPC5AsjSBCK54MyHRx48kpOti1/jRfOlwEWywNjWA=
 google.golang.org/grpc v1.68.1 h1:oI5oTa11+ng8r8XMMN7jAOmWfPZWbYpCFaMUTACxkM0=
 google.golang.org/grpc v1.68.1/go.mod h1:+q1XYFJjShcqn0QZHvCyeR4CXPA+llXIeUIfIe00waw=
+google.golang.org/grpc v1.69.0 h1:quSiOM1GJPmPH5XtU+BCoVXcDVJJAzNcoyfC2cCjGkI=
+google.golang.org/grpc v1.69.0/go.mod h1:vyjdE6jLBI76dgpDojsFGNaHlxdjXN9ghpnd2o7JGZ4=
 google.golang.org/protobuf v1.35.1 h1:m3LfL6/Ca+fqnjnlqQXNpFPABW1UD7mjh8KO2mKFytA=
 google.golang.org/protobuf v1.35.1/go.mod h1:9fA7Ob0pmnwhb644+1+CVWFRbNajQ6iRojtC/QF5bRE=
 google.golang.org/protobuf v1.35.2 h1:8Ar7bF+apOIoThw1EdZl0p1oWvMqTHmpA2fRTyZO8io=
