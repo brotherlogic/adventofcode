@@ -23,7 +23,6 @@ class Day15
     end
 
     def runInstruction(map, instr, rx, ry)
-        print "ROBOT ", rx, ",", ry, "\n"
         if instr == "<"
             if map[ry][rx-1] == "#"
                 return rx, ry
@@ -164,10 +163,7 @@ class Day15
         robotx, roboty = findRobot(map)
 
         while instructions.length() > 0
-            print "-----------------\n"
-            print "MOVE ", instructions[0], "\n"
             robotx, roboty = runInstruction(map, instructions[0], robotx, roboty)
-            printMap(map)
             instructions = instructions[1..instructions.length()-1]
         end
 
