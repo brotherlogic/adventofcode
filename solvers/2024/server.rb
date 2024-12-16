@@ -176,7 +176,7 @@ class SolverServer < Adventofcode::SolverService::Service
     end
 
 
-    raise GRPC::BadStatus.new_status_exception(UNIMPLEMENTED, details = 'Solution is not ready')
+    raise GRPC::BadStatus.new_status_exception(UNIMPLEMENTED, details = '2024 Solution is not ready')
   end
 end
 
