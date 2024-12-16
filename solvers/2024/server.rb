@@ -18,6 +18,7 @@ require_relative 'day9'
 require_relative 'day10'
 require_relative 'day11'
 require_relative 'day12'
+require_relative 'day15'
 
 include GRPC::Core::StatusCodes
 
@@ -154,6 +155,16 @@ class SolverServer < Adventofcode::SolverService::Service
       d12 = Day12.new
       return Adventofcode::SolveResponse.new(big_answer: d12.solvePart2(solve_req)) 
     end
+
+    if solve_req.day == 15 && solve_req.part == 1
+      d15 = Day15.new
+      return Adventofcode::SolveResponse.new(answer: d15.solvePart1(solve_req)) 
+    end
+    if solve_req.day == 15 && solve_req.part == 2
+      d15 = Day15.new
+      return Adventofcode::SolveResponse.new(big_answer: d15.solvePart2(solve_req)) 
+    end
+
 
     raise GRPC::BadStatus.new_status_exception(UNIMPLEMENTED, details = 'Solution is not ready')
   end
