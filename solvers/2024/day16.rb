@@ -28,64 +28,81 @@ class Day16
         x, y = findStart(map)
         backlog.push([x,y,"EAST", 0])
 
+        seen = Hash.new
+
         while backlog.length() > 0
             backlog = backlog.sort { |a,b| a[3] <=> b[3]}
             csearch = backlog[0]
 
+            seenv = false
+            if !seen.key?(csearch[0])
+                seen[csearch[0]] = Hash.new
+                seen[csearch[0]][csearch[1]] = Hash.new
+                seen[csearch[0]][csearch[1]][csearch[2]] = true
+            elsif !seen[csearch[0]].key?(csearch[1])
+                seen[csearch[0]][csearch[1]] = Hash.new
+                seen[csearch[0]][csearch[1]][csearch[2]] = true
+            elsif !seen[csearch[0]][csearch[1]].key?(csearch[2])
+                seen[csearch[0]][csearch[1]][csearch[2]] = true
+            else
+                seenv = true
+            end
 
-            #print "BACKLOG ", csearch, " ", backlog.length(), "\n"
+            print "BACKLOG ", csearch, " ", backlog.length(), "\n"
 
             if map[csearch[1]][csearch[0]] == "E"
                 return csearch[3]
             end
 
-            if csearch[2] == "EAST"
-                if map[csearch[1]][csearch[0]+1] != "#"
-                    backlog.push([csearch[0]+1, csearch[1], "EAST", csearch[3]+1])
-                end
+            if !seenv
+                if csearch[2] == "EAST"
+                    if map[csearch[1]][csearch[0]+1] != "#"
+                        backlog.push([csearch[0]+1, csearch[1], "EAST", csearch[3]+1])
+                    end
 
-                if map[csearch[1]+1][csearch[0]] != "#"
-                    backlog.push([csearch[0], csearch[1], "SOUTH", csearch[3]+1000])
-                end
+                    if map[csearch[1]+1][csearch[0]] != "#"
+                        backlog.push([csearch[0], csearch[1], "SOUTH", csearch[3]+1000])
+                    end
 
-                if map[csearch[1]-1][csearch[0]] != "#"
-                    backlog.push([csearch[0], csearch[1], "NORTH", csearch[3]+1000])
-                end
-            elsif csearch[2] == "SOUTH"
-                if map[csearch[1]+1][csearch[0]] != "#"
-                    backlog.push([csearch[0], csearch[1]+1, "SOUTH", csearch[3]+1])
-                end
+                    if map[csearch[1]-1][csearch[0]] != "#"
+                        backlog.push([csearch[0], csearch[1], "NORTH", csearch[3]+1000])
+                    end
+                elsif csearch[2] == "SOUTH"
+                    if map[csearch[1]+1][csearch[0]] != "#"
+                        backlog.push([csearch[0], csearch[1]+1, "SOUTH", csearch[3]+1])
+                    end
 
-                if map[csearch[1]][csearch[0]+1] != "#"
-                    backlog.push([csearch[0], csearch[1], "EAST", csearch[3]+1000])
-                end
+                    if map[csearch[1]][csearch[0]+1] != "#"
+                        backlog.push([csearch[0], csearch[1], "EAST", csearch[3]+1000])
+                    end
 
-                if map[csearch[1]][csearch[0]-1] != "#"
-                    backlog.push([csearch[0], csearch[1], "WEST", csearch[3]+1000])
-                end
-            elsif csearch[2] == "WEST"
-                if map[csearch[1]][csearch[0]-1] != "#"
-                    backlog.push([csearch[0]-1, csearch[1], "WEST", csearch[3]+1])
-                end
+                    if map[csearch[1]][csearch[0]-1] != "#"
+                        backlog.push([csearch[0], csearch[1], "WEST", csearch[3]+1000])
+                    end
+                elsif csearch[2] == "WEST"
+                    if map[csearch[1]][csearch[0]-1] != "#"
+                        backlog.push([csearch[0]-1, csearch[1], "WEST", csearch[3]+1])
+                    end
 
-                if map[csearch[1]+1][csearch[0]] != "#"
-                    backlog.push([csearch[0], csearch[1], "SOUTH", csearch[3]+1000])
-                end
+                    if map[csearch[1]+1][csearch[0]] != "#"
+                        backlog.push([csearch[0], csearch[1], "SOUTH", csearch[3]+1000])
+                    end
 
-                if map[csearch[1]-1][csearch[0]] != "#"
-                    backlog.push([csearch[0], csearch[1], "NORTH", csearch[3]+1000])
-                end
-            elsif csearch[2] == "NORTH"
-                if map[csearch[1]-1][csearch[0]] != "#"
-                    backlog.push([csearch[0], csearch[1]-1, "NORTH", csearch[3]+1])
-                end
+                    if map[csearch[1]-1][csearch[0]] != "#"
+                        backlog.push([csearch[0], csearch[1], "NORTH", csearch[3]+1000])
+                    end
+                elsif csearch[2] == "NORTH"
+                    if map[csearch[1]-1][csearch[0]] != "#"
+                        backlog.push([csearch[0], csearch[1]-1, "NORTH", csearch[3]+1])
+                    end
 
-                if map[csearch[1]][csearch[0]+1] != "#"
-                    backlog.push([csearch[0], csearch[1], "EAST", csearch[3]+1000])
-                end
+                    if map[csearch[1]][csearch[0]+1] != "#"
+                        backlog.push([csearch[0], csearch[1], "EAST", csearch[3]+1000])
+                    end
 
-                if map[csearch[1]][csearch[0]-1] != "#"
-                    backlog.push([csearch[0], csearch[1], "WEST", csearch[3]+1000])
+                    if map[csearch[1]][csearch[0]-1] != "#"
+                        backlog.push([csearch[0], csearch[1], "WEST", csearch[3]+1000])
+                    end
                 end
             end
 
