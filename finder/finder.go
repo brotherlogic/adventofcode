@@ -54,14 +54,16 @@ func download(year, day int32, c string) (string, error) {
 
 	defer resp.Body.Close()
 
-	if resp.StatusCode != 200 {
-		return "", errors.New(resp.Status)
-	}
-
 	b, err := io.ReadAll(resp.Body)
 	if err != nil {
 		log.Fatalln(err)
 	}
+
+	if resp.StatusCode != 200 {
+		log.Printf("Respose: %v", string(b))
+		return "", errors.New(resp.Status)
+	}
+
 	return (string(b)), nil
 }
 
