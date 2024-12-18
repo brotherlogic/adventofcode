@@ -56,12 +56,10 @@ class Day16
 
             cbest = best[csearch[1]][csearch[0]][csearch[2]]
             if cbest[0] == csearch[3]
-                csearch[4].each do |item|
-                    cbest[1].push(item)
-                end
+                cbest[1].push(csearch[4])
             elsif csearch[3] < cbest[0]
                 cbest[0] = csearch[3]
-                cbest[1] = Marshal.load(Marshal.dump(csearch[4]))
+                cbest[1] = [Marshal.load(Marshal.dump(csearch[4]))]
             end
           
             #print "TRY ", csearch[0], ",", csearch[1], ",", csearch[2], " -> (", csearch[3], ") ", cbest, " ADDING \n"
@@ -100,78 +98,54 @@ class Day16
             if !seenv
                 if csearch[2] == "EAST"
                     if map[csearch[1]][csearch[0]+1] != "#"
-                        nn2 = Marshal.load(Marshal.dump(csearch[4]))
-                        nn2.push([csearch[0]+1, csearch[1], "EAST"])
-                        backlog.push([csearch[0]+1, csearch[1], "EAST", csearch[3]+1, nn2])
+                        backlog.push([csearch[0]+1, csearch[1], "EAST", csearch[3]+1, [csearch[0], csearch[1], "EAST"]])
                     end
 
                     if map[csearch[1]+1][csearch[0]] != "#"
-                        nn2 = Marshal.load(Marshal.dump(csearch[4]))
-                        nn2.push([csearch[0], csearch[1], "SOUTH"])
-                        backlog.push([csearch[0], csearch[1], "SOUTH", csearch[3]+1000, nn2])
+                        backlog.push([csearch[0], csearch[1], "SOUTH", csearch[3]+1000, [csearch[0], csearch[1], "EAST"]])
                     end
 
                     if map[csearch[1]-1][csearch[0]] != "#"
-                        nn2 = Marshal.load(Marshal.dump(csearch[4]))
-                        nn2.push([csearch[0], csearch[1], "NORTH"])
-                        backlog.push([csearch[0], csearch[1], "NORTH", csearch[3]+1000, nn2])
+                        backlog.push([csearch[0], csearch[1], "NORTH", csearch[3]+1000, [csearch[0], csearch[1], "EAST"]])
                     end
                 elsif csearch[2] == "SOUTH"
                     if map[csearch[1]+1][csearch[0]] != "#"
-                        nn2 = Marshal.load(Marshal.dump(csearch[4]))
-                        nn2.push([csearch[0], csearch[1]+1, "SOUTH"])
                       
-                        backlog.push([csearch[0], csearch[1]+1, "SOUTH", csearch[3]+1, nn2])
+                        backlog.push([csearch[0], csearch[1]+1, "SOUTH", csearch[3]+1, [csearch[0], csearch[1], "SOUTH"]])
                     end
 
                     if map[csearch[1]][csearch[0]+1] != "#"
-                        nn2 = Marshal.load(Marshal.dump(csearch[4]))
-                        nn2.push([csearch[0], csearch[1], "EAST"])
-                        backlog.push([csearch[0], csearch[1], "EAST", csearch[3]+1000, nn2])
+                        backlog.push([csearch[0], csearch[1], "EAST", csearch[3]+1000, [csearch[0], csearch[1], "SOUTH"]])
                     end
 
                     if map[csearch[1]][csearch[0]-1] != "#"
-                        nn2 = Marshal.load(Marshal.dump(csearch[4]))
-                        nn2.push([csearch[0], csearch[1], "WEST"])
-                        backlog.push([csearch[0], csearch[1], "WEST", csearch[3]+1000, nn2])
+                        backlog.push([csearch[0], csearch[1], "WEST", csearch[3]+1000, [csearch[0], csearch[1], "SOUTH"]])
                     end
                 elsif csearch[2] == "WEST"
                     if map[csearch[1]][csearch[0]-1] != "#"
-                        nn2 = Marshal.load(Marshal.dump(csearch[4]))
-                        nn2.push([csearch[0]-1, csearch[1], "WEST"])
                       
-                        backlog.push([csearch[0]-1, csearch[1], "WEST", csearch[3]+1, nn2])
+                        backlog.push([csearch[0]-1, csearch[1], "WEST", csearch[3]+1, [csearch[0], csearch[1], "WEST"]])
                     end
 
                     if map[csearch[1]+1][csearch[0]] != "#"
-                        nn2 = Marshal.load(Marshal.dump(csearch[4]))
-                        nn2.push([csearch[0], csearch[1], "SOUTH"])
-                        backlog.push([csearch[0], csearch[1], "SOUTH", csearch[3]+1000, nn2])
+                        backlog.push([csearch[0], csearch[1], "SOUTH", csearch[3]+1000, [csearch[0], csearch[1], "WEST"]])
                     end
 
                     if map[csearch[1]-1][csearch[0]] != "#"
-                        nn2 = Marshal.load(Marshal.dump(csearch[4]))
-                        nn2.push([csearch[0], csearch[1], "NORTH"])
-                        backlog.push([csearch[0], csearch[1], "NORTH", csearch[3]+1000, nn2])
+                        backlog.push([csearch[0], csearch[1], "NORTH", csearch[3]+1000, [csearch[0], csearch[1], "WEST"]])
                     end
                 elsif csearch[2] == "NORTH"
                     if map[csearch[1]-1][csearch[0]] != "#"
-                        nn2 = Marshal.load(Marshal.dump(csearch[4]))
-                        nn2.push([csearch[0], csearch[1]-1, "NORTH"])
                       
-                        backlog.push([csearch[0], csearch[1]-1, "NORTH", csearch[3]+1, nn2])
+                        backlog.push([csearch[0], csearch[1]-1, "NORTH", csearch[3]+1, [csearch[0], csearch[1], "NORTH"]])
                     end
 
                     if map[csearch[1]][csearch[0]+1] != "#"
-                        nn2 = Marshal.load(Marshal.dump(csearch[4]))
-                        nn2.push([csearch[0], csearch[1], "EAST"])
-                        backlog.push([csearch[0], csearch[1], "EAST", csearch[3]+1000, nn2])
+                        backlog.push([csearch[0], csearch[1], "EAST", csearch[3]+1000, [csearch[0], csearch[1], "NORTH"]])
                     end
 
                     if map[csearch[1]][csearch[0]-1] != "#"
-                        nn2 = Marshal.load(Marshal.dump(csearch[4]))
-                        nn2.push([csearch[0], csearch[1], "WEST"])
-                        backlog.push([csearch[0], csearch[1], "WEST", csearch[3]+1000, nn2])
+                        backlog.push([csearch[0], csearch[1], "WEST", csearch[3]+1000, [csearch[0], csearch[1], "NORTH"]])
                     end
                 end
             end
@@ -184,6 +158,20 @@ class Day16
         map = buildMap(solve_req.data)
         best, fx, fy, c = runSearch(map)
         return best[fy[0]][fx[0]][c[0]][0]
+    end
+
+    def fillPassed(x, y, d, best, passed)
+        print x, ",", y, "-", d, "\n"
+        if d 
+        passed[y][x] = true
+        print x, ",", y, "-", d, " -> ", best[y][x][d], "\n"
+        if best[y][x][d]
+            best[y][x][d][1].each do |item|
+                print "ITEM ", item, "\n"
+                fillPassed(item[0], item[1], item[2], best, passed)
+            end
+        end
+    end
     end
 
     def solvePart2(solve_req)
@@ -201,23 +189,9 @@ class Day16
         for i in 0..fxi.length()-1
             fx, fy, direction = fxi[i], fyi[i], directioni[i]
             print "SOLUTION ", fx, ",", fy, " -> ", direction, "\n"
-      
-            print "BEST ", fx, ",", fy, "=>", direction, "\n"
-            print "SO ", best[fy][fx][direction], "\n"
-            print "BUT ", best[9][7]["NORTH"], "\n"
-            
-            best[fy][fx][direction][1].each do |path|
-                print "HERE ", path, " -> ", "\n"
-                print "CHECK ", best[path[1]][path[0]][path[2]], "\n"
-
-                best[path[1]][path[0]][path[2]][1].each do |val|
-                            print "SET ", val[0],",",val[1], "\n"
-                            passed[val[1]][val[0]] = true
-                        end
-            end
+            print "BEST ", best[9][3], "\n"
+            fillPassed(fx, fy, direction, best, passed)
         end
-
-        print passed, "\n"
 
         countv = 0
         passed.each do |row|
