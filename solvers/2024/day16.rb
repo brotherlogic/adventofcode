@@ -106,14 +106,12 @@ class Day16
                     if map[csearch[1]+1][csearch[0]] != "#"
                         nn2 = Marshal.load(Marshal.dump(csearch[4]))
                         nn2.push([csearch[0], csearch[1], "SOUTH"])
-    
                         backlog.push([csearch[0], csearch[1], "SOUTH", csearch[3]+1000, nn2])
                     end
 
                     if map[csearch[1]-1][csearch[0]] != "#"
                         nn2 = Marshal.load(Marshal.dump(csearch[4]))
                         nn2.push([csearch[0], csearch[1], "NORTH"])
-
                         backlog.push([csearch[0], csearch[1], "NORTH", csearch[3]+1000, nn2])
                     end
                 elsif csearch[2] == "SOUTH"
@@ -127,14 +125,12 @@ class Day16
                     if map[csearch[1]][csearch[0]+1] != "#"
                         nn2 = Marshal.load(Marshal.dump(csearch[4]))
                         nn2.push([csearch[0], csearch[1], "EAST"])
-
                         backlog.push([csearch[0], csearch[1], "EAST", csearch[3]+1000, nn2])
                     end
 
                     if map[csearch[1]][csearch[0]-1] != "#"
                         nn2 = Marshal.load(Marshal.dump(csearch[4]))
                         nn2.push([csearch[0], csearch[1], "WEST"])
-
                         backlog.push([csearch[0], csearch[1], "WEST", csearch[3]+1000, nn2])
                     end
                 elsif csearch[2] == "WEST"
@@ -148,14 +144,12 @@ class Day16
                     if map[csearch[1]+1][csearch[0]] != "#"
                         nn2 = Marshal.load(Marshal.dump(csearch[4]))
                         nn2.push([csearch[0], csearch[1], "SOUTH"])
-
                         backlog.push([csearch[0], csearch[1], "SOUTH", csearch[3]+1000, nn2])
                     end
 
                     if map[csearch[1]-1][csearch[0]] != "#"
                         nn2 = Marshal.load(Marshal.dump(csearch[4]))
                         nn2.push([csearch[0], csearch[1], "NORTH"])
-
                         backlog.push([csearch[0], csearch[1], "NORTH", csearch[3]+1000, nn2])
                     end
                 elsif csearch[2] == "NORTH"
@@ -169,14 +163,12 @@ class Day16
                     if map[csearch[1]][csearch[0]+1] != "#"
                         nn2 = Marshal.load(Marshal.dump(csearch[4]))
                         nn2.push([csearch[0], csearch[1], "EAST"])
-
                         backlog.push([csearch[0], csearch[1], "EAST", csearch[3]+1000, nn2])
                     end
 
                     if map[csearch[1]][csearch[0]-1] != "#"
                         nn2 = Marshal.load(Marshal.dump(csearch[4]))
                         nn2.push([csearch[0], csearch[1], "WEST"])
-
                         backlog.push([csearch[0], csearch[1], "WEST", csearch[3]+1000, nn2])
                     end
                 end
