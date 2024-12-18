@@ -212,7 +212,7 @@ class Day16
 
         print passed, "\n"
 
-        countv = 0
+        countv = 1
         passed.each do |row|
             row.each do |key, item|
                 if item

@@ -68,7 +68,7 @@ RSpec.describe Day16 do
       #...#
       #S#.#
       #####"
-      #expect(day16.solvePart2(Adventofcode::SolveRequest.new(data: data))).to eq(10)
+      expect(day16.solvePart2(Adventofcode::SolveRequest.new(data: data))).to eq(11)
     end
   end
 end
