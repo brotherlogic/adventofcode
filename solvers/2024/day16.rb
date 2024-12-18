@@ -52,7 +52,6 @@ class Day16
             backlog = backlog.sort { |a,b| a[3] <=> b[3]}
             csearch = backlog[0]
 
-            print csearch[0], ",", csearch[1], ",", csearch[2], " -> (", csearch[3], ") ", csearch[4], " ADDING \n"
 
             cbest = best[csearch[1]][csearch[0]][csearch[2]]
             if cbest[0] == csearch[3]
@@ -64,7 +63,6 @@ class Day16
                 cbest[1] = Marshal.load(Marshal.dump(csearch[4]))
             end
           
-            print csearch[0], ",", csearch[1], ",", csearch[2], " -> (", csearch[3], ") ", cbest, " ADDING \n"
 
             
             # We've seen all the paths at this point
@@ -196,22 +194,15 @@ class Day16
         end
 
         best, fx, fy, direction = runSearch(map)
-        print "BEST ", fx, ",", fy, "=>", direction, "\n"
-        print "SO ", best[fy][fx][direction], "\n"
-        print "BUT ", best[2][3]["NORTH"], "\n"
         
         best[fy][fx][direction][1].each do |path|
-            print "HERE ", path, " -> ", "\n"
-            print "CHECK ", best[path[1]][path[0]][path[2]], "\n"
-
+    
             best[path[1]][path[0]][path[2]][1].each do |val|
-                        print "SET ", val[0],",",val[1], "\n"
                         passed[val[0]][val[1]] = true
                     end
         end
 
-        print passed, "\n"
-
+    
         countv = 1
         passed.each do |row|
             row.each do |key, item|
