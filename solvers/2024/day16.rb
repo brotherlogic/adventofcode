@@ -52,7 +52,6 @@ class Day16
             backlog = backlog.sort { |a,b| a[3] <=> b[3]}
             csearch = backlog[0]
 
-            #print csearch[0], ",", csearch[1], ",", csearch[2], " -> (", csearch[3], ") ", csearch[4], " ADDING \n"
 
             cbest = best[csearch[1]][csearch[0]][csearch[2]]
             if cbest[0] == csearch[3]
@@ -62,8 +61,6 @@ class Day16
                 cbest[1] = [Marshal.load(Marshal.dump(csearch[4]))]
             end
           
-            #print "TRY ", csearch[0], ",", csearch[1], ",", csearch[2], " -> (", csearch[3], ") ", cbest, " ADDING \n"
-
             
             # We've seen all the paths at this point
             if csearch[3] > foundv
@@ -161,13 +158,10 @@ class Day16
     end
 
     def fillPassed(x, y, d, best, passed)
-        print x, ",", y, "-", d, "\n"
         if d 
         passed[y][x] = true
-        print x, ",", y, "-", d, " -> ", best[y][x][d], "\n"
         if best[y][x][d]
             best[y][x][d][1].each do |item|
-                print "ITEM ", item, "\n"
                 fillPassed(item[0], item[1], item[2], best, passed)
             end
         end
@@ -188,8 +182,6 @@ class Day16
         best, fxi, fyi, directioni = runSearch(map)
         for i in 0..fxi.length()-1
             fx, fy, direction = fxi[i], fyi[i], directioni[i]
-            print "SOLUTION ", fx, ",", fy, " -> ", direction, "\n"
-            print "BEST ", best[9][3], "\n"
             fillPassed(fx, fy, direction, best, passed)
         end
 
@@ -198,12 +190,8 @@ class Day16
             row.each do |key, item|
                 if item
                     countv += 1
-                    print "O"
-                else
-                    print " "
                 end
             end
-            print "\n"
         end
 
         return countv
