@@ -32,7 +32,7 @@ class Computer
 
     def runInstruction(opcode, literal, pointer)
         combo = getCombo(literal)
-        print "RUN ", opcode, " -> ", combo, "\n"
+        #print "RUN ", opcode, " -> ", combo, "\n"
         if opcode == 0
             numerator = @A
             denominator = 2**combo
@@ -115,8 +115,8 @@ class Day17
         pointer = 0
         while pointer < program.length()
             pointer = c.runInstruction(program[pointer].to_i, program[pointer+1].to_i, pointer)
-            c.printC()
-            print "POINTER ", pointer, "\n"
+            #c.printC()
+            #print "POINTER ", pointer, "\n"
         end
       
         return c.getOutput()
@@ -124,7 +124,7 @@ class Day17
 
     def solvePart1(solve_req)
         solution = runComputer(solve_req.data)
-        print "SOLUTION ", solution, "\n"
+        #print "SOLUTION ", solution, "\n"
         return solution.join(",")
     end
 
