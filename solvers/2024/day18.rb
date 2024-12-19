@@ -45,8 +45,8 @@ class Day18
          e = curr[3]
 
          if x == map.length()-1 && y == map.length() - 1
-            print e, "\n"
-            printMap(map)
+            #print e, "\n"
+            #printMap(map)
             return d
          end
 
