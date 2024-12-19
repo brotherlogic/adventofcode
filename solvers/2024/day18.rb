@@ -107,7 +107,6 @@ class Day18
         top = lines.length()-1
 
         while top-bottom > 1
-         print bottom, ",", top, "\n"
             map = buildMap(lines[0..(top+bottom)/2], msize)
             if solveMap(map) > 0
                bottom = (top+bottom)/2
