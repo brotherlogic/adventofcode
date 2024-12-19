@@ -43,6 +43,7 @@ class Day19
     end
 
     def search(towels, thing)
+       # print "SEARCH ", thing, "\n"
         if thing.length() == 0 
             return true
         end
@@ -59,11 +60,33 @@ class Day19
         return false
     end
 
+    def trimTowels(towels)
+        ntowels = []
+        if !search(towels[1..towels.length()-1], towels[0])
+            ntowels.push(towels[0])
+        end
+        for i in 1..towels.length()-2
+            if !search(towels[0..i-1]+towels[i+1..towels.length()-1], towels[i])
+                ntowels.push(towels[i])
+            end
+        end
+        if !search(towels[0..towels.length()-2], towels[towels.length()-1])
+            ntowels.push(towels[towels.length()-1])
+        end
+
+        return ntowels
+    end
+
     def solvePart1(solve_req)
-        towels, things = buildData(solve_req.data)
+        ftowels, things = buildData(solve_req.data)
        
+        towels = trimTowels(ftowels)
+        print "TRIMMED ", ftowels.length(), " to ", towels.length(), "\n"
+        print "POST ", towels, "\n"
+
         count = 0
         things.each do |thing|
+            print "SOLVING ", thing, "\n"
             if search(towels, thing)
                 count += 1
             end
