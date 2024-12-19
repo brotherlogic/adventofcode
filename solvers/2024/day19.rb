@@ -42,20 +42,29 @@ class Day19
         return rainbow
     end
 
-    def solvePart1(solve_req)
-        towels, things = buildData(solve_req.data)
-        mlen = things[0].length()
-        things.each do |thing|
-            if thing.length() > mlen
-                mlen = thing.length()
+    def search(towels, thing)
+        if thing.length() == 0 
+            return true
+        end
+
+        towels.each do |towel|
+            if thing.start_with?(towel)
+                result = search(towels, thing[towel.length()..thing.length()-1])
+                if result
+                    return result
+                end
             end
         end
 
-        rainbow = buildRainbowTable(towels, mlen)
+        return false
+    end
 
+    def solvePart1(solve_req)
+        towels, things = buildData(solve_req.data)
+       
         count = 0
         things.each do |thing|
-            if rainbow.key?(thing)
+            if search(towels, thing)
                 count += 1
             end
         end
