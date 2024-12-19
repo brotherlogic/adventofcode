@@ -84,6 +84,8 @@ class Day18
             end
          end
       end
+
+      return -1
    end
 
    def solve(data, msize, len)
@@ -94,7 +96,26 @@ class Day18
     def solvePart1(solve_req)
        return solve(solve_req.data, 70, 1024)
     end
+
     def solvePart2(solve_req)
-        return solvePart1(solve_req)
+      return solve2(solve_req.data, 70)
+   end
+
+    def solve2(data, msize)
+        lines = data.split("\n")
+        bottom = 0
+        top = lines.length()-1
+
+        while top-bottom > 1
+         print bottom, ",", top, "\n"
+            map = buildMap(lines[0..(top+bottom)/2], msize)
+            if solveMap(map) > 0
+               bottom = (top+bottom)/2
+            else
+               top = (top+bottom)/2
+            end
+         end
+
+         return lines[top ].strip()
      end
 end
