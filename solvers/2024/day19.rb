@@ -42,52 +42,65 @@ class Day19
         return rainbow
     end
 
-    def search(towels, thing)
-       # print "SEARCH ", thing, "\n"
+    def search(towels, thing, sofar)
         if thing.length() == 0 
-            return true
+            return [sofar]
         end
 
+        results = []
         towels.each do |towel|
             if thing.start_with?(towel)
-                result = search(towels, thing[towel.length()..thing.length()-1])
-                if result
-                    return result
-                end
+                result = search(towels, thing[towel.length()..thing.length()-1], sofar + [towel])
+                results = results + result
             end
         end
 
-        return false
+        return results
     end
 
     def trimTowels(towels)
         ntowels = []
-        if !search(towels[1..towels.length()-1], towels[0])
+        map = Hash.new()
+        res = search(towels[1..towels.length()-1], towels[0], [])
+        if res.length() == 0
             ntowels.push(towels[0])
-        end
-        for i in 1..towels.length()-2
-            if !search(towels[0..i-1]+towels[i+1..towels.length()-1], towels[i])
-                ntowels.push(towels[i])
-            end
-        end
-        if !search(towels[0..towels.length()-2], towels[towels.length()-1])
-            ntowels.push(towels[towels.length()-1])
+        else
+            map[towels[0]] = res
         end
 
-        return ntowels
+        for i in 1..towels.length()-2
+            res =  search(towels[0..i-1]+towels[i+1..towels.length()-1], towels[i], [])
+        
+            if res.length() == 0
+                ntowels.push(towels[i])
+            else
+                map[towels[i]] = res
+            end
+        end
+
+        res = search(towels[0..towels.length()-2], towels[towels.length()-1], [])
+        if res.length() == 0
+            ntowels.push(towels[towels.length()-1])
+        else
+            map[towels[towels.length()-1]] = res
+        end
+
+        return ntowels, map
     end
 
     def solvePart1(solve_req)
         ftowels, things = buildData(solve_req.data)
        
-        towels = trimTowels(ftowels)
+        towels,map = trimTowels(ftowels)
         print "TRIMMED ", ftowels.length(), " to ", towels.length(), "\n"
         print "POST ", towels, "\n"
+        print "MAP ", map, "\n"
 
         count = 0
         things.each do |thing|
-            print "SOLVING ", thing, "\n"
-            if search(towels, thing)
+            results =  search(towels, thing, [])
+            print thing, " -> ", results, "\n"
+            if results.length() > 0
                 count += 1
             end
         end
@@ -95,7 +108,49 @@ class Day19
         return count
     end
 
+    def reverseMap(results, map, sofara)
+        print "Reverse ", results, " -> ", map, "\n"
+      
+        if results.length() == 0
+            print "FOUND ", sofara, "\n"
+            return 1
+        end
+
+        sofar = 0
+        map.each do |key, vals|
+            vals.each do |val|
+                found = true
+                for i in 0..val.length()-1
+                    if results[i] != val[i]
+                        print results[i], " and ", val[i], "\n"
+                        found = false
+                        break
+                    end
+                end
+
+                print val, " = " , found, "\n"
+
+                if found
+                    sofar = reverseMap(results[val.length()..results.length()-1], map, sofara + [key])
+                end
+            end
+        end
+        return sofar + reverseMap(results[1..results.length()-1], map, sofara + [results[0]])
+    end
+
     def solvePart2(solve_req)
-        return solvePart1(solve_req)
+        ftowels, things = buildData(solve_req.data)
+       
+        towels,map = trimTowels(ftowels)
+        count = 0
+        things.each do |thing|
+            results =  search(towels, thing, [])
+            results.each do |result|
+                sumv = reverseMap(result, map, [])
+                count += sumv
+            end
+        end
+
+        return count
     end
 end
