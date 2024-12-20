@@ -108,6 +108,36 @@ class Day19
         return count
     end
 
+    def reverseMap(results, map, sofara)
+        print "Reverse ", results, " -> ", map, "\n"
+      
+        if results.length() == 0
+            print "FOUND ", sofara, "\n"
+            return 1
+        end
+
+        sofar = 0
+        map.each do |key, vals|
+            vals.each do |val|
+                found = true
+                for i in 0..val.length()-1
+                    if results[i] != val[i]
+                        print results[i], " and ", val[i], "\n"
+                        found = false
+                        break
+                    end
+                end
+
+                print val, " = " , found, "\n"
+
+                if found
+                    sofar = reverseMap(results[val.length()..results.length()-1], map, sofara + [key])
+                end
+            end
+        end
+        return sofar + reverseMap(results[1..results.length()-1], map, sofara + [results[0]])
+    end
+
     def solvePart2(solve_req)
         ftowels, things = buildData(solve_req.data)
        
@@ -115,31 +145,9 @@ class Day19
         count = 0
         things.each do |thing|
             results =  search(towels, thing, [])
-            print thing, " -> ", results, "\n"
             results.each do |result|
-                countin = 1
-                finds = 0
-                map.each do |key, val|
-                    val.each do |searcher|
-                        print "SEARCH", searcher, "\n"
-                        for i in 0..result.length()-searcher.length()
-                            found = true
-                            for j in 0..searcher.length()-1
-                                print "COMP ", result[i+j], " and ", searcher[j], "\n"
-                                if result[i+j] != searcher[j]
-                                    found = false
-                                    break
-                                end
-                            end
-                            if found
-                                print "FOUND ", searcher, " -> ", result, "\n"
-                                finds += 1
-                            end
-                        end
-                    end
-                end
-                print "COUNTIN ", countin, " -> ", finds, "\n"
-                count += countin + finds
+                sumv = reverseMap(result, map, [])
+                count += sumv
             end
         end
 
