@@ -376,6 +376,25 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 		f.removeLabel(ctx, "Needs Data", issue)
 		f.removeLabel(ctx, "Data Issue", issue)
 		f.removeLabel(ctx, "Cookie Missing", issue)
+
+		if status.Code(err) == codes.Internal && issue.LastErrorCode != fmt.Sprintf("%v", err) {
+			issue.LastErrorCode = fmt.Sprintf("%v", err)
+			_, err = f.ghclient.CommentOnIssue(ctx, &ghbpb.CommentOnIssueRequest{
+				User:    "brotherlogic",
+				Repo:    "adventofcode",
+				Id:      int32(issue.GetId()),
+				Comment: fmt.Sprintf("%v", err),
+			})
+			if err != nil {
+				return err
+			}
+			data, err := proto.Marshal(issue)
+			if err != nil {
+				return err
+			}
+			_, err = f.psclient.Write(ctx, &pspb.WriteRequest{Key: "brotherlogic/adventofcode/finder/cissue", Value: &anypb.Any{Value: data}})
+			return err
+		}
 	}
 
 	// If we haven't got a solution yet, we need to keep working
