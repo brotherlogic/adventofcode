@@ -201,7 +201,7 @@ class SolverServer < Adventofcode::SolverService::Service
       return Adventofcode::SolveResponse.new(big_answer: d19.solvePart1(solve_req)) 
     end
     if solve_req.day == 19 && solve_req.part == 2
-      d19 = Day98.new
+      d19 = Day19.new
       return Adventofcode::SolveResponse.new(big_answer: d19.solvePart2(solve_req)) 
     end
 
