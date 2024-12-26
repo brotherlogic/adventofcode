@@ -215,7 +215,10 @@ class SolverServer < Adventofcode::SolverService::Service
       return Adventofcode::SolveResponse.new(big_answer: d23.solvePart2(solve_req)) 
     end
 
-
+    if solve_req.day == 25 && solve_req.part == 1
+      d25 = Day25.new
+      return Adventofcode::SolveResponse.new(big_answer: d25.solvePart1(solve_req)) 
+    end
 
     raise GRPC::BadStatus.new_status_exception(UNIMPLEMENTED, details = '2024 Solution is not ready')
   end
