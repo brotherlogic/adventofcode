@@ -26,6 +26,26 @@ class Day24
     def resolve(target, database, mapper)
         if database[target] != -1
             return database[target]
+        end
+
+        nval = -1
+        lhs = resolve(mapper[target][0], database, mapper)
+        rhs = resolve
+
+        if mapper[target][1] == "XOR"
+            if (lhs == 1 && rhs == 0) || (lhs == 0 && rhs == 1)
+                nval = 1
+            else
+                nval = 0
+
+            end
+        elsif mapper[target][1] == "OR"
+            if lhs ==  1 || rhs == 1
+                nval = 1
+            else
+                nval = 0
+            end
+            
     end
 
     def solvePart1(solve_req)
