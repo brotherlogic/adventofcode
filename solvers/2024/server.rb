@@ -24,6 +24,7 @@ require_relative 'day17'
 require_relative 'day18'
 require_relative 'day19'
 require_relative 'day23'
+require_relative 'day25'
 
 include GRPC::Core::StatusCodes
 
