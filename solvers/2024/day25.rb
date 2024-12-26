@@ -54,17 +54,13 @@ class Day25
 
     def solvePart1(solve_req)
         keys, locks = buildKeysAndLocks(solve_req.data)
-        print "LOCKS ", locks, "\n"
-        print "KEYS ", keys, "\n"
-
+      
         count = 0
         locks.each do |lock|
             keys.each do |key|
-                print lock, " -> ", key, "\n"
                 found = true
                 for i in 0..4
                     if lock[i] + key[i] >= 6
-                        print "MISS ", lock[i], " and ", key[i], "\n"
                         found = false
                     end
                 end
