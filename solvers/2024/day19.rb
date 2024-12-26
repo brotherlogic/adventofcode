@@ -132,6 +132,7 @@ class Day19
 
     def solvePart2(solve_req)
         ftowels, things = buildData(solve_req.data)
+        return 0
        
         towels,map = trimTowels(ftowels)
         count = 0
