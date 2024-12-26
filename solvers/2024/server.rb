@@ -24,6 +24,7 @@ require_relative 'day17'
 require_relative 'day18'
 require_relative 'day19'
 require_relative 'day23'
+require_relative 'day24'
 require_relative 'day25'
 
 include GRPC::Core::StatusCodes
@@ -214,6 +215,15 @@ class SolverServer < Adventofcode::SolverService::Service
     if solve_req.day == 23 && solve_req.part == 2
       d23 = Day23.new
       return Adventofcode::SolveResponse.new(big_answer: d23.solvePart2(solve_req)) 
+    end
+
+    if solve_req.day == 24 && solve_req.part == 1
+      d24 = Day24.new
+      return Adventofcode::SolveResponse.new(big_answer: d24.solvePart1(solve_req)) 
+    end
+    if solve_req.day == 24 && solve_req.part == 2
+      d24 = Day24.new
+      return Adventofcode::SolveResponse.new(big_answer: d24.solvePart2(solve_req)) 
     end
 
     if solve_req.day == 25 && solve_req.part == 1
