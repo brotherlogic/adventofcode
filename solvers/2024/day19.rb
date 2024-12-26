@@ -92,14 +92,10 @@ class Day19
         ftowels, things = buildData(solve_req.data)
        
         towels,map = trimTowels(ftowels)
-        print "TRIMMED ", ftowels.length(), " to ", towels.length(), "\n"
-        print "POST ", towels, "\n"
-        print "MAP ", map, "\n"
-
+     
         count = 0
         things.each do |thing|
             results =  search(towels, thing, [])
-            print thing, " -> ", results, "\n"
             if results.length() > 0
                 count += 1
             end
@@ -109,10 +105,8 @@ class Day19
     end
 
     def reverseMap(results, map, sofara)
-        print "Reverse ", results, " -> ", map, "\n"
       
         if results.length() == 0
-            print "FOUND ", sofara, "\n"
             return 1
         end
 
@@ -122,14 +116,12 @@ class Day19
                 found = true
                 for i in 0..val.length()-1
                     if results[i] != val[i]
-                        print results[i], " and ", val[i], "\n"
                         found = false
                         break
                     end
                 end
 
-                print val, " = " , found, "\n"
-
+               
                 if found
                     sofar = reverseMap(results[val.length()..results.length()-1], map, sofara + [key])
                 end
@@ -145,6 +137,7 @@ class Day19
         towels,map = trimTowels(ftowels)
         count = 0
         things.each do |thing|
+            print thing, " with", map, "\n"
             results =  search(towels, thing, [])
             results.each do |result|
                 sumv = reverseMap(result, map, [])
