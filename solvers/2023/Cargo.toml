@@ -14,7 +14,7 @@ path = "src/server.rs"
 [dependencies]
 tonic = "0.10.0"
 prost = "0.12"
-tokio = { version = "1.19.2", features = ["macros", "rt-multi-thread"] }
+tokio = { version = "1.38.2", features = ["macros", "rt-multi-thread"] }
 tokio-cron-scheduler = "*"
 axum = "0.5.17"
 num-bigfloat = "*"
