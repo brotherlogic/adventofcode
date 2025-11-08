@@ -23,18 +23,20 @@ import (
 )
 
 type Server struct {
-	years    map[int32]bool
-	solvers  map[string]int32
-	psclient pstore_client.PStoreClient
-	mapLock  *sync.Mutex
+	years     map[int32]bool
+	solvers   map[string]int32
+	psclient  pstore_client.PStoreClient
+	mapLock   *sync.Mutex
+	startTime time.Time
 }
 
 func NewServer(psclient pstore_client.PStoreClient) *Server {
 	return &Server{
-		years:    make(map[int32]bool),
-		solvers:  make(map[string]int32),
-		psclient: psclient,
-		mapLock:  &sync.Mutex{},
+		years:     make(map[int32]bool),
+		solvers:   make(map[string]int32),
+		psclient:  psclient,
+		mapLock:   &sync.Mutex{},
+		startTime: time.Now(),
 	}
 }
 

@@ -508,6 +508,12 @@ func min(a, b int32) int32 {
 
 func main() {
 	log.Print("Running finder script")
+
+	if time.Now().Month() != time.November {
+		log.Print("Not in season")
+		return
+	}
+
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute*5)
 	defer cancel()
 
