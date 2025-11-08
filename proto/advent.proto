@@ -97,12 +97,20 @@ message SetCookieRequest {
 }
 message SetCookieResponse{}
 
+message GetSolversRequest {}
+message GetSolversResponse {
+    repeated int32 years = 1;
+    int64 server_start_time = 2;
+}
+
+
 service AdventOfCodeInternalService {
     rpc Upload(UploadRequest) returns (UploadResponse) {};
     rpc Register(RegisterRequest) returns (RegisterResponse) {};
     rpc AddSolution(AddSolutionRequest) returns (AddSolutionResponse) {};
     rpc GetSolution(GetSolutionRequest) returns (GetSolutionResponse) {};
     rpc SetCookie(SetCookieRequest) returns (SetCookieResponse) {};
+    rpc GetSolvers(GetSolversRequest) returns (GetSolversResponse) {};
 }
 
 service SolverService {

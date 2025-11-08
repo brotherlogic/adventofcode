@@ -58,6 +58,15 @@ var (
 	}, []string{"puzzle", "result"})
 )
 
+func (s *Server) GetSolvers(ctx context.Context, req *pb.GetSolversRequest) (*pb.GetSolversResponse, error) {
+	var years []int32
+	for _, year := range s.solvers {
+		years = append(years, year)
+
+	}
+	return &pb.GetSolversResponse{Years: years, ServerStartTime: s.startTime.Unix()}, nil
+}
+
 func (s *Server) GetSolution(ctx context.Context, req *pb.GetSolutionRequest) (*pb.GetSolutionResponse, error) {
 	data, err := s.psclient.Read(ctx, &pspb.ReadRequest{Key: "github.com/brotherlogic/adventofcode/solutions"})
 	if err != nil {
