@@ -31,6 +31,7 @@ var (
 type finder struct {
 	ghclient ghb_client.GithubridgeClient
 	psclient pstore_client.PStoreClient
+	client   pb.AdventOfCodeInternalServiceClient
 }
 
 func download(year, day int32, c string) (string, error) {
@@ -351,6 +352,7 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 		return fmt.Errorf("unable to dial aoc: %w", err)
 	}
 	client := pb.NewAdventOfCodeInternalServiceClient(conn)
+
 	mclient := pb.NewAdventOfCodeServiceClient(connm)
 	msol, err := mclient.Solve(ctx, &pb.SolveRequest{
 		Year: issue.GetYear(),
@@ -506,6 +508,33 @@ func min(a, b int32) int32 {
 	return b
 }
 
+func (f *finder) runPrep(ctx context.Context) error {
+	// First check that we have a solver for the current year
+	res, err := f.client.GetSolvers(ctx, &pb.GetSolversRequest{})
+	if err != nil {
+		return fmt.Errorf("unable to get solvers: %w", err)
+	}
+
+	// Only do prep if the server's been running for an hour at least
+	if time.Since(time.Unix(res.GetServerStartTime(), 0)) < time.Hour {
+		return nil
+	}
+
+	found := false
+	for _, year := range res.GetYears() {
+		if year == int32(time.Now().Year()) {
+			found = true
+			break
+		}
+	}
+
+	if !found {
+		err = f.raiseIssue(ctx, int32(time.Now().Year()), 0, 0, status.Errorf(codes.FailedPrecondition, "Needs solver for %v", time.Now().Year()))
+	}
+
+	return nil
+}
+
 func main() {
 	log.Print("Running finder script")
 
@@ -530,6 +559,15 @@ func main() {
 	f := &finder{
 		ghclient: ghclient,
 		psclient: pstore,
+	}
+
+	if time.Now().Month() == time.November {
+		log.Print("Running Novemember")
+		err = f.runPrep(ctx)
+		if err == nil {
+			return
+		}
+		log.Fatalf("Error running november script: %v", err)
 	}
 
 	// Check on the existing issue
