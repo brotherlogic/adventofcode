@@ -562,13 +562,15 @@ func main() {
 	}
 
 	if time.Now().Month() == time.November {
-		log.Print("Running Novemember")
+		log.Print("Running November script")
 		err = f.runPrep(ctx)
 		if err == nil {
 			return
 		}
 		log.Fatalf("Error running november script: %v", err)
 	}
+
+	log.Printf("Running in non-November")
 
 	// Check on the existing issue
 	issue, err := f.loadExistingIssue(ctx)
