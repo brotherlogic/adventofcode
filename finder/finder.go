@@ -323,20 +323,21 @@ func (f *finder) runYear(ctx context.Context, ghclient ghb_client.GithubridgeCli
 
 func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 	rissue, err := f.ghclient.GetIssue(ctx, &ghbpb.GetIssueRequest{
-		User: "brotherlogic",
-		Repo: "adventofcode",
-		Id:   int32(issue.GetId()),
+		User:   "brotherlogic",
+		Repo:   "adventofcode",
+		Id:     int32(issue.GetId()),
+		Caller: "adventofcode-finder",
 	})
 
 	if status.Code(err) == codes.NotFound {
 		// Effective issue close
 		log.Printf("Closing issue, as gh reported not found: %v", err)
-		rissue = &ghbpb.GetIssueResponse{State: "closed"}
+		rissue = &ghbpb.GetIssueResponse{State: ghbpb.IssueState_ISSUE_STATE_CLOSED}
 	} else if err != nil {
 		return err
 	}
 
-	if rissue.GetState() == "closed" {
+	if rissue.GetState() == ghbpb.IssueState_ISSUE_STATE_CLOSED {
 		log.Printf("Deleting issue - marked as clsoed")
 		_, err := f.psclient.Delete(ctx, &pspb.DeleteRequest{Key: "brotherlogic/adventofcode/finder/cissue"})
 		return err
@@ -562,13 +563,15 @@ func main() {
 	}
 
 	if time.Now().Month() == time.November {
-		log.Print("Running Novemember")
+		log.Print("Running November script")
 		err = f.runPrep(ctx)
 		if err == nil {
 			return
 		}
 		log.Fatalf("Error running november script: %v", err)
 	}
+
+	log.Printf("Running in non-November")
 
 	// Check on the existing issue
 	issue, err := f.loadExistingIssue(ctx)
