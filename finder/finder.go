@@ -28,6 +28,12 @@ var (
 	retries         = 3
 )
 
+type State int
+
+const (
+	NoSolver State = iota
+)
+
 type finder struct {
 	ghclient ghb_client.GithubridgeClient
 	psclient pstore_client.PStoreClient
@@ -219,6 +225,32 @@ func (f *finder) loadExistingIssue(ctx context.Context) (*pb.Issue, error) {
 	return issue, nil
 }
 
+func resolveCode(state State) codes.Code {
+	switch state {
+	case NoSolver:
+		return codes.InvalidArgument
+	default:
+		return codes.OK
+	}
+}
+
+func (f *finder) processIssueState(ctx context.Context, year int32, state State, pass bool) error {
+	issue, err := f.loadExistingIssue(ctx)
+
+	// We need to create an issue
+	if status.Code(err) == codes.NotFound && !pass {
+		return f.raiseIssue(ctx, year, 0, 0, status.Errorf(resolveCode(state), ""))
+	}
+
+	// We need to close an issue
+	if status.Code(err) == codes.OK && pass {
+		return f.closeIssue(ctx, issue)
+	}
+
+	// Anything else requires no action
+	return err
+}
+
 func (f *finder) raiseIssue(ctx context.Context, year, day, part int32, err error) error {
 	var issue *ghbpb.CreateIssueResponse
 	var ierr error
@@ -258,6 +290,20 @@ func (f *finder) raiseIssue(ctx context.Context, year, day, part int32, err erro
 
 	_, err = f.psclient.Write(ctx, &pspb.WriteRequest{Key: "brotherlogic/adventofcode/finder/cissue", Value: &anypb.Any{Value: bytes}})
 	log.Printf("Written issue: %v", err)
+	return err
+}
+
+func (f *finder) closeIssue(ctx context.Context, issue *pb.Issue) error {
+	_, err := f.ghclient.CloseIssue(ctx, &ghbpb.CloseIssueRequest{
+		User: "brotherlogic",
+		Repo: "adventofcode",
+		Id:   int64(issue.GetId()),
+	})
+	if err != nil {
+		return nil
+	}
+
+	_, err = f.psclient.Delete(ctx, &pspb.DeleteRequest{Key: "brotherlogic/adventofcode/finder/cissue"})
 	return err
 }
 
@@ -530,11 +576,9 @@ func (f *finder) runPrep(ctx context.Context) error {
 		}
 	}
 
-	if !found {
-		err = f.raiseIssue(ctx, int32(time.Now().Year()), 0, 0, status.Errorf(codes.FailedPrecondition, "Needs solver for %v", time.Now().Year()))
-		if err != nil {
-			return err
-		}
+	err = f.processIssueState(ctx, int32(time.Now().Year()), NoSolver, found)
+	if err != nil {
+		return fmt.Errorf("unable to process issue state: %w", err)
 	}
 
 	log.Printf("Found solvers: %v", res)
