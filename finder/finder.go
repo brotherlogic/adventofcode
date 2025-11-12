@@ -518,6 +518,7 @@ func (f *finder) runPrep(ctx context.Context) error {
 
 	// Only do prep if the server's been running for an hour at least
 	if time.Since(time.Unix(res.GetServerStartTime(), 0)) < time.Hour {
+		log.Printf("Server's not been running long enough for us to check")
 		return nil
 	}
 
@@ -531,7 +532,12 @@ func (f *finder) runPrep(ctx context.Context) error {
 
 	if !found {
 		err = f.raiseIssue(ctx, int32(time.Now().Year()), 0, 0, status.Errorf(codes.FailedPrecondition, "Needs solver for %v", time.Now().Year()))
+		if err != nil {
+			return err
+		}
 	}
+
+	log.Printf("Found solvers: %v", res)
 
 	return nil
 }
