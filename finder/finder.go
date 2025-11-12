@@ -557,9 +557,18 @@ func main() {
 		log.Fatalf("unable to get pstore client: %v", err)
 	}
 
+	// See if we have the right solution for this one
+	conn, err := grpc.Dial("adventofcode.adventofcode:8082", grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf("unable to dial aoc: %w", err)
+	}
+
+	client := pb.NewAdventOfCodeInternalServiceClient(conn)
+
 	f := &finder{
 		ghclient: ghclient,
 		psclient: pstore,
+		client:   client,
 	}
 
 	if time.Now().Month() == time.November {
