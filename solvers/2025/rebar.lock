@@ -1,3 +1,4 @@
+{"1.2.0",
 [{<<"cowboy">>,
   {git,"https://github.com/willemdj/cowboy",
        {ref,"a0c13cc1104976ab8be4694a79d8a1f5da2d2463"}},
@@ -21,4 +22,11 @@
  {<<"ranch">>,
   {git,"https://github.com/ninenines/ranch",
        {ref,"55c2a9d623454f372a15e99721a37093d8773b48"}},
-  2}].
+  2},
+ {<<"rebar3_gpb_plugin">>,{pkg,<<"rebar3_gpb_plugin">>,<<"2.2.0">>},0}]}.
+[
+{pkg_hash,[
+ {<<"rebar3_gpb_plugin">>, <<"C8031648718CF4A39BE1CAABA57A1A5C7A06821CCDFAC4B2A29C506F91151476">>}]},
+{pkg_hash_ext,[
+ {<<"rebar3_gpb_plugin">>, <<"35AB8F678C2D5B7B345D6B50B28F351520F0323F5CA76BCEDA7977215F08C24C">>}]}
+].

@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package adventofcode;
+
+message SolveRequest {
+    int32 year = 1;
+    int32 day = 2;
+    int32 part = 3;
+    string data = 4;
+}
+
+message SolveResponse {
+    int32 answer = 1;
+    string string_answer = 2;
+    int64 big_answer = 3;
+}
+
+service SolverService {
+    rpc Solve(SolveRequest) returns (SolveResponse) {};
+}
