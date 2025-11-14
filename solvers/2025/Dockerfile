@@ -6,7 +6,7 @@ WORKDIR $GOPATH/src/github.com/brotherlogic/adventofcode
 
 COPY go.mod ./
 COPY go.sum ./
-s
+
 RUN go mod download
 
 COPY *.go ./
