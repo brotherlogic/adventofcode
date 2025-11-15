@@ -6,11 +6,16 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"time"
 
 	pb "github.com/brotherlogic/adventofcode/proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+)
+
+const (
+	AOC_ADDRESS = "adventofcode.adventofcode:8082"
 )
 
 var (
@@ -24,6 +29,21 @@ func (s *Server) Solve(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResp
 	return &pb.SolveResponse{}, status.Errorf(codes.Unimplemented, "method Solve not implemented")
 }
 
+func (s *Server) heartbeat(ctx context.Context) error {
+	conn, err := grpc.Dial(AOC_ADDRESS)
+	if err != nil {
+		return err
+	}
+	defer conn.Close()
+
+	client := pb.NewAdventOfCodeInternalServiceClient(conn)
+	_, err = client.Register(ctx, &pb.RegisterRequest{
+		Year:     2025,
+		Callback: "adventofcode-solver-2025.adventofcode:8080",
+	})
+	return err
+}
+
 func main() {
 	server := &Server{}
 
@@ -33,6 +53,20 @@ func main() {
 	}
 	gs := grpc.NewServer()
 	pb.RegisterSolverServiceServer(gs, server)
+
+	// Run a heartbeat every minute
+	go func() {
+		for {
+			time.Sleep(time.Minute)
+
+			ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
+			err := server.heartbeat(ctx)
+			if err != nil {
+				log.Printf("Unable to send heartbeat: %v", err)
+			}
+			cancel()
+		}
+	}()
 
 	if err := gs.Serve(lis); err != nil {
 		log.Fatalf("failed to serve grpc: %v", err)
