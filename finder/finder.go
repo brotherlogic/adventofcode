@@ -38,6 +38,7 @@ type finder struct {
 	ghclient ghb_client.GithubridgeClient
 	psclient pstore_client.PStoreClient
 	client   pb.AdventOfCodeInternalServiceClient
+	eclient  pb.AdventOfCodeServiceClient
 }
 
 func download(year, day int32, c string) (string, error) {
@@ -582,6 +583,17 @@ func (f *finder) runPrep(ctx context.Context) error {
 	}
 
 	log.Printf("Found solvers: %v", res)
+
+	// If we got this far we were able to find a solver for the current year
+	// Now we test that it responds
+	sol, err := f.eclient.Solve(ctx, &pb.SolveRequest{Year: int32(time.Now().Year())})
+	if err != nil {
+		return fmt.Errorf("error calling solve: %w", err)
+	}
+
+	if sol.GetAnswer() != 123 {
+		return fmt.Errorf("solver for %v did not return the right answer %v vs %v", time.Now().Year(), 123, sol.GetAnswer())
+	}
 
 	return nil
 }
