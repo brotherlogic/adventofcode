@@ -6,13 +6,12 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"reflect"
 	"time"
 
 	pb "github.com/brotherlogic/adventofcode/proto"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials/insecure"
-	"google.golang.org/grpc/status"
 )
 
 const (
@@ -27,7 +26,21 @@ type Server struct {
 }
 
 func (s *Server) Solve(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResponse, error) {
-	return &pb.SolveResponse{}, status.Errorf(codes.Unimplemented, "method Solve not implemented")
+	day := req.GetDay()
+	part := req.GetPart()
+
+	method := reflect.ValueOf(&Server{}).MethodByName(fmt.Sprintf("Day%vPart%v", day, part))
+
+	if !method.IsValid() {
+		return nil, fmt.Errorf("cannot find method Day%vPart%v", day, part)
+	}
+
+	ret := method.Call([]reflect.Value{
+		reflect.ValueOf(ctx),
+		reflect.ValueOf(req),
+	})
+
+	return ret[0].Interface().(*pb.SolveResponse), ret[1].Interface().(error)
 }
 
 func (s *Server) heartbeat(ctx context.Context) error {
