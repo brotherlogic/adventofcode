@@ -248,7 +248,7 @@ func (f *finder) processIssueState(ctx context.Context, year int32, state State,
 	}
 
 	// Anything else requires no action
-	return err
+	return nil
 }
 
 func (f *finder) raiseIssue(ctx context.Context, year, day, part int32, err error) error {
