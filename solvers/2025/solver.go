@@ -11,6 +11,7 @@ import (
 	pb "github.com/brotherlogic/adventofcode/proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/status"
 )
 
@@ -30,7 +31,7 @@ func (s *Server) Solve(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResp
 }
 
 func (s *Server) heartbeat(ctx context.Context) error {
-	conn, err := grpc.Dial(AOC_ADDRESS)
+	conn, err := grpc.NewClient(AOC_ADDRESS, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		return err
 	}
