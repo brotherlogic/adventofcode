@@ -595,6 +595,8 @@ func (f *finder) runPrep(ctx context.Context) error {
 		return fmt.Errorf("solver for %v did not return the right answer %v vs %v", time.Now().Year(), 123, sol.GetAnswer())
 	}
 
+	log.Printf("Found answer: %v", sol)
+
 	return nil
 }
 
