@@ -624,13 +624,19 @@ func main() {
 	if err != nil {
 		log.Fatalf("unable to dial aoc: %w", err)
 	}
-
 	client := pb.NewAdventOfCodeInternalServiceClient(conn)
+
+	econn, err := grpc.Dial("adventofcode.adventofcode:8080", grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf("Unable to dial aoc excternal: %v", err)
+	}
+	eclient := pb.NewAdventOfCodeServiceClient(econn)
 
 	f := &finder{
 		ghclient: ghclient,
 		psclient: pstore,
 		client:   client,
+		eclient:  eclient,
 	}
 
 	if time.Now().Month() == time.November {
