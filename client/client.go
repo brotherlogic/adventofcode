@@ -18,34 +18,7 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
 
-<<<<<<< Updated upstream
 	conn, err := grpc.Dial(os.Args[1], grpc.WithInsecure())
-=======
-	clientCert, err := tls.LoadX509KeyPair("/home/simon/keys/client.pem", "/home/simon/keys/client.key")
-	if err != nil {
-		log.Fatalf("Unable to load: %v", err)
-	}
-
-	trustedCert, err := ioutil.ReadFile("/home/simon/keys/cacert.pem")
-
-	certPool := x509.NewCertPool()
-	if !certPool.AppendCertsFromPEM(trustedCert) {
-		log.Fatalf("Unable to append cert: %v", err)
-	}
-
-	tlsConfig := &tls.Config{
-		Certificates: []tls.Certificate{clientCert},
-		RootCAs:      certPool,
-		MinVersion:   tls.VersionTLS13,
-		MaxVersion:   tls.VersionTLS13,
-	}
-
-	// Create a new TLS credentials based on the TLS configuration
-	cred := credentials.NewTLS(tlsConfig)
-
-	conn, err := grpc.Dial(os.Args[1], grpc.WithTransportCredentials(cred))
-	//conn, err := grpc.Dial(os.Args[1], grpc.WithTransportCredentials(insecure.NewCredentials()))
->>>>>>> Stashed changes
 	if err != nil {
 		log.Fatalf("Bad dial: %v -> %v", err, cred)
 	}
