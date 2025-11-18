@@ -32,6 +32,7 @@ type State int
 
 const (
 	NoSolver State = iota
+	SolverWrong
 )
 
 type finder struct {
@@ -230,6 +231,8 @@ func resolveCode(state State) codes.Code {
 	switch state {
 	case NoSolver:
 		return codes.InvalidArgument
+	case SolverWrong:
+		return codes.FailedPrecondition
 	default:
 		return codes.OK
 	}
@@ -591,8 +594,9 @@ func (f *finder) runPrep(ctx context.Context) error {
 		return fmt.Errorf("error calling solve: %w", err)
 	}
 
-	if sol.GetAnswer() != 123 {
-		return fmt.Errorf("solver for %v did not return the right answer %v vs %v", time.Now().Year(), 123, sol.GetAnswer())
+	err = f.processIssueState(ctx, int32(time.Now().Year()), SolverWrong, sol.GetAnswer() == 123)
+	if err != nil {
+		return fmt.Errorf("unable to process issue state: %w", err)
 	}
 
 	log.Printf("Found answer: %v", sol)
@@ -626,13 +630,19 @@ func main() {
 	if err != nil {
 		log.Fatalf("unable to dial aoc: %w", err)
 	}
-
 	client := pb.NewAdventOfCodeInternalServiceClient(conn)
+
+	econn, err := grpc.Dial("adventofcode.adventofcode:8080", grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf("Unable to dial aoc excternal: %v", err)
+	}
+	eclient := pb.NewAdventOfCodeServiceClient(econn)
 
 	f := &finder{
 		ghclient: ghclient,
 		psclient: pstore,
 		client:   client,
+		eclient:  eclient,
 	}
 
 	if time.Now().Month() == time.November {
