@@ -1,0 +1,118 @@
+syntax = "proto3";
+
+package adventofcode;
+
+option csharp_namespace = "AdventOfCode";
+option go_package = "github.com/brotherlogic/adventofcode/proto";
+
+message Issue {
+    int64 id = 1;
+    repeated Solution solution_attempts = 2;
+    bool open = 3;
+
+    int32 year = 4;
+    int32 day = 5;
+    int32 part = 6;
+
+    string last_error_code = 7;
+}
+
+message Solutions {
+    repeated Solution solutions = 1;
+}
+
+message Solution {
+    int32 year = 1;
+    int32 day = 2;
+    int32 part = 3;
+
+    int64 big_answer = 4;
+    string string_answer = 5;
+    int32 answer = 6;
+
+    int64 solution_made = 7;
+}
+
+message SolveRequest {
+    int32 year = 1;
+    int32 day = 2;
+    int32 part = 3;
+    string data = 4;
+}
+
+message SolveResponse {
+    int32 answer = 1;
+    string string_answer = 2;
+    int64 big_answer = 3;
+}
+
+message UploadRequest {
+    int32 year = 1;
+    int32 day = 2;
+    string data = 3;
+    bool dual_day = 4;
+    int32 part = 5;
+}
+
+message UploadResponse {}
+
+message GetDataRequest {
+    int32 year = 1;
+    int32 day = 2;
+    int32 part = 3;
+}
+
+message GetDataResponse {
+    string data = 1;
+}
+
+message RegisterRequest {
+    string callback = 1;
+    int32 year = 2;
+}
+
+message RegisterResponse {}
+
+message AddSolutionRequest {
+    Solution solution = 1;
+}
+message AddSolutionResponse {}
+
+message GetSolutionRequest {
+    int32 year = 1;
+    int32 day = 2;
+    int32 part = 3;
+}
+
+message GetSolutionResponse {
+    Solution solution = 1;
+}
+
+service AdventOfCodeService {
+    rpc Solve(SolveRequest) returns (SolveResponse) {};
+}
+
+message SetCookieRequest {
+    string cookie = 1;
+}
+message SetCookieResponse{}
+
+message GetSolversRequest {}
+message GetSolversResponse {
+    repeated int32 years = 1;
+    int64 server_start_time = 2;
+}
+
+
+service AdventOfCodeInternalService {
+    rpc Upload(UploadRequest) returns (UploadResponse) {};
+    rpc Register(RegisterRequest) returns (RegisterResponse) {};
+    rpc AddSolution(AddSolutionRequest) returns (AddSolutionResponse) {};
+    rpc GetSolution(GetSolutionRequest) returns (GetSolutionResponse) {};
+    rpc SetCookie(SetCookieRequest) returns (SetCookieResponse) {};
+    rpc GetSolvers(GetSolversRequest) returns (GetSolversResponse) {};
+}
+
+service SolverService {
+    rpc Solve(SolveRequest) returns (SolveResponse) {};
+}

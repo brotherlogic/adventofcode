@@ -1,0 +1,17 @@
+{application, advent_2026,
+ [{description, "Advent of Code 2026 Solver"},
+  {vsn, "0.1.0"},
+  {registered, []},
+  {mod, {advent_2026_app, []}},
+  {applications,
+   [kernel,
+    stdlib,
+    sasl,
+    grpcbox
+   ]},
+  {env,[]},
+  {modules, []},
+
+  {licenses, ["Apache 2.0"]},
+  {links, []}
+ ]}.
