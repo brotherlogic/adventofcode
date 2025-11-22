@@ -599,6 +599,8 @@ func (f *finder) runPrep(ctx context.Context) error {
 		return fmt.Errorf("unable to process issue state: %w", err)
 	}
 
+	log.Printf("Found answer: %v", sol)
+
 	return nil
 }
 

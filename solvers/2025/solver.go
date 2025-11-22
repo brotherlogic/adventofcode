@@ -29,8 +29,9 @@ func (s *Server) Solve(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResp
 	day := req.GetDay()
 	part := req.GetPart()
 
-	method := reflect.ValueOf(&Server{}).MethodByName(fmt.Sprintf("Day%vPart%v", day, part))
-
+	methodName := fmt.Sprintf("Day%vPart%v", day, part)
+	log.Printf("Trying to run %v", methodName)
+	method := reflect.ValueOf(&Server{}).MethodByName(methodName)
 	if !method.IsValid() {
 		return nil, fmt.Errorf("cannot find method Day%vPart%v", day, part)
 	}
