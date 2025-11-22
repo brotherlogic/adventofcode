@@ -1,4 +1,4 @@
-name: Build and Push 2025 Solver to Docker
+name: Build and Push 2026 Solver to Docker
 on:
     push:
         tags:
