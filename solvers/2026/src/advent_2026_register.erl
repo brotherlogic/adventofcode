@@ -59,9 +59,8 @@ register() ->
     % Since we don't have sys.config setup for this specific peer, we might need to add it there
     % or try to pass it as an option if grpcbox supports it.
     % For now, I will try to assume the environment might have it or I'll add it to sys.config.
-    % But the user instruction was specific about the address.
-    % I'll try to use the channel option.
-    Options = #{channel => <<"adventofcode.adventofcode:8082">>},
+    % We use the default channel configured in sys.config
+    Options = #{},
     case adventofcode_advent_of_code_internal_service_client:register(Ctx, Request, Options) of
         {ok, _Response, _Metadata} ->
             io:format("Registered successfully~n");
