@@ -15,5 +15,12 @@ init([]) ->
     SupFlags = #{strategy => one_for_all,
                  intensity => 0,
                  period => 1},
-    ChildSpecs = [],
+    ChildSpecs = [
+        #{id => advent_2026_register,
+          start => {advent_2026_register, start_link, []},
+          restart => permanent,
+          shutdown => 5000,
+          type => worker,
+          modules => [advent_2026_register]}
+    ],
     {ok, {SupFlags, ChildSpecs}}.
