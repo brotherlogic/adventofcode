@@ -61,7 +61,7 @@ register() ->
     % or try to pass it as an option if grpcbox supports it.
     % For now, I will try to assume the environment might have it or I'll add it to sys.config.
     % We use the default channel configured in sys.config
-    Options = #{},
+    Options = #{channel => default},
     case adventofcode_advent_of_code_internal_service_client:register(Ctx, Request, Options) of
         {ok, _Response, _Metadata} ->
             io:format("Registered successfully~n");
