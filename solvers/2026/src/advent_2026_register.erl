@@ -23,6 +23,7 @@ start_link() ->
 %%%===================================================================
 
 init([]) ->
+    io:format("GRPCBOX ENV: ~p~n", [application:get_all_env(grpcbox)]),
     self() ! register,
     {ok, []}.
 
