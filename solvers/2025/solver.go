@@ -54,7 +54,7 @@ func (s *Server) heartbeat(ctx context.Context) error {
 	client := pb.NewAdventOfCodeInternalServiceClient(conn)
 	_, err = client.Register(ctx, &pb.RegisterRequest{
 		Year:     2025,
-		Callback: "adventofcode-solver-2025.adventofcode:8080",
+		Callback: "solver-2025.adventofcode:8080",
 	})
 	return err
 }
