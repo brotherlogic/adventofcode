@@ -41,7 +41,11 @@ func (s *Server) Solve(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResp
 		reflect.ValueOf(req),
 	})
 
-	return ret[0].Interface().(*pb.SolveResponse), ret[1].Interface().(error)
+	if ret[0].IsNil() {
+		return nil, ret[1].Interface().(error)
+	}
+
+	return ret[0].Interface().(*pb.SolveResponse), nil
 }
 
 func (s *Server) heartbeat(ctx context.Context) error {
