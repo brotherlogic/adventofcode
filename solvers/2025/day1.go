@@ -20,12 +20,12 @@ func (s *Server) Day1Part1(ctx context.Context, req *pb.SolveRequest) (*pb.Solve
 			}
 			if line[0] == 'L' {
 				position -= num
-				if position < 0 {
+				for position < 0 {
 					position += 100
 				}
 			} else {
 				position += num
-				if position >= 100 {
+				for position >= 100 {
 					position -= 100
 				}
 			}
