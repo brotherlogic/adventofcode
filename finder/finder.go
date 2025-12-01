@@ -607,11 +607,6 @@ func (f *finder) runPrep(ctx context.Context) error {
 func main() {
 	log.Print("Running finder script")
 
-	if time.Now().Month() != time.November {
-		log.Print("Not in season")
-		return
-	}
-
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute*5)
 	defer cancel()
 
