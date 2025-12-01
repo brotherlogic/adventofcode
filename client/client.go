@@ -20,7 +20,7 @@ func main() {
 
 	conn, err := grpc.Dial(os.Args[1], grpc.WithInsecure())
 	if err != nil {
-		log.Fatalf("Bad dial: %v -> %v", err, cred)
+		log.Fatalf("Bad dial: %v", err)
 	}
 
 	client := pb.NewAdventOfCodeServiceClient(conn)
