@@ -13,23 +13,25 @@ func (s *Server) Day1Part1(ctx context.Context, req *pb.SolveRequest) (*pb.Solve
 	count := 0
 
 	for _, line := range strings.Split(req.GetData(), "\n") {
-		num, err := strconv.ParseInt(line[1:], 10, 64)
-		if err != nil {
-			return nil, err
-		}
-		if line[0] == 'L' {
-			position -= num
-			if position < 0 {
-				position += 100
+		if len(line) > 0 {
+			num, err := strconv.ParseInt(line[1:], 10, 64)
+			if err != nil {
+				return nil, err
 			}
-		} else {
-			position += num
-			if position >= 100 {
-				position -= 100
+			if line[0] == 'L' {
+				position -= num
+				if position < 0 {
+					position += 100
+				}
+			} else {
+				position += num
+				if position >= 100 {
+					position -= 100
+				}
 			}
-		}
-		if position == 0 {
-			count++
+			if position == 0 {
+				count++
+			}
 		}
 	}
 
