@@ -1,0 +1,37 @@
+package main
+
+import (
+	"context"
+	"strconv"
+	"strings"
+
+	pb "github.com/brotherlogic/adventofcode/proto"
+)
+
+func (s *Server) Day1Part1(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResponse, error) {
+	position := int64(50)
+	count := 0
+
+	for _, line := range strings.Split(req.GetData(), "\n") {
+		num, err := strconv.ParseInt(line[1:], 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		if line[0] == 'L' {
+			position -= num
+			if position < 0 {
+				position += 100
+			}
+		} else {
+			position += num
+			if position >= 100 {
+				position -= 100
+			}
+		}
+		if position == 0 {
+			count++
+		}
+	}
+
+	return &pb.SolveResponse{Answer: int32(count)}, nil
+}
