@@ -9,7 +9,7 @@ import (
 )
 
 func isInvalid(num int64) bool {
-	strnum := strconv.Itoa(int(num))
+	strnum := strconv.FormatInt(num, 10)
 
 	// Odd number of digits ; not invalid
 	if len(strnum)%2 == 1 {
