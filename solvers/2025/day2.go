@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"log"
 	"strconv"
 	"strings"
 
@@ -35,6 +36,7 @@ func (s *Server) Day2Part1(ctx context.Context, req *pb.SolveRequest) (*pb.Solve
 			return nil, err
 		}
 
+		log.Printf("Checking from %v to %v (%v)", le, he, he-le)
 		for i := le; i <= he; i++ {
 			if isInvalid(i) {
 				//log.Printf("Found %v", i)
