@@ -56,6 +56,10 @@ var (
 		Help:    "The size of the print queue",
 		Buckets: []float64{1, 10, 100, 1000, 2000, 4000, 8000, 16000, 32000, 64000},
 	}, []string{"puzzle", "result"})
+
+	startupTimes = promauto.NewGaugeVec(prometheus.GaugeOpts{
+		Name: "adventofcode_startups",
+	}, []string{"year"})
 )
 
 func (s *Server) GetSolvers(ctx context.Context, req *pb.GetSolversRequest) (*pb.GetSolversResponse, error) {
@@ -267,6 +271,9 @@ func (s *Server) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.Reg
 	s.mapLock.Lock()
 	s.years[req.GetYear()] = true
 	s.solvers[req.GetCallback()] = req.GetYear()
+
+	startupTimes.With(prometheus.Labels{"year": fmt.Sprintf("%v", req.GetYear())}).Set(float64(req.GetStartupTime()))
+
 	s.mapLock.Unlock()
 
 	return &pb.RegisterResponse{}, s.updateMetrics()
