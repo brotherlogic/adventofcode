@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"log"
 	"strconv"
 	"strings"
 
@@ -57,14 +56,12 @@ func (s *Server) Day1Part2(ctx context.Context, req *pb.SolveRequest) (*pb.Solve
 				position -= num
 				for position < 0 {
 					position += 100
-					log.Printf("Adding under 100 (%v)", line)
 					count++
 				}
 			} else {
 				position += num
 				for position > 100 {
 					position -= 100
-					log.Printf("Adding over 100 (%v)", line)
 					count++
 				}
 			}

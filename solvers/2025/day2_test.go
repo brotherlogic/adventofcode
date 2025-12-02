@@ -23,6 +23,6 @@ func TestDay2Part1(t *testing.T) {
 	}
 
 	if res.GetBigAnswer() != 1227775554 {
-		t.Errorf("Got %v should have been 1227775554", res.GetAnser())
+		t.Errorf("Got %v should have been 1227775554", res.GetBigAnswer())
 	}
 }
