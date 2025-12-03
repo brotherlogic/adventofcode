@@ -69,6 +69,7 @@ message GetDataResponse {
 message RegisterRequest {
     string callback = 1;
     int32 year = 2;
+    int64 startup_time = 3;
 }
 
 message RegisterResponse {}

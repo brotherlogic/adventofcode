@@ -23,6 +23,7 @@ var (
 )
 
 type Server struct {
+	startup int64
 }
 
 func (s *Server) Solve(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResponse, error) {
@@ -59,12 +60,15 @@ func (s *Server) heartbeat(ctx context.Context) error {
 	_, err = client.Register(ctx, &pb.RegisterRequest{
 		Year:     2025,
 		Callback: "solver-2025.adventofcode:8080",
+		//StartupTime: s.startup,
 	})
 	return err
 }
 
 func main() {
-	server := &Server{}
+	server := &Server{
+		startup: time.Now().Unix(),
+	}
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
 	if err != nil {
