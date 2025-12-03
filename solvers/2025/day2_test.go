@@ -26,3 +26,19 @@ func TestDay2Part1(t *testing.T) {
 		t.Errorf("Got %v should have been 1227775554", res.GetBigAnswer())
 	}
 }
+
+func TestDay2Part2(t *testing.T) {
+	s := &Server{}
+
+	res, err := s.Day2Part2(context.Background(), &pb.SolveRequest{
+		Data: TEST,
+	})
+
+	if err != nil {
+		t.Fatalf("Unable to run test: %v", err)
+	}
+
+	if res.GetBigAnswer() != 4174379265 {
+		t.Errorf("Got %v should have been 4174379265", res.GetBigAnswer())
+	}
+}
