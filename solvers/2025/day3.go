@@ -34,3 +34,16 @@ func (s *Server) Day3Part1(ctx context.Context, req *pb.SolveRequest) (*pb.Solve
 
 	return &pb.SolveResponse{Answer: sum}, nil
 }
+
+func (s *Server) Day3Part2(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResponse, error) {
+	sum := int64(0)
+	for _, line := range strings.Split(req.GetData(), "\n") {
+		bv, bo := findBiggest(strings.TrimSpace(line), 0, len(line)-2)
+
+		sv, _ := findBiggest(strings.TrimSpace(line), bo+1, len(line)-1)
+		//log.Printf("Found %v and %v", bv, sv)
+		sum += int64(bv*10 + sv)
+	}
+
+	return &pb.SolveResponse{BigAnswer: sum}, nil
+}
