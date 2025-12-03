@@ -26,14 +26,12 @@ func isInvalid(num int64) bool {
 func isInvalidFull(num int64) bool {
 	strnum := strconv.FormatInt(num, 10)
 
-	// Odd number of digits ; not invalid
-	if len(strnum)%2 == 1 {
-		return false
-	}
-
 	for rlen := 1; rlen <= len(strnum)/2; rlen++ {
 		found := true
-		for start := rlen; start <= len(strnum)-rlen; start++ {
+		if len(strnum)%rlen != 0 {
+			continue
+		}
+		for start := rlen; start <= len(strnum)-rlen; start += rlen {
 			if strnum[0:rlen] != strnum[start:start+rlen] {
 				found = false
 				break
@@ -59,7 +57,6 @@ func (s *Server) Day2Part1(ctx context.Context, req *pb.SolveRequest) (*pb.Solve
 			return nil, err
 		}
 
-		log.Printf("Checking from %v to %v (%v)", le, he, he-le)
 		for i := le; i <= he; i++ {
 			if isInvalid(i) {
 				//log.Printf("Found %v", i)
