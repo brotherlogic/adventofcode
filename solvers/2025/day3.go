@@ -24,7 +24,7 @@ func findBiggest(num string, offset, cutoff int) (int64, int) {
 
 func (s *Server) Day3Part1(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResponse, error) {
 	sum := int32(0)
-	for _, line := range strings.Split(req.GetData(), "\n") {
+	for line := range strings.SplitSeq(req.GetData(), "\n") {
 		bv, bo := findBiggest(strings.TrimSpace(line), 0, len(line)-2)
 
 		sv, _ := findBiggest(strings.TrimSpace(line), bo+1, len(line)-1)
