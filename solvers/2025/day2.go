@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"log"
 	"strconv"
 	"strings"
 
@@ -81,10 +80,8 @@ func (s *Server) Day2Part2(tx context.Context, req *pb.SolveRequest) (*pb.SolveR
 			return nil, err
 		}
 
-		log.Printf("Checking from %v to %v (%v)", le, he, he-le)
 		for i := le; i <= he; i++ {
 			if isInvalidFull(i) {
-				log.Printf("Found %v", i)
 				total += i
 			}
 		}
