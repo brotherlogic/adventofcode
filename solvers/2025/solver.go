@@ -57,6 +57,7 @@ func (s *Server) heartbeat(ctx context.Context) error {
 	defer conn.Close()
 
 	client := pb.NewAdventOfCodeInternalServiceClient(conn)
+	log.Printf("Registering with %v", s.startup)
 	_, err = client.Register(ctx, &pb.RegisterRequest{
 		Year:        2025,
 		Callback:    "solver-2025.adventofcode:8080",
