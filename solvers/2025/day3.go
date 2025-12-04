@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"log"
 	"math"
 	"strconv"
 	"strings"
@@ -44,10 +43,10 @@ func (s *Server) Day3Part2(ctx context.Context, req *pb.SolveRequest) (*pb.Solve
 		val := int64(0)
 		for battery := 12; battery > 0; battery-- {
 			bv, bo := findBiggest(strings.TrimSpace(line), sp, len(line)-battery)
-			val += bv * int64(math.Pow(10, float64(battery)))
+			val += bv * int64(math.Pow(10, float64(battery-1)))
 			sp = bo + 1
 		}
-		log.Printf("Got %v", val)
+		//log.Printf("Got %v (%v)", val, len(fmt.Sprintf("%v", val)))
 		sum += val
 	}
 
