@@ -10,7 +10,7 @@ import (
 
 func readGrid(data string) [][]int {
 	lines := strings.Split(data, "\n")
-	grid := make([][]int, len(lines[0]))
+	grid := make([][]int, len(lines))
 	for y := range len(lines) {
 		grid[y] = make([]int, len(lines[y]))
 		for x, ch := range lines[y] {
