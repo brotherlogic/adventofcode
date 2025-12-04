@@ -57,3 +57,18 @@ func (s *Server) Day4Part1(_ context.Context, req *pb.SolveRequest) (*pb.SolveRe
 
 	return &pb.SolveResponse{Answer: sum}, nil
 }
+
+func (s *Server) Day4Part2(_ context.Context, req *pb.SolveRequest) (*pb.SolveResponse, error) {
+	grid := readGrid(req.GetData())
+
+	sum := int32(0)
+	for y := range grid {
+		for x := range grid[y] {
+			if grid[y][x] == 1 {
+				sum += accessable(grid, x, y)
+			}
+		}
+	}
+
+	return &pb.SolveResponse{Answer: sum}, nil
+}
