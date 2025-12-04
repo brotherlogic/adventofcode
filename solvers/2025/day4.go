@@ -62,12 +62,30 @@ func (s *Server) Day4Part2(_ context.Context, req *pb.SolveRequest) (*pb.SolveRe
 	grid := readGrid(req.GetData())
 
 	sum := int32(0)
-	for y := range grid {
-		for x := range grid[y] {
-			if grid[y][x] == 1 {
-				sum += accessable(grid, x, y)
+	incr := int32(0)
+	for sum == 0 || incr > 0 {
+		incr = 0
+		ngrid := make([][]int, len(grid))
+		for y := range grid {
+			ngrid[y] = make([]int, len(grid[y]))
+			for x := range grid[y] {
+				if grid[y][x] == 1 {
+					acc := accessable(grid, x, y)
+					if acc == 1 {
+						ngrid[y][x] = 0
+						incr += 1
+					} else {
+						ngrid[y][x] = 1
+					}
+				} else {
+					ngrid[y][x] = grid[y][x]
+				}
 			}
 		}
+
+		log.Printf("Removing %v", incr)
+		sum += incr
+		grid = ngrid
 	}
 
 	return &pb.SolveResponse{Answer: sum}, nil
