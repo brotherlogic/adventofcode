@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"math"
 	"strconv"
 	"strings"
 
@@ -33,4 +34,21 @@ func (s *Server) Day3Part1(ctx context.Context, req *pb.SolveRequest) (*pb.Solve
 	}
 
 	return &pb.SolveResponse{Answer: sum}, nil
+}
+
+func (s *Server) Day3Part2(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResponse, error) {
+	sum := int64(0)
+	for _, line := range strings.Split(req.GetData(), "\n") {
+		sp := 0
+		val := int64(0)
+		for battery := 12; battery > 0; battery-- {
+			bv, bo := findBiggest(strings.TrimSpace(line), sp, len(line)-battery)
+			val += bv * int64(math.Pow(10, float64(battery-1)))
+			sp = bo + 1
+		}
+		//log.Printf("Got %v (%v)", val, len(fmt.Sprintf("%v", val)))
+		sum += val
+	}
+
+	return &pb.SolveResponse{BigAnswer: sum}, nil
 }
