@@ -9,23 +9,23 @@ import (
 	pb "github.com/brotherlogic/adventofcode/proto"
 )
 
-func readData(data string) ([][]int, []int) {
-	var ranges = make([][]int, 0)
-	var numbers = make([]int, 0)
+func readData(data string) ([][]int64, []int64) {
+	var ranges = make([][]int64, 0)
+	var numbers = make([]int64, 0)
 	for _, line := range strings.Split(data, "\n") {
 		if line == "" {
 			break
 		}
 		elems := strings.Split(line, "-")
-		start, err := strconv.ParseInt(elems[0], 10, 32)
+		start, err := strconv.ParseInt(elems[0], 10, 64)
 		if err != nil {
 			log.Fatalf("Cannot parse range start: %v -> %v", line, err)
 		}
-		end, err := strconv.ParseInt(elems[1], 10, 32)
+		end, err := strconv.ParseInt(elems[1], 10, 64)
 		if err != nil {
 			log.Fatalf("Cannot parse range end: %v -> %v", line, err)
 		}
-		ranges = append(ranges, []int{int(start), int(end)})
+		ranges = append(ranges, []int64{(start), (end)})
 	}
 
 	for _, line := range strings.Split(data, "\n") {
@@ -36,7 +36,7 @@ func readData(data string) ([][]int, []int) {
 		if err != nil {
 			log.Fatalf("Cannot parse line: %v -> %v", line, err)
 		}
-		numbers = append(numbers, int(num))
+		numbers = append(numbers, (num))
 	}
 
 	return ranges, numbers
