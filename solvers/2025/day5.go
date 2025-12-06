@@ -56,6 +56,10 @@ func collapseRanges(ranges [][]int64) [][]int64 {
 				found = true
 			}
 
+			if ranges[j][0] >= crange[0] && ranges[j][1] <= crange[1] {
+				found = true
+			}
+
 			if !found {
 				tranges = append(tranges, ranges[j])
 			}
