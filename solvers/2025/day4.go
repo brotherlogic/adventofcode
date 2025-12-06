@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"log"
 	"strings"
 
 	pb "github.com/brotherlogic/adventofcode/proto"
@@ -34,8 +33,6 @@ func accessable(grid [][]int, x, y int) int32 {
 			}
 		}
 	}
-
-	log.Printf("%v,%v -> %v", x, y, sumv)
 
 	if sumv > 4 {
 		return 0
@@ -83,7 +80,6 @@ func (s *Server) Day4Part2(_ context.Context, req *pb.SolveRequest) (*pb.SolveRe
 			}
 		}
 
-		log.Printf("Removing %v", incr)
 		sum += incr
 		grid = ngrid
 	}
