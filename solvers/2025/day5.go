@@ -9,6 +9,14 @@ import (
 	pb "github.com/brotherlogic/adventofcode/proto"
 )
 
+func collapseRanges(ranges [][]int64) [][]int64 {
+	var nranges [][]int64
+	for _, rangev := range ranges {
+		nranges = append(nranges, rangev)
+	}
+	return nranges
+}
+
 func readData(data string) ([][]int64, []int64) {
 	var ranges = make([][]int64, 0)
 	var numbers = make([]int64, 0)
@@ -58,5 +66,18 @@ func (s *Server) Day5Part1(ctx context.Context, req *pb.SolveRequest) (*pb.Solve
 
 	return &pb.SolveResponse{
 		Answer: int32(sumv),
+	}, nil
+}
+
+func (s *Server) Day5Part2(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResponse, error) {
+	ranges, _ := readData(req.GetData())
+
+	sumv := int64(0)
+	for _, rangev := range collapseRanges(ranges) {
+		sumv += rangev[1] - rangev[0]
+	}
+
+	return &pb.SolveResponse{
+		BigAnswer: sumv,
 	}, nil
 }

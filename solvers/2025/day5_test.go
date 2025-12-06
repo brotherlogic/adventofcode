@@ -36,3 +36,19 @@ func TestDay5Part1(t *testing.T) {
 		t.Errorf("Expected 3, got %v", res.GetAnswer())
 	}
 }
+
+func TestDay5Part2(t *testing.T) {
+	s := &Server{}
+
+	res, err := s.Day5Part2(context.Background(), &pb.SolveRequest{
+		Data: day5,
+	})
+
+	if err != nil {
+		t.Fatalf("Unable to solve: %v", err)
+	}
+
+	if res.GetAnswer() != 14 {
+		t.Errorf("Expected 14, got %v", res.GetAnswer())
+	}
+}
