@@ -9,6 +9,54 @@ import (
 	pb "github.com/brotherlogic/adventofcode/proto"
 )
 
+func collapseRanges(ranges [][]int64) [][]int64 {
+	var nranges [][]int64
+	for len(ranges) > 0 {
+		crange := ranges[0]
+		log.Printf("Assessing %v (%v from %v)", crange, 0, ranges)
+		var tranges [][]int64
+		for j := 1; j < len(ranges); j++ {
+			log.Printf("Validating against %v", ranges[j])
+			found := false
+			// Does the top end lie in the middle of crange?
+			if ranges[j][1] <= crange[1] && ranges[j][1] >= crange[0] {
+				log.Printf("Top end %v in %v", ranges[j], crange)
+				if ranges[j][0] < crange[0] {
+					crange[0] = ranges[j][0]
+					found = true
+				}
+			}
+
+			// Does the bottom end lie in the middle of crange
+			if ranges[j][0] <= crange[1] && ranges[j][0] >= crange[0] {
+				log.Printf("Bottom end %v in %v", ranges[j], crange)
+				if ranges[j][1] > crange[1] {
+					crange[1] = ranges[j][1]
+					found = true
+				}
+			}
+
+			// Does ranges envelop crange
+			if ranges[j][0] <= crange[0] && ranges[j][1] >= crange[1] {
+				log.Printf("Envelop %v in %v", ranges[j], crange)
+				crange = ranges[j]
+				found = true
+			}
+
+			if !found {
+				tranges = append(tranges, ranges[j])
+			}
+		}
+
+		nranges = append(nranges, crange)
+		ranges = tranges
+		log.Printf("New ranges: %v", ranges)
+	}
+
+	log.Printf("Collapse to: %v", nranges)
+	return nranges
+}
+
 func readData(data string) ([][]int64, []int64) {
 	var ranges = make([][]int64, 0)
 	var numbers = make([]int64, 0)
@@ -49,7 +97,6 @@ func (s *Server) Day5Part1(ctx context.Context, req *pb.SolveRequest) (*pb.Solve
 	for _, num := range numbers {
 		for _, rangev := range ranges {
 			if num >= rangev[0] && num <= rangev[1] {
-				log.Printf("Found %v in range %v", num, rangev)
 				sumv++
 				break
 			}
@@ -58,5 +105,18 @@ func (s *Server) Day5Part1(ctx context.Context, req *pb.SolveRequest) (*pb.Solve
 
 	return &pb.SolveResponse{
 		Answer: int32(sumv),
+	}, nil
+}
+
+func (s *Server) Day5Part2(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResponse, error) {
+	ranges, _ := readData(req.GetData())
+
+	sumv := int64(0)
+	for _, rangev := range collapseRanges(ranges) {
+		sumv += rangev[1] - rangev[0]
+	}
+
+	return &pb.SolveResponse{
+		BigAnswer: sumv,
 	}, nil
 }
