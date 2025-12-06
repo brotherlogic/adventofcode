@@ -11,9 +11,49 @@ import (
 
 func collapseRanges(ranges [][]int64) [][]int64 {
 	var nranges [][]int64
-	for _, rangev := range ranges {
-		nranges = append(nranges, rangev)
+	for len(ranges) > 0 {
+		crange := ranges[0]
+		log.Printf("Assessing %v (%v from %v)", crange, 0, ranges)
+		var tranges [][]int64
+		for j := 1; j < len(ranges); j++ {
+			log.Printf("Validating against %v", ranges[j])
+			found := false
+			// Does the top end lie in the middle of crange?
+			if ranges[j][1] <= crange[1] && ranges[j][1] >= crange[0] {
+				log.Printf("Top end %v in %v", ranges[j], crange)
+				if ranges[j][0] < crange[0] {
+					crange[0] = ranges[j][0]
+					found = true
+				}
+			}
+
+			// Does the bottom end lie in the middle of crange
+			if ranges[j][0] <= crange[1] && ranges[j][0] >= crange[0] {
+				log.Printf("Bottom end %v in %v", ranges[j], crange)
+				if ranges[j][1] > crange[1] {
+					crange[1] = ranges[j][1]
+					found = true
+				}
+			}
+
+			// Does ranges envelop crange
+			if ranges[j][0] <= crange[0] && ranges[j][1] >= crange[1] {
+				log.Printf("Envelop %v in %v", ranges[j], crange)
+				crange = ranges[j]
+				found = true
+			}
+
+			if !found {
+				tranges = append(tranges, ranges[j])
+			}
+		}
+
+		nranges = append(nranges, crange)
+		ranges = tranges
+		log.Printf("New ranges: %v", ranges)
 	}
+
+	log.Printf("Collapse to: %v", nranges)
 	return nranges
 }
 
@@ -57,7 +97,6 @@ func (s *Server) Day5Part1(ctx context.Context, req *pb.SolveRequest) (*pb.Solve
 	for _, num := range numbers {
 		for _, rangev := range ranges {
 			if num >= rangev[0] && num <= rangev[1] {
-				log.Printf("Found %v in range %v", num, rangev)
 				sumv++
 				break
 			}

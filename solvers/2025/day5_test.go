@@ -48,7 +48,7 @@ func TestDay5Part2(t *testing.T) {
 		t.Fatalf("Unable to solve: %v", err)
 	}
 
-	if res.GetAnswer() != 14 {
-		t.Errorf("Expected 14, got %v", res.GetAnswer())
+	if res.GetBigAnswer() != 14 {
+		t.Errorf("Expected 14, got %v", res.GetBigAnswer())
 	}
 }
