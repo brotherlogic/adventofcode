@@ -32,7 +32,7 @@ func readData(data string) ([][]int64, []int64) {
 		if len(line) == 0 || strings.Contains(line, "-") {
 			continue
 		}
-		num, err := strconv.ParseInt(line, 10, 32)
+		num, err := strconv.ParseInt(line, 10, 64)
 		if err != nil {
 			log.Fatalf("Cannot parse line: %v -> %v", line, err)
 		}
