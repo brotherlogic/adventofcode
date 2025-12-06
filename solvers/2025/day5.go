@@ -123,7 +123,7 @@ func (s *Server) Day5Part2(ctx context.Context, req *pb.SolveRequest) (*pb.Solve
 
 	sumv := int64(0)
 	for _, rangev := range metaCollapse(ranges) {
-		sumv += rangev[1] - rangev[0]
+		sumv += rangev[1] - rangev[0] + 1
 	}
 
 	return &pb.SolveResponse{
