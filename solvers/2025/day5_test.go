@@ -52,3 +52,15 @@ func TestDay5Part2(t *testing.T) {
 		t.Errorf("Expected 14, got %v", res.GetBigAnswer())
 	}
 }
+
+func TestCollapseComplex(t *testing.T) {
+	var nums [][]int64
+	nums = append(nums, []int64{6, 20})
+	nums = append(nums, []int64{23, 200})
+	nums = append(nums, []int64{15, 25})
+
+	c := metaCollapse(nums)
+	if len(c) != 1 {
+		t.Errorf("Miscollapse of broken ranges: %v", c)
+	}
+}
