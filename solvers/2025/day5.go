@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"log"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -31,8 +32,9 @@ func collapseRanges(ranges [][]int64) [][]int64 {
 			// Does the top end lie in the middle of crange?
 			if ranges[j][1] <= crange[1] && ranges[j][1] >= crange[0] {
 				log.Printf("Top end %v in %v", ranges[j], crange)
-				if ranges[j][0] < crange[0] {
-					crange[0] = ranges[j][0]
+				if ranges[j][0] <= crange[0] {
+					crange[0] = min(ranges[j][0], crange[0])
+					log.Printf("Adjusted bottom to %v", crange[0])
 					found = true
 				}
 			}
@@ -40,8 +42,9 @@ func collapseRanges(ranges [][]int64) [][]int64 {
 			// Does the bottom end lie in the middle of crange
 			if ranges[j][0] <= crange[1] && ranges[j][0] >= crange[0] {
 				log.Printf("Bottom end %v in %v", ranges[j], crange)
-				if ranges[j][1] > crange[1] {
-					crange[1] = ranges[j][1]
+				if ranges[j][1] >= crange[1] {
+					crange[1] = max(ranges[j][1], crange[1])
+					log.Printf("Adjusted top to %v", crange[1])
 					found = true
 				}
 			}
@@ -56,6 +59,8 @@ func collapseRanges(ranges [][]int64) [][]int64 {
 			if !found {
 				tranges = append(tranges, ranges[j])
 			}
+
+			log.Printf("TRANGES %v", tranges)
 		}
 
 		nranges = append(nranges, crange)
@@ -63,7 +68,7 @@ func collapseRanges(ranges [][]int64) [][]int64 {
 		log.Printf("New ranges: %v", ranges)
 	}
 
-	log.Printf("Collapse to: %v", nranges)
+	//log.Printf("Collapse to: %v", nranges)
 	return nranges
 }
 
@@ -122,7 +127,12 @@ func (s *Server) Day5Part2(ctx context.Context, req *pb.SolveRequest) (*pb.Solve
 	ranges, _ := readData(req.GetData())
 
 	sumv := int64(0)
-	for _, rangev := range metaCollapse(ranges) {
+	vranges := metaCollapse(ranges)
+	sort.SliceStable(vranges, func(i, j int) bool {
+		return vranges[i][0] < vranges[j][0]
+	})
+	for _, rangev := range vranges {
+		log.Printf("%v; Range: %v: %v", sumv, rangev, rangev[1]-rangev[0]+1)
 		sumv += rangev[1] - rangev[0] + 1
 	}
 
