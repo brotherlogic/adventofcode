@@ -9,6 +9,16 @@ import (
 	pb "github.com/brotherlogic/adventofcode/proto"
 )
 
+func metaCollapse(ranges [][]int64) [][]int64 {
+	ll := len(ranges)
+	nr := collapseRanges(ranges)
+	for len(nr) != ll {
+		ll = len(nr)
+		nr = collapseRanges(nr)
+	}
+	return nr
+}
+
 func collapseRanges(ranges [][]int64) [][]int64 {
 	var nranges [][]int64
 	for len(ranges) > 0 {
@@ -112,8 +122,8 @@ func (s *Server) Day5Part2(ctx context.Context, req *pb.SolveRequest) (*pb.Solve
 	ranges, _ := readData(req.GetData())
 
 	sumv := int64(0)
-	for _, rangev := range collapseRanges(ranges) {
-		sumv += rangev[1] - rangev[0]
+	for _, rangev := range metaCollapse(ranges) {
+		sumv += rangev[1] - rangev[0] + 1
 	}
 
 	return &pb.SolveResponse{
