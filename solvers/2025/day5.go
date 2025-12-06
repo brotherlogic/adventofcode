@@ -131,9 +131,13 @@ func (s *Server) Day5Part2(ctx context.Context, req *pb.SolveRequest) (*pb.Solve
 	sort.SliceStable(vranges, func(i, j int) bool {
 		return vranges[i][0] < vranges[j][0]
 	})
-	for _, rangev := range vranges {
+	for i, rangev := range vranges {
 		log.Printf("%v; Range: %v: %v", sumv, rangev, rangev[1]-rangev[0]+1)
 		sumv += rangev[1] - rangev[0] + 1
+
+		if i > 0 && rangev[0] <= vranges[i-1][1] {
+			log.Printf("ERROR: %v -> %v", rangev, vranges[i-1])
+		}
 	}
 
 	return &pb.SolveResponse{

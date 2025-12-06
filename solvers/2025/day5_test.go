@@ -72,15 +72,15 @@ func TestCollapseComplex2(t *testing.T) {
 	s := &Server{}
 
 	res, err := s.Day5Part2(context.Background(), &pb.SolveRequest{
-		Data: `1-15
-1-10`,
+		Data: `1-10
+2-5`,
 	})
 
 	if err != nil {
 		t.Fatalf("Unable to solve: %v", err)
 	}
 
-	if res.GetBigAnswer() != 15 {
+	if res.GetBigAnswer() != 10 {
 		t.Errorf("Expected 15, got %v", res.GetBigAnswer())
 	}
 
