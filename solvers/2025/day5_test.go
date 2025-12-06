@@ -63,4 +63,25 @@ func TestCollapseComplex(t *testing.T) {
 	if len(c) != 1 {
 		t.Errorf("Miscollapse of broken ranges: %v", c)
 	}
+	if c[0][0] != int64(6) || c[0][1] != int64(200) {
+		t.Errorf("Miscollapse of broken ranges: %v", c)
+	}
+}
+
+func TestCollapseComplex2(t *testing.T) {
+	s := &Server{}
+
+	res, err := s.Day5Part2(context.Background(), &pb.SolveRequest{
+		Data: `1-15
+1-10`,
+	})
+
+	if err != nil {
+		t.Fatalf("Unable to solve: %v", err)
+	}
+
+	if res.GetBigAnswer() != 15 {
+		t.Errorf("Expected 15, got %v", res.GetBigAnswer())
+	}
+
 }

@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"log"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -63,7 +64,7 @@ func collapseRanges(ranges [][]int64) [][]int64 {
 		log.Printf("New ranges: %v", ranges)
 	}
 
-	log.Printf("Collapse to: %v", nranges)
+	//log.Printf("Collapse to: %v", nranges)
 	return nranges
 }
 
@@ -122,7 +123,12 @@ func (s *Server) Day5Part2(ctx context.Context, req *pb.SolveRequest) (*pb.Solve
 	ranges, _ := readData(req.GetData())
 
 	sumv := int64(0)
-	for _, rangev := range metaCollapse(ranges) {
+	vranges := metaCollapse(ranges)
+	sort.SliceStable(vranges, func(i, j int) bool {
+		return vranges[i][0] < vranges[j][0]
+	})
+	for _, rangev := range vranges {
+		log.Printf("%v; Range: %v: %v", sumv, rangev, rangev[1]-rangev[0]+1)
 		sumv += rangev[1] - rangev[0] + 1
 	}
 
