@@ -18,14 +18,14 @@ func TestDay6Part1(t *testing.T) {
 	s := &Server{}
 
 	res, err := s.Day6Part1(context.Background(), &pb.SolveRequest{
-		Data: day5,
+		Data: day6,
 	})
 
 	if err != nil {
 		t.Fatalf("Unable to solve: %v", err)
 	}
 
-	if res.GetAnswer() != 4277556 {
+	if res.GetBigAnswer() != 4277556 {
 		t.Errorf("Expected 4277556, got %v", res.GetAnswer())
 	}
 }
