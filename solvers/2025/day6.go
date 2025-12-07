@@ -58,3 +58,30 @@ func (s *Server) Day6Part1(ctx context.Context, req *pb.SolveRequest) (*pb.Solve
 		BigAnswer: sumv,
 	}, nil
 }
+
+func (s *Server) Day6Part2(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResponse, error) {
+	sumv := int64(0)
+
+	data, ops := buildGrid(req.GetData())
+
+	for i, op := range ops {
+		val := int64(0)
+		if op == "*" {
+			val = 1
+		}
+
+		for _, parts := range data {
+			if op == "*" {
+				val *= parts[i]
+			} else {
+				val += parts[i]
+			}
+		}
+
+		sumv += val
+	}
+
+	return &pb.SolveResponse{
+		BigAnswer: sumv,
+	}, nil
+}
