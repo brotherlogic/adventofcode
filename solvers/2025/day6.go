@@ -16,7 +16,7 @@ func buildGrid(grid string) ([][]int64, []string) {
 	for _, line := range strings.Split(grid, "\n") {
 		if strings.Contains(line, "*") {
 			ops = strings.Fields(line)
-		} else {
+		} else if len(line) > 0 {
 			var numline []int64
 			for _, num := range strings.Fields(line) {
 				val, err := strconv.ParseInt(num, 10, 64)
