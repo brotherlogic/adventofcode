@@ -29,3 +29,19 @@ func TestDay6Part1(t *testing.T) {
 		t.Errorf("Expected 4277556, got %v", res.GetAnswer())
 	}
 }
+
+func TestDay6Part2(t *testing.T) {
+	s := &Server{}
+
+	res, err := s.Day6Part2(context.Background(), &pb.SolveRequest{
+		Data: day6,
+	})
+
+	if err != nil {
+		t.Fatalf("Unable to solve: %v", err)
+	}
+
+	if res.GetBigAnswer() != 3263827 {
+		t.Errorf("Expected 3263827, got %v", res.GetBigAnswer())
+	}
+}
