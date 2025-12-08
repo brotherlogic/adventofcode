@@ -125,6 +125,7 @@ func runDay8Part1(req *pb.SolveRequest, maxv int) (*pb.SolveResponse, error) {
 	log.Printf("%v", circuits)
 
 	circuits = collapse(circuits)
+	circuits = collapse(circuits)
 
 	log.Printf("%v", circuits)
 
