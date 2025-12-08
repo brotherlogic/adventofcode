@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"log"
 	"strings"
 
 	pb "github.com/brotherlogic/adventofcode/proto"
@@ -27,8 +26,6 @@ func buildSplitGrid(data string) [][]int {
 		grid = append(grid, row)
 	}
 
-	log.Printf("Built grid: %v", grid)
-
 	return grid
 }
 
@@ -51,8 +48,6 @@ func (s *Server) Day7Part1(ctx context.Context, req *pb.SolveRequest) (*pb.Solve
 		}
 	}
 
-	log.Printf("Got to %v", grid[len(grid)-1])
-
 	return &pb.SolveResponse{Answer: int32(splits)}, nil
 }
 
@@ -72,8 +67,6 @@ func (s *Server) Day7Part2(ctx context.Context, req *pb.SolveRequest) (*pb.Solve
 			}
 		}
 	}
-
-	log.Printf("Got to %v", grid[len(grid)-1])
 
 	sumv := int32(0)
 	for _, val := range grid[len(grid)-1] {
