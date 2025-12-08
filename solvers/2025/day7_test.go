@@ -1,0 +1,43 @@
+package main
+
+import (
+	"context"
+	"testing"
+
+	pb "github.com/brotherlogic/adventofcode/proto"
+)
+
+const (
+	day7TestInput = `.......S.......
+...............
+.......^.......
+...............
+......^.^......
+...............
+.....^.^.^.....
+...............
+....^.^...^....
+...............
+...^.^...^.^...
+...............
+..^...^.....^..
+...............
+.^.^.^.^.^...^.
+...............`
+)
+
+func TestDay7Part1(t *testing.T) {
+	s := &Server{}
+
+	res, err := s.Day7Part1(context.Background(), &pb.SolveRequest{
+		Data: day7TestInput,
+	})
+
+	if err != nil {
+		t.Fatalf("Unable to solve: %v", err)
+	}
+
+	if res.GetAnswer() != 21 {
+		t.Errorf("Expected 21, got %v", res.GetAnswer())
+	}
+}
