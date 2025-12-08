@@ -118,7 +118,6 @@ func resolveAdvanced(numv []string, op string) int64 {
 	if op == "*" {
 		sumv = 1
 	}
-	log.Printf("Proc %v", numv)
 
 	for offset := 0; offset < len(numv[0]); offset++ {
 		nnum := ""
@@ -127,7 +126,6 @@ func resolveAdvanced(numv []string, op string) int64 {
 				nnum += string(numvv[offset])
 			}
 		}
-		log.Printf("Found %v", nnum)
 		if len(nnum) > 0 {
 			val, err := strconv.ParseInt(nnum, 10, 64)
 			if err != nil {
@@ -152,7 +150,6 @@ func (s *Server) Day6Part2(ctx context.Context, req *pb.SolveRequest) (*pb.Solve
 	for i, op := range ops {
 		var numv []string
 		for _, parts := range data {
-			log.Printf("Processing '%v'", parts)
 			numv = append(numv, parts[i])
 		}
 
