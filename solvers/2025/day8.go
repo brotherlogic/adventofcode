@@ -92,6 +92,27 @@ func collapse(circuits []map[int]bool) []map[int]bool {
 	return circuits
 }
 
+func (s *Server) Day8Part2(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResponse, error) {
+	distGrid := buildDistanceGridAndArray(req.GetData())
+
+	sort.SliceStable(distGrid, func(x, y int) bool {
+		return distGrid[x].dist < distGrid[y].dist
+	})
+
+	var circuits []map[int]bool
+
+	fv := 0
+	for i := range distGrid {
+		fv = i
+		seenx, seeny := 0, 0
+		for _, sets := range circuits {
+
+		}
+	}
+
+	return &pb.SolveResponse{Answer: int32(distGrid[fv].coords1[0] * distGrid[fv].coords2[0])}, nil
+}
+
 func runDay8Part1(req *pb.SolveRequest, maxv int) (*pb.SolveResponse, error) {
 	distGrid := buildDistanceGridAndArray(req.GetData())
 
