@@ -1,0 +1,136 @@
+package main
+
+import (
+	"context"
+	"log"
+	"math"
+	"sort"
+	"strconv"
+	"strings"
+
+	pb "github.com/brotherlogic/adventofcode/proto"
+)
+
+type dist struct {
+	index1  int
+	index2  int
+	coords1 []int64
+	coords2 []int64
+	dist    float64
+}
+
+func computeDist(a, b []int64) float64 {
+	return math.Sqrt(float64(((a[0] - b[0]) * (a[0] - b[0])) +
+		((a[1] - b[1]) * (a[1] - b[1])) +
+		((a[2] - b[2]) * (a[2] - b[2]))))
+}
+
+func buildDistanceGridAndArray(data string) []*dist {
+	var numarr [][]int64
+	var resarr []*dist
+
+	for _, line := range strings.Split(data, "\n") {
+		var row []int64
+		for _, piece := range strings.Split(line, ",") {
+			num, err := strconv.ParseInt(piece, 10, 64)
+			if err != nil {
+				log.Fatalf("Cannot parse line: %v -> %v", line, err)
+			}
+			row = append(row, num)
+		}
+		numarr = append(numarr, row)
+	}
+
+	for i := 0; i < len(numarr); i++ {
+		for j := i + 1; j < len(numarr); j++ {
+			d := &dist{
+				index1:  i,
+				index2:  j,
+				coords1: numarr[i],
+				coords2: numarr[j],
+				dist:    computeDist(numarr[i], numarr[j]),
+			}
+
+			resarr = append(resarr, d)
+		}
+	}
+
+	return resarr
+}
+
+func (s *Server) Day8Part1(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResponse, error) {
+	return runDay8Part1(req, 1000)
+}
+
+func collapse(circuits []map[int]bool) []map[int]bool {
+	for i := 0; i < len(circuits); i++ {
+		for j := i + 1; j < len(circuits); j++ {
+			found := false
+			for val, _ := range circuits[j] {
+				for vval, _ := range circuits[i] {
+					if val == vval {
+						found = true
+						break
+					}
+				}
+				if found {
+					break
+				}
+			}
+			if found {
+				for val, _ := range circuits[j] {
+					circuits[i][val] = true
+					delete(circuits[j], val)
+				}
+			}
+		}
+	}
+
+	return circuits
+}
+
+func runDay8Part1(req *pb.SolveRequest, maxv int) (*pb.SolveResponse, error) {
+	distGrid := buildDistanceGridAndArray(req.GetData())
+
+	sort.SliceStable(distGrid, func(x, y int) bool {
+		return distGrid[x].dist < distGrid[y].dist
+	})
+
+	var circuits []map[int]bool
+
+	for i := range maxv {
+		placed := false
+		for _, circuit := range circuits {
+			for val, _ := range circuit {
+				if val == distGrid[i].index1 || val == distGrid[i].index2 {
+					placed = true
+					if val == distGrid[i].index1 || val == distGrid[i].index2 {
+						circuit[distGrid[i].index1] = true
+						circuit[distGrid[i].index2] = true
+					}
+					break
+				}
+			}
+		}
+		if !placed {
+			circuits = append(circuits, make(map[int]bool))
+			circuits[len(circuits)-1][distGrid[i].index1] = true
+			circuits[len(circuits)-1][distGrid[i].index2] = true
+		}
+	}
+
+	log.Printf("%v", circuits)
+
+	circuits = collapse(circuits)
+
+	log.Printf("%v", circuits)
+
+	var sizes []int
+	for _, circuit := range circuits {
+		sizes = append(sizes, len(circuit))
+	}
+	sort.Ints(sizes)
+	log.Printf("Now: %v", sizes)
+
+	return &pb.SolveResponse{Answer: int32(sizes[len(sizes)-1] * sizes[len(sizes)-2] * sizes[len(sizes)-3])}, nil
+}

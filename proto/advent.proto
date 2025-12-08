@@ -38,6 +38,7 @@ message SolveRequest {
     int32 day = 2;
     int32 part = 3;
     string data = 4;
+    int32 test_override = 5;
 }
 
 message SolveResponse {
