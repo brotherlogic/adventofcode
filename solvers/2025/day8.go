@@ -59,42 +59,78 @@ func buildDistanceGridAndArray(data string) []*dist {
 }
 
 func (s *Server) Day8Part1(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResponse, error) {
-	return runDay8Part1(req, 10)
+	return runDay8Part1(req, 1000)
+}
+
+func collapse(circuits []map[int]bool) []map[int]bool {
+	for i := 0; i < len(circuits); i++ {
+		for j := i + 1; j < len(circuits); j++ {
+			found := false
+			for val, _ := range circuits[j] {
+				for vval, _ := range circuits[i] {
+					if val == vval {
+						found = true
+						break
+					}
+				}
+				if found {
+					break
+				}
+			}
+			if found {
+				for val, _ := range circuits[j] {
+					circuits[i][val] = true
+					delete(circuits[j], val)
+				}
+			}
+		}
+	}
+
+	return circuits
 }
 
 func runDay8Part1(req *pb.SolveRequest, maxv int) (*pb.SolveResponse, error) {
-	sumv := int32(0)
-
 	distGrid := buildDistanceGridAndArray(req.GetData())
 
 	sort.SliceStable(distGrid, func(x, y int) bool {
 		return distGrid[x].dist < distGrid[y].dist
 	})
 
-	var circuits [][]int
+	var circuits []map[int]bool
 
 	for i := range maxv {
 		placed := false
 		for _, circuit := range circuits {
-			for _, val := range circuit {
+			for val, _ := range circuit {
 				if val == distGrid[i].index1 || val == distGrid[i].index2 {
 					placed = true
-					circuit = append(circuit, distGrid[i].index1)
-					circuit = append(circuit, distGrid[i].index2}
+					if val == distGrid[i].index1 || val == distGrid[i].index2 {
+						circuit[distGrid[i].index1] = true
+						circuit[distGrid[i].index2] = true
+					}
 					break
 				}
 			}
-			if placed {
-				break
-			}
 		}
-
 		if !placed {
-			circuits = append(circuits, []int{distGrid[i].index1, distGrid[i].index2})
+			circuits = append(circuits, make(map[int]bool))
+			circuits[len(circuits)-1][distGrid[i].index1] = true
+			circuits[len(circuits)-1][distGrid[i].index2] = true
 		}
 	}
 
 	log.Printf("%v", circuits)
 
-	return &pb.SolveResponse{Answer: sumv}, nil
+	circuits = collapse(circuits)
+
+	log.Printf("%v", circuits)
+
+	var sizes []int
+	for _, circuit := range circuits {
+		sizes = append(sizes, len(circuit))
+	}
+	sort.Ints(sizes)
+	log.Printf("Now: %v", sizes)
+
+	return &pb.SolveResponse{Answer: int32(sizes[len(sizes)-1] * sizes[len(sizes)-2] * sizes[len(sizes)-3])}, nil
 }
