@@ -30,6 +30,9 @@ func buildDistanceGridAndArray(data string) []*dist {
 	var resarr []*dist
 
 	for _, line := range strings.Split(data, "\n") {
+		if line == "" {
+			continue
+		}
 		var row []int64
 		for _, piece := range strings.Split(line, ",") {
 			num, err := strconv.ParseInt(piece, 10, 64)
