@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"testing"
 
 	pb "github.com/brotherlogic/adventofcode/proto"
@@ -31,11 +30,9 @@ const (
 )
 
 func TestDay8Part1(t *testing.T) {
-	s := &Server{}
-
-	res, err := s.Day8Part1(context.Background(), &pb.SolveRequest{
+	res, err := runDay8Part1(&pb.SolveRequest{
 		Data: day8TestInput,
-	})
+	}, 10)
 
 	if err != nil {
 		t.Fatalf("Unable to solve: %v", err)
