@@ -101,16 +101,53 @@ func (s *Server) Day8Part2(ctx context.Context, req *pb.SolveRequest) (*pb.Solve
 
 	var circuits []map[int]bool
 
-	fv := 0
-	for i := range distGrid {
-		fv = i
-		seenx, seeny := 0, 0
-		for _, sets := range circuits {
+	var fv *dist
+	for _, dg := range distGrid {
+		fv = dg
+		if len(circuits) == len(distGrid) {
+			break
+		}
 
+		seen1, seen2 := -1, -1
+		for i, sets := range circuits {
+			for val := range sets {
+				if val == dg.index1 {
+					seen1 = i
+				}
+				if val == dg.index2 {
+					seen2 = i
+				}
+			}
+		}
+
+		if seen1 >= 0 && seen2 < 0 {
+			circuits[seen1][dg.index2] = true
+		}
+
+		if seen2 >= 0 && seen1 < 0 {
+			circuits[seen2][dg.index1] = true
+		}
+
+		if seen1 >= 0 && seen2 >= 0 {
+			var nc map[int]bool
+			for val := range circuits[seen1] {
+				nc[val] = true
+			}
+			for val := range circuits[seen2] {
+				nc[val] = true
+			}
+			var ncircuits []map[int]bool
+			for i := range circuits {
+				if i != seen1 && i != seen2 {
+					ncircuits = append(ncircuits, circuits[i])
+				}
+			}
+			ncircuits = append(ncircuits, nc)
+			circuits = ncircuits
 		}
 	}
 
-	return &pb.SolveResponse{Answer: int32(distGrid[fv].coords1[0] * distGrid[fv].coords2[0])}, nil
+	return &pb.SolveResponse{Answer: int32(fv.coords1[0] * fv.coords2[0])}, nil
 }
 
 func runDay8Part1(req *pb.SolveRequest, maxv int) (*pb.SolveResponse, error) {
