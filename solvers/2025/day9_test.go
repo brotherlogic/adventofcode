@@ -33,3 +33,11 @@ func TestDay9Part1(t *testing.T) {
 		t.Errorf("Expected 50, got %v", res.GetAnswer())
 	}
 }
+
+func TestRectangle(t *testing.T) {
+	rect := getRectangle([]int64{2, 5}, []int64{9, 7})
+
+	if rect != 24 {
+		t.Errorf("Bad rectangle: %v", rect)
+	}
+}
