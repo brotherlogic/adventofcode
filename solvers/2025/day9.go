@@ -9,6 +9,51 @@ import (
 	pb "github.com/brotherlogic/adventofcode/proto"
 )
 
+// Easier because these are all straightlines
+func lineIntersects(ls, le, ps, pe []int) bool {
+	if ls[0] == le[0] && ps[0] == pe[0] {
+		// L is vertical, P is verticaal
+		return false
+	}
+
+	if ls[1] == le[1] && ps[1] == pe[1] {
+		// L is horizontal, P is vertical
+		return false
+	}
+
+	if ls[0] == le[0] {
+		// L is vertical, P is horizontal
+		if ps[0] > pe[0] {
+			if ls[0] < ps[0] && ls[0] > pe[0] {
+				return true
+			}
+		}
+
+		if ps[0] < pe[0] {
+			if ls[0] > ps[0] && ls[0] < pe[0] {
+				return true
+			}
+		}
+	}
+
+	if ls[1] == le[1] {
+		// L is vertical, P is horizontal
+		if ps[1] > pe[1] {
+			if ls[1] < ps[1] && ls[1] > pe[1] {
+				return true
+			}
+		}
+
+		if ps[0] < pe[0] {
+			if ls[1] > ps[1] && ls[1] < pe[1] {
+				return true
+			}
+		}
+	}
+
+	return false
+}
+
 func buildCoords(data string) [][]int64 {
 	var coords [][]int64
 
