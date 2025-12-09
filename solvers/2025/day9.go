@@ -51,10 +51,11 @@ func (s *Server) Day9Part1(ctx context.Context, req *pb.SolveRequest) (*pb.Solve
 		for _, br := range coords[i+1:] {
 			rect := getRectangle(tl, br)
 			if rect > best {
+				log.Printf("Getting %v -> %v: %v / %v", tl, br, getRectangle(tl, br), getRectangle(br, tl))
 				best = rect
 			}
 		}
 	}
 
-	return &pb.SolveResponse{Answer: int32(best)}, nil
+	return &pb.SolveResponse{BigAnswer: best}, nil
 }

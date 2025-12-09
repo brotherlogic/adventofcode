@@ -29,15 +29,15 @@ func TestDay9Part1(t *testing.T) {
 		t.Fatalf("Unable to solve: %v", err)
 	}
 
-	if res.GetAnswer() != 50 {
-		t.Errorf("Expected 50, got %v", res.GetAnswer())
+	if res.GetBigAnswer() != 50 {
+		t.Errorf("Expected 50, got %v", res.GetBigAnswer())
 	}
 }
 
 func TestRectangle(t *testing.T) {
-	rect := getRectangle([]int64{2, 5}, []int64{9, 7})
+	rect := getRectangle([]int64{11, 7}, []int64{7, 1})
 
-	if rect != 24 {
+	if rect != 35 {
 		t.Errorf("Bad rectangle: %v", rect)
 	}
 }
