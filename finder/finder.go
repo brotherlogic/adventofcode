@@ -431,7 +431,7 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 		f.removeLabel(ctx, "Cookie Missing", issue)
 
 		log.Printf("Got %v and we already have %v", err, issue.LastErrorCode)
-		if status.Code(err) == codes.Internal && issue.LastErrorCode != fmt.Sprintf("%v", err) {
+		if (status.Code(err) == codes.ResourceExhausted || status.Code(err) == codes.Internal) && issue.LastErrorCode != fmt.Sprintf("%v", err) {
 			issue.LastErrorCode = fmt.Sprintf("%v", err)
 			_, err = f.ghclient.CommentOnIssue(ctx, &ghbpb.CommentOnIssueRequest{
 				User:    "brotherlogic",
