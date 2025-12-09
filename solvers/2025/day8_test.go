@@ -8,7 +8,8 @@ import (
 )
 
 const (
-	day8TestInput = `162,817,812
+	day8TestInput = `
+162,817,812
 57,618,57
 906,360,560
 592,479,940
@@ -31,11 +32,9 @@ const (
 )
 
 func TestDay8Part1(t *testing.T) {
-	s := &Server{}
-
-	res, err := s.Day8Part1(context.Background(), &pb.SolveRequest{
+	res, err := runDay8Part1(&pb.SolveRequest{
 		Data: day8TestInput,
-	})
+	}, 10)
 
 	if err != nil {
 		t.Fatalf("Unable to solve: %v", err)
@@ -43,5 +42,20 @@ func TestDay8Part1(t *testing.T) {
 
 	if res.GetAnswer() != 40 {
 		t.Errorf("Expected 40, got %v", res.GetAnswer())
+	}
+}
+
+func TestDay8Part2(t *testing.T) {
+	s := &Server{}
+	res, err := s.Day8Part2(context.Background(), &pb.SolveRequest{
+		Data: day8TestInput,
+	})
+
+	if err != nil {
+		t.Fatalf("Unable to solve: %v", err)
+	}
+
+	if res.GetAnswer() != 25272 {
+		t.Errorf("Expected 25272, got %v", res.GetAnswer())
 	}
 }
