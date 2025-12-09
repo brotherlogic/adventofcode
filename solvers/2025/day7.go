@@ -7,11 +7,11 @@ import (
 	pb "github.com/brotherlogic/adventofcode/proto"
 )
 
-func buildSplitGrid(data string) [][]int {
-	var grid [][]int
+func buildSplitGrid(data string) [][]int64 {
+	var grid [][]int64
 
 	for _, line := range strings.Split(data, "\n") {
-		var row []int
+		var row []int64
 		for _, char := range line {
 			switch char {
 			case '.':
@@ -68,10 +68,10 @@ func (s *Server) Day7Part2(ctx context.Context, req *pb.SolveRequest) (*pb.Solve
 		}
 	}
 
-	sumv := int32(0)
+	sumv := int64(0)
 	for _, val := range grid[len(grid)-1] {
-		sumv += int32(val)
+		sumv += val
 	}
 
-	return &pb.SolveResponse{Answer: int32(sumv)}, nil
+	return &pb.SolveResponse{BigAnswer: sumv}, nil
 }
