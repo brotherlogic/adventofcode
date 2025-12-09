@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"testing"
 
 	pb "github.com/brotherlogic/adventofcode/proto"
@@ -27,8 +28,7 @@ const (
 941,993,340
 862,61,35
 984,92,344
-425,690,689
-`
+425,690,689`
 )
 
 func TestDay8Part1(t *testing.T) {
@@ -42,5 +42,20 @@ func TestDay8Part1(t *testing.T) {
 
 	if res.GetAnswer() != 40 {
 		t.Errorf("Expected 40, got %v", res.GetAnswer())
+	}
+}
+
+func TestDay8Part2(t *testing.T) {
+	s := &Server{}
+	res, err := s.Day8Part2(context.Background(), &pb.SolveRequest{
+		Data: day8TestInput,
+	})
+
+	if err != nil {
+		t.Fatalf("Unable to solve: %v", err)
+	}
+
+	if res.GetAnswer() != 25272 {
+		t.Errorf("Expected 25272, got %v", res.GetAnswer())
 	}
 }

@@ -25,7 +25,7 @@ func computeDist(a, b []int64) float64 {
 		((a[2] - b[2]) * (a[2] - b[2]))))
 }
 
-func buildDistanceGridAndArray(data string) []*dist {
+func buildDistanceGridAndArray(data string) ([]*dist, int) {
 	var numarr [][]int64
 	var resarr []*dist
 
@@ -58,7 +58,7 @@ func buildDistanceGridAndArray(data string) []*dist {
 		}
 	}
 
-	return resarr
+	return resarr, len(numarr)
 }
 
 func (s *Server) Day8Part1(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResponse, error) {
@@ -92,8 +92,73 @@ func collapse(circuits []map[int]bool) []map[int]bool {
 	return circuits
 }
 
+func (s *Server) Day8Part2(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResponse, error) {
+	distGrid, maxv := buildDistanceGridAndArray(req.GetData())
+
+	sort.SliceStable(distGrid, func(x, y int) bool {
+		return distGrid[x].dist < distGrid[y].dist
+	})
+
+	var circuits []map[int]bool
+
+	var fv *dist
+	for _, dg := range distGrid {
+		if len(circuits) == 1 && len(circuits[0]) == maxv {
+			break
+		}
+		fv = dg
+
+		seen1, seen2 := -1, -1
+		for i, sets := range circuits {
+			for val := range sets {
+				if val == dg.index1 {
+					seen1 = i
+				}
+				if val == dg.index2 {
+					seen2 = i
+				}
+			}
+		}
+
+		if seen1 >= 0 && seen2 < 0 {
+			circuits[seen1][dg.index2] = true
+		}
+
+		if seen2 >= 0 && seen1 < 0 {
+			circuits[seen2][dg.index1] = true
+		}
+
+		if seen1 >= 0 && seen2 >= 0 {
+			nc := make(map[int]bool)
+			for val := range circuits[seen1] {
+				nc[val] = true
+			}
+			for val := range circuits[seen2] {
+				nc[val] = true
+			}
+			var ncircuits []map[int]bool
+			for i := range circuits {
+				if i != seen1 && i != seen2 {
+					ncircuits = append(ncircuits, circuits[i])
+				}
+			}
+			ncircuits = append(ncircuits, nc)
+			circuits = ncircuits
+		}
+
+		if seen1 < 0 && seen2 < 0 {
+			temp := make(map[int]bool)
+			temp[dg.index1] = true
+			temp[dg.index2] = true
+			circuits = append(circuits, temp)
+		}
+	}
+
+	return &pb.SolveResponse{Answer: int32(fv.coords1[0] * fv.coords2[0])}, nil
+}
+
 func runDay8Part1(req *pb.SolveRequest, maxv int) (*pb.SolveResponse, error) {
-	distGrid := buildDistanceGridAndArray(req.GetData())
+	distGrid, _ := buildDistanceGridAndArray(req.GetData())
 
 	sort.SliceStable(distGrid, func(x, y int) bool {
 		return distGrid[x].dist < distGrid[y].dist
@@ -124,6 +189,7 @@ func runDay8Part1(req *pb.SolveRequest, maxv int) (*pb.SolveResponse, error) {
 
 	log.Printf("%v", circuits)
 
+	circuits = collapse(circuits)
 	circuits = collapse(circuits)
 
 	log.Printf("%v", circuits)
