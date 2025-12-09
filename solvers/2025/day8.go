@@ -154,7 +154,7 @@ func (s *Server) Day8Part2(ctx context.Context, req *pb.SolveRequest) (*pb.Solve
 		}
 	}
 
-	return &pb.SolveResponse{Answer: int32(fv.coords1[0] * fv.coords2[0])}, nil
+	return &pb.SolveResponse{BigAnswer: fv.coords1[0] * fv.coords2[0]}, nil
 }
 
 func runDay8Part1(req *pb.SolveRequest, maxv int) (*pb.SolveResponse, error) {
