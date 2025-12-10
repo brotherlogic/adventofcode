@@ -55,7 +55,7 @@ func buildJoltage(piece string) []int {
 func buildLine(line string) ([]bool, [][]int, []int) {
 	elems := strings.Fields(strings.TrimSpace(line))
 
-	return buildLights(elems[0]), buildSwitches(elems[1 : len(elems)-2]), buildJoltage(elems[len(elems)-1])
+	return buildLights(elems[0]), buildSwitches(elems[1 : len(elems)-1]), buildJoltage(elems[len(elems)-1])
 }
 
 type state struct {
@@ -74,10 +74,6 @@ func copy(val []bool) []bool {
 func runBest(goal []bool, q []*state, switches [][]int) *state {
 	nb := q[0]
 	qr := q[1:]
-	log.Printf("Running %+v", nb)
-	if nb.count > 4 {
-		return nil
-	}
 
 	found := true
 	for i := range len(goal) {
@@ -92,10 +88,11 @@ func runBest(goal []bool, q []*state, switches [][]int) *state {
 
 	for _, switchs := range switches {
 		na := copy(nb.lstate)
-		log.Printf("%v -> %v", na, switchs)
 		for _, sv := range switchs {
 			na[sv] = !na[sv]
 		}
+
+		//log.Printf("Applying %v -> %v:%v", switchs, nb.lstate, na)
 
 		qr = append(qr, &state{
 			lstate: na,
@@ -122,6 +119,7 @@ func (s *Server) Day10Part1(_ context.Context, req *pb.SolveRequest) (*pb.SolveR
 
 	for _, line := range strings.Split(strings.TrimSpace(req.GetData()), "\n") {
 		sumv += computeLine(line)
+		log.Printf("NOW %v", sumv)
 	}
 
 	return &pb.SolveResponse{Answer: sumv}, nil
