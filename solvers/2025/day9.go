@@ -10,7 +10,7 @@ import (
 )
 
 // Easier because these are all straightlines
-func lineIntersects(ls, le, ps, pe []int) bool {
+func lineIntersects(ls, le, ps, pe []int64) bool {
 	if ls[0] == le[0] && ps[0] == pe[0] {
 		// L is vertical, P is verticaal
 		return false
@@ -101,6 +101,54 @@ func (s *Server) Day9Part1(ctx context.Context, req *pb.SolveRequest) (*pb.Solve
 		for _, br := range coords[i+1:] {
 			rect := getRectangle(tl, br)
 			if rect > best {
+				log.Printf("Getting %v -> %v: %v / %v", tl, br, getRectangle(tl, br), getRectangle(br, tl))
+				best = rect
+			}
+		}
+	}
+
+	return &pb.SolveResponse{BigAnswer: best}, nil
+}
+
+func intersect(x1, y1, x2, y2 int64, coords [][]int64) bool {
+	for i := 0; i < len(coords)-2; i++ {
+		if lineIntersects([]int64{x1, y1}, []int64{x2, y2}, coords[i], coords[i+1]) {
+			return true
+		}
+	}
+	return false
+}
+
+func rectangleIntersects(tl, br []int64, coords [][]int64) bool {
+	if intersect(tl[0], tl[1], tl[0], br[1], coords) {
+		return true
+	}
+
+	if intersect(tl[0], br[1], br[0], br[1], coords) {
+		return true
+	}
+
+	if intersect(br[0], br[1], tl[0], br[1], coords) {
+		return true
+	}
+
+	if intersect(tl[0], br[1], tl[0], tl[1], coords) {
+		return true
+	}
+	return false
+}
+
+func (s *Server) Day9Part2(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResponse, error) {
+	best := int64(0)
+
+	coords := buildCoords(req.GetData())
+	for i, tl := range coords {
+		for _, br := range coords[i+1:] {
+			rect := getRectangle(tl, br)
+
+			intersects := rectangleIntersects(tl, br, coords)
+
+			if intersects && rect > best {
 				log.Printf("Getting %v -> %v: %v / %v", tl, br, getRectangle(tl, br), getRectangle(br, tl))
 				best = rect
 			}
