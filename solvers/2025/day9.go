@@ -17,39 +17,44 @@ func lineIntersects(ls, le, ps, pe []int) bool {
 	}
 
 	if ls[1] == le[1] && ps[1] == pe[1] {
-		// L is horizontal, P is vertical
+		// L is horizontal, P is horizontal
 		return false
 	}
 
 	if ls[0] == le[0] {
 		// L is vertical, P is horizontal
+		log.Printf("VH")
 		if ps[0] > pe[0] {
 			if ls[0] < ps[0] && ls[0] > pe[0] {
+				log.Printf("C1")
 				return true
 			}
 		}
 
 		if ps[0] < pe[0] {
 			if ls[0] > ps[0] && ls[0] < pe[0] {
+				log.Printf("C2")
 				return true
 			}
 		}
 	}
 
 	if ls[1] == le[1] {
-		// L is vertical, P is horizontal
-		if ps[1] > pe[1] {
-			if ls[1] < ps[1] && ls[1] > pe[1] {
-				return true
-			}
-		}
+		log.Printf("HV %v %v", ps, pe)
+		// L is horiztonal, P is vertical
+		cx, cy := ps[1], ls[0]
 
-		if ps[0] < pe[0] {
-			if ls[1] > ps[1] && ls[1] < pe[1] {
-				return true
-			}
+		xin := false
+		yin := false
+		if ls[0] > ls[1] && (cx <= ls[0] && cx >= ls[1]) {
+			xin = true
+		}
+		if ls[0] < ls[1] && (cx >= ls[0] && cx <= ls[1]) {
+			xin = true
 		}
 	}
+
+	log.Printf("NONE")
 
 	return false
 }

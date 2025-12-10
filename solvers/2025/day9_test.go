@@ -41,3 +41,15 @@ func TestRectangle(t *testing.T) {
 		t.Errorf("Bad rectangle: %v", rect)
 	}
 }
+
+func TestIntersection(t *testing.T) {
+	i := lineIntersects([]int{2, 2}, []int{10, 2}, []int{5, 5}, []int{5, 2})
+	if !i {
+		t.Errorf("Line should intersect")
+	}
+
+	i = lineIntersects([]int{5, 2}, []int{10, 2}, []int{5, 5}, []int{5, 2})
+	if i {
+		t.Errorf("Line should not intersect")
+	}
+}
