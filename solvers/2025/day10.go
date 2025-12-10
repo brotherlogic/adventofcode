@@ -23,36 +23,36 @@ func buildLights(lights string) []bool {
 	return ret
 }
 
-func buildSwitches(switches []string) [][]int {
-	var res [][]int
+func buildSwitches(switches []string) [][]int64 {
+	var res [][]int64
 	for _, entry := range switches {
 		pieces := strings.Split(entry[1:len(entry)-1], ",")
-		var comb []int
+		var comb []int64
 		for _, piece := range pieces {
 			val, err := strconv.ParseInt(piece, 10, 64)
 			if err != nil {
 				log.Fatalf("Cannot parse: %v;%v -> %v", switches, piece, err)
 			}
-			comb = append(comb, int(val))
+			comb = append(comb, int64(val))
 		}
 		res = append(res, comb)
 	}
 	return res
 }
 
-func buildJoltage(piece string) []int {
-	var res []int
+func buildJoltage(piece string) []int64 {
+	var res []int64
 	for _, c := range strings.Split(piece[1:len(piece)-1], ",") {
 		val, err := strconv.ParseInt(c, 10, 64)
 		if err != nil {
 			log.Fatalf("Cannot parse: %v -> %v", piece, err)
 		}
-		res = append(res, int(val))
+		res = append(res, int64(val))
 	}
 	return res
 }
 
-func buildLine(line string) ([]bool, [][]int, []int) {
+func buildLine(line string) ([]bool, [][]int64, []int64) {
 	elems := strings.Fields(strings.TrimSpace(line))
 
 	return buildLights(elems[0]), buildSwitches(elems[1 : len(elems)-1]), buildJoltage(elems[len(elems)-1])
@@ -71,7 +71,7 @@ func copy(val []bool) []bool {
 	return nval
 }
 
-func runBest(goal []bool, q []*state, switches [][]int) *state {
+func runBest(goal []bool, q []*state, switches [][]int64) *state {
 	nb := q[0]
 	qr := q[1:]
 
