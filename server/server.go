@@ -54,7 +54,7 @@ var (
 	solveTimes = promauto.NewHistogramVec(prometheus.HistogramOpts{
 		Name:    "adventofcode_times",
 		Help:    "The size of the print queue",
-		Buckets: []float64{1, 10, 100, 1000, 2000, 4000, 8000, 16000, 32000, 64000},
+		Buckets: []float64{1, 10, 100, 1000, 2000, 4000, 8000, 16000, 32000, 64000, 128000, 256000, 512000},
 	}, []string{"puzzle", "result"})
 
 	startupTimes = promauto.NewGaugeVec(prometheus.GaugeOpts{
