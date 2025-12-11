@@ -58,7 +58,7 @@ func TestRectangle(t *testing.T) {
 
 func TestIntersection(t *testing.T) {
 
-	i := lineIntersects([]int64{2, 1}, []int64{2, 5}, []int64{2, 3}, []int64{3, 7})
+	i := lineIntersects([]int64{11, 1}, []int64{2, 1}, []int64{7, 3}, []int64{7, 1})
 	if !i {
 		t.Errorf("Line should intersect")
 	}

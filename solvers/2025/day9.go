@@ -24,7 +24,7 @@ func lineIntersects(ls, le, ps, pe []int64) bool {
 
 	if ls[0] == le[0] {
 		// L is vertical, P is horizontal
-		//log.Printf("LH")
+		log.Printf("LH")
 		cx, cy := ls[0], ps[1]
 
 		xin := false
@@ -58,7 +58,9 @@ func lineIntersects(ls, le, ps, pe []int64) bool {
 	if ls[1] == le[1] {
 		// L is horiztonal, P is vertical
 		log.Printf("HV")
-		cx, cy := ls[1], ps[0]
+		cx, cy := ps[0], ls[1]
+
+		log.Printf("Crosspoint %v %v", cx, cy)
 
 		xin := false
 		yin := false
@@ -75,14 +77,12 @@ func lineIntersects(ls, le, ps, pe []int64) bool {
 			yin = true
 		}
 
+		log.Printf("%v %v", xin, yin)
+
 		if xin && yin {
 			log.Printf("%v,%v -> %v or %v | %v or %v", cx, cy, ls, le, ps, pe)
 			// Not an intersection if one of the crosspoints is at a corner
 			if (cx == ls[0] && cy == ls[1]) || (cx == le[0] && cy == le[1]) {
-				return false
-			}
-
-			if (cx == ps[0] && cy == ps[1]) || (cx == pe[0] && cy == pe[1]) {
 				return false
 			}
 
@@ -145,12 +145,15 @@ func (s *Server) Day9Part1(ctx context.Context, req *pb.SolveRequest) (*pb.Solve
 }
 
 func intersect(x1, y1, x2, y2 int64, coords [][]int64) bool {
+	log.Printf("COORDS %v", len(coords))
 	for i := 0; i < len(coords)-1; i++ {
 		if lineIntersects([]int64{x1, y1}, []int64{x2, y2}, coords[i], coords[i+1]) {
 			return true
 		}
 	}
-	return false
+
+	return lineIntersects([]int64{x1, y1}, []int64{x2, y2}, coords[0], coords[len(coords)-1])
+
 }
 
 func rectangleIntersects(tl, br []int64, coords [][]int64) bool {
@@ -171,7 +174,7 @@ func rectangleIntersects(tl, br []int64, coords [][]int64) bool {
 		return true
 	}
 
-	if intersect(br[0], tl[1], br[0], br[1], coords) {
+	if intersect(br[0], tl[1], tl[0], tl[1], coords) {
 		log.Printf("Intersect %v %v %v %v", tl[0], br[1], br[0], br[1])
 
 		return true
@@ -183,6 +186,7 @@ func (s *Server) Day9Part2(ctx context.Context, req *pb.SolveRequest) (*pb.Solve
 	best := int64(0)
 
 	coords := buildCoords(req.GetData())
+
 	for i, tl := range coords {
 		for _, br := range coords[i+1:] {
 			rect := getRectangle(tl, br)
