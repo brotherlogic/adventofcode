@@ -20,6 +20,20 @@ fff: out
 ggg: out
 hhh: ccc fff iii
 iii: out`
+	day11testinput2 = `
+svr: aaa bbb
+aaa: fft
+fft: ccc
+bbb: tty
+tty: ccc
+ccc: ddd eee
+ddd: hub
+hub: fff
+eee: dac
+dac: fff
+fff: ggg hhh
+ggg: out
+hhh: out`
 )
 
 func TestDay11Part1(t *testing.T) {
@@ -35,6 +49,22 @@ func TestDay11Part1(t *testing.T) {
 
 	if res.GetAnswer() != 5 {
 		t.Errorf("Expected 5, got %v", res.GetBigAnswer())
+	}
+}
+
+func TestDay11Part2(t *testing.T) {
+	s := &Server{}
+
+	res, err := s.Day11Part2(context.Background(), &pb.SolveRequest{
+		Data: day11testinput2,
+	})
+
+	if err != nil {
+		t.Fatalf("Unable to solve: %v", err)
+	}
+
+	if res.GetAnswer() != 2 {
+		t.Errorf("Expected 2, got %v", res.GetBigAnswer())
 	}
 }
 

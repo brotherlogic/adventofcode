@@ -32,9 +32,21 @@ func copyArr(arr []string, add string) []string {
 	return narr
 }
 
-func runSearch(point string, seen []string, mapping map[string][]string) int32 {
+func runSearch(point string, seen []string, mapping map[string][]string, req []string) int32 {
 
 	if point == "out" {
+		for _, r := range req {
+			found := false
+			for _, seen := range seen {
+				if r == seen {
+					found = true
+					break
+				}
+			}
+			if !found {
+				return 0
+			}
+		}
 		return 1
 	}
 
@@ -47,7 +59,7 @@ func runSearch(point string, seen []string, mapping map[string][]string) int32 {
 
 	sumv := int32(0)
 	for _, dest := range mapping[point] {
-		sumv += runSearch(dest, copyArr(seen, point), mapping)
+		sumv += runSearch(dest, copyArr(seen, point), mapping, req)
 	}
 	return sumv
 }
@@ -57,7 +69,17 @@ func (*Server) Day11Part1(ctx context.Context, req *pb.SolveRequest) (*pb.SolveR
 
 	mapping := buildMapping(req.GetData())
 
-	count = runSearch("you", []string{}, mapping)
+	count = runSearch("you", []string{}, mapping, []string{})
+
+	return &pb.SolveResponse{Answer: count}, nil
+}
+
+func (*Server) Day11Part2(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResponse, error) {
+	count := int32(0)
+
+	mapping := buildMapping(req.GetData())
+
+	count = runSearch("svr", []string{}, mapping, []string{"fft", "dac"})
 
 	return &pb.SolveResponse{Answer: count}, nil
 }
