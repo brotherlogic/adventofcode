@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"testing"
+	"time"
 
 	pb "github.com/brotherlogic/adventofcode/proto"
 )
@@ -34,5 +35,23 @@ func TestDay11Part1(t *testing.T) {
 
 	if res.GetAnswer() != 5 {
 		t.Errorf("Expected 5, got %v", res.GetBigAnswer())
+	}
+}
+
+func TestAvoidLooping(t *testing.T) {
+	s := &Server{}
+
+	c, cancel := context.WithTimeout(context.Background(), time.Minute)
+	defer cancel()
+	res, err := s.Day11Part1(c, &pb.SolveRequest{
+		Data: `a: b
+		b:a`,
+	})
+	if err != nil {
+		t.Fatalf("Failed: %v", err)
+	}
+
+	if res.GetAnswer() != 0 {
+		t.Errorf("Bad answer: %v", res)
 	}
 }
