@@ -187,19 +187,14 @@ func runDay8Part1(req *pb.SolveRequest, maxv int) (*pb.SolveResponse, error) {
 		}
 	}
 
-	log.Printf("%v", circuits)
-
 	circuits = collapse(circuits)
 	circuits = collapse(circuits)
-
-	log.Printf("%v", circuits)
 
 	var sizes []int
 	for _, circuit := range circuits {
 		sizes = append(sizes, len(circuit))
 	}
 	sort.Ints(sizes)
-	log.Printf("Now: %v", sizes)
 
 	return &pb.SolveResponse{Answer: int32(sizes[len(sizes)-1] * sizes[len(sizes)-2] * sizes[len(sizes)-3])}, nil
 }

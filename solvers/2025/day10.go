@@ -92,8 +92,6 @@ func runBest(goal []bool, q []*state, switches [][]int64) *state {
 			na[sv] = !na[sv]
 		}
 
-		//log.Printf("Applying %v -> %v:%v", switchs, nb.lstate, na)
-
 		qr = append(qr, &state{
 			lstate: na,
 			count:  nb.count + 1,
@@ -104,7 +102,6 @@ func runBest(goal []bool, q []*state, switches [][]int64) *state {
 
 func computeLine(line string) int32 {
 	lights, switches, _ := buildLine(line)
-	log.Printf("LINE %v", lights)
 	istate := &state{
 		lstate: make([]bool, len(lights)),
 		count:  0,
@@ -119,7 +116,6 @@ func (s *Server) Day10Part1(_ context.Context, req *pb.SolveRequest) (*pb.SolveR
 
 	for _, line := range strings.Split(strings.TrimSpace(req.GetData()), "\n") {
 		sumv += computeLine(line)
-		log.Printf("NOW %v", sumv)
 	}
 
 	return &pb.SolveResponse{Answer: sumv}, nil
