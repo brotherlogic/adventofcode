@@ -39,11 +39,11 @@ func runSearch(point string, seen []string, mapping map[string][]string) int32 {
 	}
 
 	// Don't loop
-	/*for _, s := range seen {
+	for _, s := range seen {
 		if point == s {
 			return 0
 		}
-	}*/
+	}
 
 	sumv := int32(0)
 	for _, dest := range mapping[point] {

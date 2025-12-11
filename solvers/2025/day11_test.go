@@ -41,11 +41,11 @@ func TestDay11Part1(t *testing.T) {
 func TestAvoidLooping(t *testing.T) {
 	s := &Server{}
 
-	c, cancel := context.WithTimeout(context.Background(), time.Minute)
+	c, cancel := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancel()
 	res, err := s.Day11Part1(c, &pb.SolveRequest{
-		Data: `a: b
-		b:a`,
+		Data: `you: b
+		b: you`,
 	})
 	if err != nil {
 		t.Fatalf("Failed: %v", err)
