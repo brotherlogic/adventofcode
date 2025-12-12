@@ -47,7 +47,7 @@ func TestDay11Part1(t *testing.T) {
 		t.Fatalf("Unable to solve: %v", err)
 	}
 
-	if res.GetAnswer() != 5 {
+	if res.GetBigAnswer() != 5 {
 		t.Errorf("Expected 5, got %v", res.GetAnswer())
 	}
 }
@@ -63,7 +63,7 @@ func TestDay11Part2(t *testing.T) {
 		t.Fatalf("Unable to solve: %v", err)
 	}
 
-	if res.GetAnswer() != 2 {
+	if res.GetBigAnswer() != 2 {
 		t.Errorf("Expected 2, got %v", res.GetAnswer())
 	}
 }
