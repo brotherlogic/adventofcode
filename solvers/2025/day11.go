@@ -9,7 +9,7 @@ import (
 )
 
 type searchCache struct {
-	cache map[string]int32
+	cache map[string]int64
 }
 
 func buildMapping(data string) map[string][]string {
@@ -37,7 +37,7 @@ func copyArr(arr []string, add string) []string {
 	return narr
 }
 
-func (c *searchCache) runSearch(point string, seen []string, mapping map[string][]string, req []string, goal string) int32 {
+func (c *searchCache) runSearch(point string, seen []string, mapping map[string][]string, req []string, goal string) int64 {
 
 	if point == goal {
 		for _, r := range req {
@@ -67,7 +67,7 @@ func (c *searchCache) runSearch(point string, seen []string, mapping map[string]
 		}
 	}
 
-	sumv := int32(0)
+	sumv := int64(0)
 	for _, dest := range mapping[point] {
 		sumv += c.runSearch(dest, copyArr(seen, point), mapping, req, goal)
 	}
@@ -88,37 +88,37 @@ func buildReverseMapping(mapping map[string][]string) map[string][]string {
 }
 
 func (*Server) Day11Part1(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResponse, error) {
-	count := int32(0)
+	count := int64(0)
 
 	mapping := buildMapping(req.GetData())
 	revMapping := buildReverseMapping(mapping)
 
 	cache := &searchCache{
-		cache: make(map[string]int32),
+		cache: make(map[string]int64),
 	}
 	count = cache.runSearch("out", []string{}, revMapping, []string{}, "you")
 
-	return &pb.SolveResponse{Answer: count}, nil
+	return &pb.SolveResponse{BigAnswer: count}, nil
 }
 
 func (*Server) Day11Part2(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResponse, error) {
-	count := int32(0)
+	count := int64(0)
 
 	mapping := buildMapping(req.GetData())
 	revMapping := buildReverseMapping(mapping)
 
 	cache := &searchCache{
-		cache: make(map[string]int32),
+		cache: make(map[string]int64),
 	}
 	c1 := cache.runSearch("dac", []string{}, revMapping, []string{}, "fft")
 
 	cache = &searchCache{
-		cache: make(map[string]int32),
+		cache: make(map[string]int64),
 	}
 	c2 := cache.runSearch("fft", []string{}, revMapping, []string{}, "svr")
 
 	cache = &searchCache{
-		cache: make(map[string]int32),
+		cache: make(map[string]int64),
 	}
 	c3 := cache.runSearch("out", []string{}, revMapping, []string{}, "dac")
 
@@ -126,5 +126,5 @@ func (*Server) Day11Part2(ctx context.Context, req *pb.SolveRequest) (*pb.SolveR
 
 	log.Printf("COUNT: %v", count)
 
-	return &pb.SolveResponse{Answer: count}, nil
+	return &pb.SolveResponse{BigAnswer: count}, nil
 }
