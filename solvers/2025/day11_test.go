@@ -48,7 +48,7 @@ func TestDay11Part1(t *testing.T) {
 	}
 
 	if res.GetAnswer() != 5 {
-		t.Errorf("Expected 5, got %v", res.GetBigAnswer())
+		t.Errorf("Expected 5, got %v", res.GetAnswer())
 	}
 }
 
@@ -64,7 +64,7 @@ func TestDay11Part2(t *testing.T) {
 	}
 
 	if res.GetAnswer() != 2 {
-		t.Errorf("Expected 2, got %v", res.GetBigAnswer())
+		t.Errorf("Expected 2, got %v", res.GetAnswer())
 	}
 }
 
