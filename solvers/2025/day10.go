@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"strconv"
 	"strings"
@@ -71,43 +72,53 @@ func copy(val []bool) []bool {
 	return nval
 }
 
-func runBest(goal []bool, q []*state, switches [][]int64) *state {
-	nb := q[0]
-	qr := q[1:]
+func runBest(goal []bool, q []*state, switches [][]int64, seen map[string]bool) *state {
+	log.Printf("RUNNING")
 
-	found := true
-	for i := range len(goal) {
-		if goal[i] != nb.lstate[i] {
-			found = false
-			break
+	for len(q) > 0 {
+		nb := q[0]
+		q = q[1:]
+
+		if _, ok := seen[fmt.Sprintf("%v", nb.lstate)]; ok {
+			continue
+		}
+		seen[fmt.Sprintf("%v", nb.lstate)] = true
+
+		found := true
+		for i := range len(goal) {
+			if goal[i] != nb.lstate[i] {
+				found = false
+				break
+			}
+		}
+		if found {
+			return nb
+		}
+
+		for _, switchs := range switches {
+			na := copy(nb.lstate)
+			for _, sv := range switchs {
+				na[sv] = !na[sv]
+			}
+
+			q = append(q, &state{
+				lstate: na,
+				count:  nb.count + 1,
+			})
 		}
 	}
-	if found {
-		return nb
-	}
-
-	for _, switchs := range switches {
-		na := copy(nb.lstate)
-		for _, sv := range switchs {
-			na[sv] = !na[sv]
-		}
-
-		qr = append(qr, &state{
-			lstate: na,
-			count:  nb.count + 1,
-		})
-	}
-	return runBest(goal, qr, switches)
+	return nil
 }
 
 func computeLine(line string) int32 {
+	log.Printf("Computing line: %v", line)
 	lights, switches, _ := buildLine(line)
 	istate := &state{
 		lstate: make([]bool, len(lights)),
 		count:  0,
 	}
 
-	found := runBest(lights, []*state{istate}, switches)
+	found := runBest(lights, []*state{istate}, switches, make(map[string]bool))
 	return found.count
 }
 
