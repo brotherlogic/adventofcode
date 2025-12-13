@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"log"
+	"math"
 	"strconv"
 	"strings"
 
@@ -44,6 +45,9 @@ func getSizesAndBoards(data string) ([]*size, []*board) {
 				nv, err := strconv.ParseInt(c, 10, 64)
 				if err != nil {
 					log.Fatalf("Cannot parse count: %v", err)
+				}
+				if nv < math.MinInt || nv > math.MaxInt {
+					log.Fatalf("Parsed count %d overflows int type!", nv)
 				}
 				counts = append(counts, int(nv))
 			}
