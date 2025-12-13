@@ -73,7 +73,6 @@ func copy(val []bool) []bool {
 }
 
 func runBest(goal []bool, q []*state, switches [][]int64, seen map[string]bool) *state {
-	log.Printf("RUNNING")
 
 	for len(q) > 0 {
 		nb := q[0]
@@ -111,7 +110,6 @@ func runBest(goal []bool, q []*state, switches [][]int64, seen map[string]bool) 
 }
 
 func computeLine(line string) int32 {
-	log.Printf("Computing line: %v", line)
 	lights, switches, _ := buildLine(line)
 	istate := &state{
 		lstate: make([]bool, len(lights)),
