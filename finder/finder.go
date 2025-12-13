@@ -338,6 +338,12 @@ func (f *finder) runYear(ctx context.Context, ghclient ghb_client.GithubridgeCli
 				continue
 			}
 
+			if year >= 2025 {
+				if day > 12 || (day == 12 && part == 2) {
+					continue
+				}
+			}
+
 			// Look to see if we already have a solution for this
 			_, err = client.GetSolution(ctx, &pb.GetSolutionRequest{
 				Year: year,
