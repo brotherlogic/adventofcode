@@ -32,6 +32,22 @@ func TestDay10Part1(t *testing.T) {
 	}
 }
 
+func TestDay10Part2(t *testing.T) {
+	s := &Server{}
+
+	res, err := s.Day10Part2(context.Background(), &pb.SolveRequest{
+		Data: day10TestData,
+	})
+
+	if err != nil {
+		t.Fatalf("Unable to run: %v", err)
+	}
+
+	if res.GetAnswer() != 33 {
+		t.Errorf("Expected 33, got %v", res)
+	}
+}
+
 func TestDay10Part1_Validate(t *testing.T) {
 	s := &Server{}
 
