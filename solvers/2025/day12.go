@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"log"
-	"math"
 	"strconv"
 	"strings"
 
@@ -12,13 +11,13 @@ import (
 
 type size struct {
 	piece  []string
-	hashes int
+	hashes int64
 }
 
 type board struct {
-	width  int
-	height int
-	counts []int
+	width  int64
+	height int64
+	counts []int64
 }
 
 func getSizesAndBoards(data string) ([]*size, []*board) {
@@ -26,7 +25,7 @@ func getSizesAndBoards(data string) ([]*size, []*board) {
 	boards := []*board{}
 
 	var cpieces []string
-	chash := 0
+	chash := int64(0)
 	for _, line := range strings.Split(data, "\n") {
 		if strings.Contains(line, "x") {
 			elems := strings.Split(line, ":")
@@ -40,21 +39,18 @@ func getSizesAndBoards(data string) ([]*size, []*board) {
 				log.Fatalf("Cannot parse width: %v", err)
 			}
 
-			var counts []int
+			var counts []int64
 			for _, c := range strings.Fields(elems[1]) {
 				nv, err := strconv.ParseInt(c, 10, 64)
 				if err != nil {
 					log.Fatalf("Cannot parse count: %v", err)
 				}
-				if nv < math.MinInt || nv > math.MaxInt {
-					log.Fatalf("Parsed count %d overflows int type!", nv)
-				}
-				counts = append(counts, int(nv))
+				counts = append(counts, int64(nv))
 			}
 
 			boards = append(boards, &board{
-				width:  int(width),
-				height: int(height),
+				width:  int64(width),
+				height: int64(height),
 				counts: counts,
 			})
 		} else {
@@ -68,7 +64,7 @@ func getSizesAndBoards(data string) ([]*size, []*board) {
 				continue
 			} else if !strings.Contains(line, ":") {
 				cpieces = append(cpieces, strings.TrimSpace(line))
-				chash += strings.Count(line, "#")
+				chash += int64(strings.Count(line, "#"))
 			}
 		}
 	}
@@ -76,18 +72,18 @@ func getSizesAndBoards(data string) ([]*size, []*board) {
 	return sizes, boards
 }
 
-func buildBoard(width, height int) [][]bool {
+func buildBoard(width, height int64) [][]bool {
 	board := make([][]bool, height)
-	for i := 0; i < height; i++ {
+	for i := int64(0); i < height; i++ {
 		board[i] = make([]bool, width)
 	}
 	return board
 }
 
-func buildPieces(sizes []*size, counts []int) [][][]bool {
+func buildPieces(sizes []*size, counts []int64) [][][]bool {
 	var pieces [][][]bool
 	for j, c := range counts {
-		for i := 0; i < c; i++ {
+		for i := int64(0); i < c; i++ {
 			pieces = append(pieces, buildPiece(sizes[j]))
 		}
 	}
@@ -143,7 +139,7 @@ func rotate(piece [][]bool, rotation int) [][]bool {
 			newPiece = append(newPiece, nrow)
 		}
 	}
-	//log.Printf("Rotated piece: %v", newPiece)
+	//log.Print64f("Rotated piece: %v", newPiece)
 	return newPiece
 }
 
@@ -162,7 +158,7 @@ func canPlace(board [][]bool, piece [][]bool, xoff, yoff, rotation int) ([][]boo
 	rpiece := rotate(piece, rotation)
 	cboard := copyBoard(board)
 
-	//log.Printf("Trying to place %v in %v at %v,%v", rpiece, cboard, xoff, yoff)
+	//log.Print64f("Trying to place %v in %v at %v,%v", rpiece, cboard, xoff, yoff)
 
 	for y := 0; y < len(rpiece); y++ {
 		for x := 0; x < len(rpiece[0]); x++ {
@@ -185,7 +181,7 @@ func place(board [][]bool, pieces [][][]bool) bool {
 	}
 	piece := pieces[0]
 
-	//log.Printf("Placing piece %v on board %v", piece, board)
+	//log.Print64f("Placing piece %v on board %v", piece, board)
 
 	for y := 0; y <= len(board)-len(piece); y++ {
 		for x := 0; x <= len(board[0])-len(piece[0]); x++ {
@@ -206,10 +202,10 @@ func place(board [][]bool, pieces [][][]bool) bool {
 func (s *Server) Day12Part1(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResponse, error) {
 	sizes, boards := getSizesAndBoards(req.GetData())
 
-	solved := 0
+	solved := int32(0)
 	for _, board := range boards {
 		// Can we just fit each piece on its own?
-		sumPieces := 0
+		sumPieces := int64(0)
 		for _, counts := range board.counts {
 			sumPieces += counts
 		}
@@ -221,7 +217,7 @@ func (s *Server) Day12Part1(ctx context.Context, req *pb.SolveRequest) (*pb.Solv
 		}
 
 		// Are there more hashes than spaces
-		totalHashes := 0
+		totalHashes := int64(0)
 		for i, counts := range board.counts {
 			totalHashes += counts * sizes[i].hashes
 		}
@@ -237,5 +233,5 @@ func (s *Server) Day12Part1(ctx context.Context, req *pb.SolveRequest) (*pb.Solv
 		}
 	}
 
-	return &pb.SolveResponse{Answer: int32(solved)}, nil
+	return &pb.SolveResponse{Answer: (solved)}, nil
 }
