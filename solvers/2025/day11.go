@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"log"
 	"strings"
 
 	pb "github.com/brotherlogic/adventofcode/proto"
@@ -123,8 +122,6 @@ func (*Server) Day11Part2(ctx context.Context, req *pb.SolveRequest) (*pb.SolveR
 	c3 := cache.runSearch("out", []string{}, revMapping, []string{}, "dac")
 
 	count = c1 * c2 * c3
-
-	log.Printf("COUNT: %v", count)
 
 	return &pb.SolveResponse{BigAnswer: count}, nil
 }
