@@ -7,6 +7,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 
 	"google.golang.org/grpc"
@@ -432,6 +433,10 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 
 		log.Printf("Got %v and we already have %v", err, issue.LastErrorCode)
 		if (status.Code(err) == codes.ResourceExhausted || status.Code(err) == codes.Internal) && issue.LastErrorCode != fmt.Sprintf("%v", err) {
+			if status.Code(err) == codes.DeadlineExceeded && strings.Contains(issue.LastErrorCode, "DeadlineExceeded") {
+				// Don't double post D_E errors
+				return err
+			}
 			issue.LastErrorCode = fmt.Sprintf("%v", err)
 			_, err = f.ghclient.CommentOnIssue(ctx, &ghbpb.CommentOnIssueRequest{
 				User:    "brotherlogic",
