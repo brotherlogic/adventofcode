@@ -118,48 +118,12 @@ func runBest(goal []bool, q []*state, switches [][]int64, seen map[string]bool) 
 	return nil
 }
 
-func runBestJoltage(goal []int64, q []*state, switches [][]int64, seen map[string]bool) *state {
+func gaussianElimination(mat [][]int64) [][]int64 {
+	pivot := 0
+	col := 0
+	for pivot < len(mat) && col < len(mat[0]) {
 
-	for len(q) > 0 {
-		nb := q[0]
-		q = q[1:]
-
-		if _, ok := seen[fmt.Sprintf("%v", nb.jstate)]; ok {
-			continue
-		}
-		seen[fmt.Sprintf("%v", nb.jstate)] = true
-
-		found := true
-		broken := false
-		for i := range len(goal) {
-			if goal[i] != nb.jstate[i] {
-				found = false
-				break
-			}
-			if goal[i] < nb.jstate[i] {
-				broken = true
-			}
-		}
-		if found {
-			return nb
-		}
-		if broken {
-			continue
-		}
-
-		for _, switchs := range switches {
-			na := copyj(nb.jstate)
-			for _, sv := range switchs {
-				na[sv]++
-			}
-
-			q = append(q, &state{
-				jstate: na,
-				count:  nb.count + 1,
-			})
-		}
 	}
-	return nil
 }
 
 func computeLine(line string) int32 {
@@ -173,15 +137,10 @@ func computeLine(line string) int32 {
 	return found.count
 }
 
-func computeJoltage(line string) int32 {
+func computeJoltage(line string) int64 {
 	_, switches, joltage := buildLine(line)
-	istate := &state{
-		jstate: make([]int64, len(joltage)),
-		count:  0,
-	}
 
-	found := runBestJoltage(joltage, []*state{istate}, switches, make(map[string]bool))
-	return found.count
+	return runBestJoltage(joltage, switches, make([]int64, len(joltage)), 0)
 }
 
 func (s *Server) Day10Part1(_ context.Context, req *pb.SolveRequest) (*pb.SolveResponse, error) {
@@ -195,11 +154,12 @@ func (s *Server) Day10Part1(_ context.Context, req *pb.SolveRequest) (*pb.SolveR
 }
 
 func (s *Server) Day10Part2(_ context.Context, req *pb.SolveRequest) (*pb.SolveResponse, error) {
-	sumv := int32(0)
+	sumv := int64(0)
 
 	for _, line := range strings.Split(strings.TrimSpace(req.GetData()), "\n") {
 		sumv += computeJoltage(line)
+		log.Printf("SUM %v", sumv)
 	}
 
-	return &pb.SolveResponse{Answer: sumv}, nil
+	return &pb.SolveResponse{BigAnswer: sumv}, nil
 }

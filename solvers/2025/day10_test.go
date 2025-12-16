@@ -14,6 +14,9 @@ const (
 [.###.#] (0,1,2,3,4) (0,3,4) (0,1,2,4,5) (1,2) {10,11,11,5,10,5}
 `
 	day10TestSO = `[#.....#.#] (0,1,2,3,4,6,7) (0,1,2,3,5,6,8) (6,8) (0,1,3,4,6,8) (0,2,3,5) (0,2,4,5,7,8) (0,1,4,6) (0,5,6,8) (0,1,2,3,5,8) {216,32,64,46,39,195,187,34,188}`
+
+	day10TestISO = `
+	[.##.] (3) (1,3) (2) (2,3) (0,2) (0,1) {3,5,4,7}`
 )
 
 func TestDay10Part1(t *testing.T) {
@@ -43,7 +46,39 @@ func TestDay10Part2(t *testing.T) {
 		t.Fatalf("Unable to run: %v", err)
 	}
 
-	if res.GetAnswer() != 33 {
+	if res.GetBigAnswer() != 33 {
+		t.Errorf("Expected 33, got %v", res)
+	}
+}
+
+func TestDay10Part2_Isolate(t *testing.T) {
+	s := &Server{}
+
+	res, err := s.Day10Part2(context.Background(), &pb.SolveRequest{
+		Data: day10TestISO,
+	})
+
+	if err != nil {
+		t.Fatalf("Unable to run: %v", err)
+	}
+
+	if res.GetBigAnswer() != 33 {
+		t.Errorf("Expected 33, got %v", res)
+	}
+}
+
+func TestDay10Part2_Validate(t *testing.T) {
+	s := &Server{}
+
+	res, err := s.Day10Part2(context.Background(), &pb.SolveRequest{
+		Data: day10TestSO,
+	})
+
+	if err != nil {
+		t.Fatalf("Unable to run: %v", err)
+	}
+
+	if res.GetBigAnswer() != 33 {
 		t.Errorf("Expected 33, got %v", res)
 	}
 }
@@ -59,7 +94,7 @@ func TestDay10Part1_Validate(t *testing.T) {
 		t.Fatalf("Unable to run: %v", err)
 	}
 
-	if res.GetAnswer() != 8 {
+	if res.GetBigAnswer() != 8 {
 		t.Errorf("Expected 8, got %v", res)
 	}
 }

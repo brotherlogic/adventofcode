@@ -2,6 +2,8 @@ github.com/brotherlogic/adventofcode v0.445.0 h1:GHt+nA9SjlEIYkTQkTT5hEbXPjA6cVx
 github.com/brotherlogic/adventofcode v0.445.0/go.mod h1:B+mQAmlyTL/h04nQ5lUmQZI+ZZTy7UBmkxvkBcMkrqs=
 github.com/brotherlogic/adventofcode v0.482.0 h1:Cu2BQbnAAQNcQw+9oSNuFfiNhmOy8svQD38pr/gzzcQ=
 github.com/brotherlogic/adventofcode v0.482.0/go.mod h1:B+mQAmlyTL/h04nQ5lUmQZI+ZZTy7UBmkxvkBcMkrqs=
+github.com/draffensperger/golp v0.0.0-20250721104811-2d405f0b4e68 h1:Zt1kA9y7DnXA5ACqWhHFD7yVXag6/uNsikEyR+4l+40=
+github.com/draffensperger/golp v0.0.0-20250721104811-2d405f0b4e68/go.mod h1:/TbDI9zua4CTUs81AOyDxnKAuvXX/SmOjonijHadP+k=
 github.com/go-logr/logr v1.4.3 h1:CjnDlHq8ikf6E492q6eKboGOC0T8CDaOvkHCIg8idEI=
 github.com/go-logr/logr v1.4.3/go.mod h1:9T104GzyrTigFIr8wt5mBrctHMim0Nb2HLGrmQ40KvY=
 github.com/go-logr/stdr v1.2.2 h1:hSWxHoqTgW2S2qGc0LTAI563KZ5YKYRhT3MFKZMbjag=
