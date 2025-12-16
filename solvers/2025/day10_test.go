@@ -62,8 +62,8 @@ func TestDay10Part2_Isolate(t *testing.T) {
 		t.Fatalf("Unable to run: %v", err)
 	}
 
-	if res.GetBigAnswer() != 33 {
-		t.Errorf("Expected 33, got %v", res)
+	if res.GetBigAnswer() != 10 {
+		t.Errorf("Expected 10, got %v", res)
 	}
 }
 
@@ -78,8 +78,8 @@ func TestDay10Part2_Validate(t *testing.T) {
 		t.Fatalf("Unable to run: %v", err)
 	}
 
-	if res.GetBigAnswer() != 33 {
-		t.Errorf("Expected 33, got %v", res)
+	if res.GetBigAnswer() != 228 {
+		t.Errorf("Expected 228, got %v", res)
 	}
 }
 
@@ -94,7 +94,7 @@ func TestDay10Part1_Validate(t *testing.T) {
 		t.Fatalf("Unable to run: %v", err)
 	}
 
-	if res.GetBigAnswer() != 8 {
+	if res.GetAnswer() != 8 {
 		t.Errorf("Expected 8, got %v", res)
 	}
 }

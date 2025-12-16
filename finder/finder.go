@@ -618,7 +618,7 @@ func (f *finder) runPrep(ctx context.Context) error {
 func main() {
 	log.Print("Running finder script")
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Minute*5)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
 
 	ghclient, err := ghb_client.GetClientInternal()

@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
+	"os/exec"
 	"strconv"
 	"strings"
 
@@ -118,12 +120,99 @@ func runBest(goal []bool, q []*state, switches [][]int64, seen map[string]bool) 
 	return nil
 }
 
-func gaussianElimination(mat [][]int64) [][]int64 {
-	pivot := 0
-	col := 0
-	for pivot < len(mat) && col < len(mat[0]) {
-
+func runZ3(switches [][]int64, goal []int64, aim int64) (int64, bool) {
+	log.Printf("RUN %v %v %v", switches, goal, aim)
+	f, err := os.CreateTemp("", "z3")
+	if err != nil {
+		log.Fatal(err)
 	}
+	defer os.Remove(f.Name())
+	for i := range switches {
+		f.WriteString(fmt.Sprintf("(declare-const s%v Int)\n", i+1))
+	}
+
+	for i := range goal {
+		f.WriteString(fmt.Sprintf("(assert (= %v (+", goal[i]))
+		for j, sws := range switches {
+			found := false
+			for _, val := range sws {
+				if val == int64(i) {
+					found = true
+					break
+				}
+			}
+			if found {
+				f.WriteString(fmt.Sprintf(" s%v", j+1))
+			}
+		}
+		f.WriteString(")))\n")
+	}
+
+	for j := range switches {
+		f.WriteString(fmt.Sprintf("(assert (<= 0 s%v))\n", j+1))
+	}
+
+	if aim > 0 {
+		f.WriteString(fmt.Sprintf("(assert (= %v (+ ", aim))
+		for j := range switches {
+			f.WriteString(fmt.Sprintf(" s%v", j+1))
+		}
+		f.WriteString(")))\n")
+	}
+
+	f.WriteString("(check-sat)\n")
+	f.WriteString("(get-model)\n")
+	f.Close()
+
+	//log.Printf("HERE: %+v", f)
+	out, err := exec.Command("z3", f.Name()).CombinedOutput()
+	if err != nil {
+		log.Printf("Failed to run z3 (%v): %v -> %v", f.Name(), err, string(out))
+		return 0, false
+	}
+	log.Printf("GOT: %v (%v)", string(out), f.Name())
+	result := make([]int64, len(switches))
+	num := int64(0)
+	for _, line := range strings.Split(string(out), "\n") {
+		if strings.Contains(line, "define-fun") {
+			fields := strings.Fields(line)
+			nump, err := strconv.ParseInt(fields[1][1:], 10, 64)
+			if err != nil {
+				log.Fatalf("Failed to parse: %v", err)
+			}
+			num = nump
+
+			//log.Printf("FOUND %v", num)
+		}
+		numl := strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(line, ")", ""), " ", ""), "(", "")
+		numv, err := strconv.ParseInt(numl, 10, 64)
+		if err == nil {
+			//log.Printf("GOT %v", numv)
+			result[num-1] = numv
+		}
+	}
+
+	val := int64(0)
+	for _, entry := range result {
+		if entry < 0 {
+			return 0, false
+		}
+		val += entry
+	}
+	log.Printf("RET %v (%v) from %v", val, aim, f.Name())
+	return val, true
+}
+
+func runBestJoltage(goal []int64, switches [][]int64) int64 {
+	best, ok := runZ3(switches, goal, -1)
+	for ok {
+		nbest, nok := runZ3(switches, goal, best-1)
+		if nok {
+			best = nbest
+		}
+		ok = nok
+	}
+	return best
 }
 
 func computeLine(line string) int32 {
@@ -139,8 +228,8 @@ func computeLine(line string) int32 {
 
 func computeJoltage(line string) int64 {
 	_, switches, joltage := buildLine(line)
-
-	return runBestJoltage(joltage, switches, make([]int64, len(joltage)), 0)
+	found := runBestJoltage(joltage, switches)
+	return found
 }
 
 func (s *Server) Day10Part1(_ context.Context, req *pb.SolveRequest) (*pb.SolveResponse, error) {
@@ -157,8 +246,9 @@ func (s *Server) Day10Part2(_ context.Context, req *pb.SolveRequest) (*pb.SolveR
 	sumv := int64(0)
 
 	for _, line := range strings.Split(strings.TrimSpace(req.GetData()), "\n") {
-		sumv += computeJoltage(line)
-		log.Printf("SUM %v", sumv)
+		jolt := computeJoltage(line)
+		log.Printf("SOL %v", jolt)
+		sumv += jolt
 	}
 
 	return &pb.SolveResponse{BigAnswer: sumv}, nil
