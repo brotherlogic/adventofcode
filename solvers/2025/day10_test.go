@@ -43,7 +43,7 @@ func TestDay10Part2(t *testing.T) {
 		t.Fatalf("Unable to run: %v", err)
 	}
 
-	if res.GetAnswer() != 33 {
+	if res.GetBigAnswer() != 33 {
 		t.Errorf("Expected 33, got %v", res)
 	}
 }
