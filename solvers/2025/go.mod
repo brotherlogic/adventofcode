@@ -4,6 +4,7 @@ go 1.25.4
 
 require (
 	github.com/brotherlogic/adventofcode v0.482.0
+	gonum.org/v1/gonum v0.16.0
 	google.golang.org/grpc v1.77.0
 )
 

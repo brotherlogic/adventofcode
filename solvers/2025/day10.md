@@ -9,6 +9,7 @@ We have some linear equations to solve:
 4 = s3 + s4 + s5
 7 = s1 + s2 + s4
 
+<<<<<<< HEAD
 where s1+s2+s3+s4+s5+s6 is minimal
 
 the overall number of solutions may be high
