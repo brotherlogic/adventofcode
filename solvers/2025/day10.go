@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
+	"os/exec"
 	"strconv"
 	"strings"
 
@@ -118,48 +120,94 @@ func runBest(goal []bool, q []*state, switches [][]int64, seen map[string]bool) 
 	return nil
 }
 
-func runBestJoltage(goal []int64, q []*state, switches [][]int64, seen map[string]bool) *state {
+func runZ3(switches [][]int64, goal []int64, aim int64) (int64, bool) {
+	log.Printf("RUN %v %v %v", switches, goal, aim)
+	f, err := os.CreateTemp("", "z3")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer os.Remove(f.Name())
+	for i := range switches {
+		f.WriteString(fmt.Sprintf("(declare-const s%v Int)\n", i))
+	}
 
-	for len(q) > 0 {
-		nb := q[0]
-		q = q[1:]
-
-		if _, ok := seen[fmt.Sprintf("%v", nb.jstate)]; ok {
-			continue
-		}
-		seen[fmt.Sprintf("%v", nb.jstate)] = true
-
-		found := true
-		broken := false
-		for i := range len(goal) {
-			if goal[i] != nb.jstate[i] {
-				found = false
-				break
+	for i := range goal {
+		f.WriteString(fmt.Sprintf("(assert (= %v (+", goal[i]))
+		for j, sws := range switches {
+			found := false
+			for _, val := range sws {
+				if val == int64(i) {
+					found = true
+					break
+				}
 			}
-			if goal[i] < nb.jstate[i] {
-				broken = true
+			if found {
+				f.WriteString(fmt.Sprintf(" s%v", j))
 			}
 		}
-		if found {
-			return nb
-		}
-		if broken {
-			continue
-		}
+		f.WriteString(")))\n")
+	}
 
-		for _, switchs := range switches {
-			na := copyj(nb.jstate)
-			for _, sv := range switchs {
-				na[sv]++
+	if aim > 0 {
+		f.WriteString(fmt.Sprintf("(assert (= %v (+ ", aim))
+		for j := range switches {
+			f.WriteString(fmt.Sprintf(" s%v", j))
+		}
+		f.WriteString(")))\n")
+	}
+
+	f.WriteString("(check-sat)\n")
+	f.WriteString("(get-model)\n")
+	f.Close()
+
+	//log.Printf("HERE: %+v", f)
+	out, err := exec.Command("z3", f.Name()).CombinedOutput()
+	if err != nil {
+		log.Fatalf("Failed to run z3: %v -> %v", err, string(out))
+	}
+	//log.Printf("GOT: %v", string(out))
+	result := make([]int64, len(switches))
+	num := int64(0)
+	for _, line := range strings.Split(string(out), "\n") {
+		if strings.Contains(line, "define-fun") {
+			fields := strings.Fields(line)
+			nump, err := strconv.ParseInt(fields[1][1:], 10, 64)
+			if err != nil {
+				log.Fatalf("Failed to parse: %v", err)
 			}
+			num = nump
 
-			q = append(q, &state{
-				jstate: na,
-				count:  nb.count + 1,
-			})
+			//log.Printf("FOUND %v", num)
+		}
+		numl := strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(line, ")", ""), " ", ""), "(", "")
+		numv, err := strconv.ParseInt(numl, 10, 64)
+		if err == nil {
+			//log.Printf("GOT %v", numv)
+			result[num] = numv
 		}
 	}
-	return nil
+
+	val := int64(0)
+	for _, entry := range result {
+		if entry < 0 {
+			return 0, false
+		}
+		val += entry
+	}
+	log.Printf("RET %v (%v) from %v", val, aim, f.Name())
+	return val, true
+}
+
+func runBestJoltage(goal []int64, switches [][]int64) int64 {
+	best, ok := runZ3(switches, goal, -1)
+	for ok {
+		nbest, nok := runZ3(switches, goal, best-1)
+		if nok {
+			best = nbest
+		}
+		ok = nok
+	}
+	return best
 }
 
 func computeLine(line string) int32 {
@@ -173,15 +221,10 @@ func computeLine(line string) int32 {
 	return found.count
 }
 
-func computeJoltage(line string) int32 {
+func computeJoltage(line string) int64 {
 	_, switches, joltage := buildLine(line)
-	istate := &state{
-		jstate: make([]int64, len(joltage)),
-		count:  0,
-	}
-
-	found := runBestJoltage(joltage, []*state{istate}, switches, make(map[string]bool))
-	return found.count
+	found := runBestJoltage(joltage, switches)
+	return found
 }
 
 func (s *Server) Day10Part1(_ context.Context, req *pb.SolveRequest) (*pb.SolveResponse, error) {
@@ -195,11 +238,13 @@ func (s *Server) Day10Part1(_ context.Context, req *pb.SolveRequest) (*pb.SolveR
 }
 
 func (s *Server) Day10Part2(_ context.Context, req *pb.SolveRequest) (*pb.SolveResponse, error) {
-	sumv := int32(0)
+	sumv := int64(0)
 
 	for _, line := range strings.Split(strings.TrimSpace(req.GetData()), "\n") {
-		sumv += computeJoltage(line)
+		jolt := computeJoltage(line)
+		log.Printf("SOL %v", jolt)
+		sumv += jolt
 	}
 
-	return &pb.SolveResponse{Answer: sumv}, nil
+	return &pb.SolveResponse{BigAnswer: sumv}, nil
 }

@@ -18,6 +18,8 @@ RUN CGO_ENABLED=0 go build -o /solver
 ##
 FROM gcr.io/distroless/base-debian11
 
+RUN apt-get update && apt-get install -y z3
+
 WORKDIR /
 
 COPY --from=build /solver /solver
