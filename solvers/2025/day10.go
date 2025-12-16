@@ -128,7 +128,7 @@ func runZ3(switches [][]int64, goal []int64, aim int64) (int64, bool) {
 	}
 	defer os.Remove(f.Name())
 	for i := range switches {
-		f.WriteString(fmt.Sprintf("(declare-const s%v Int)\n", i))
+		f.WriteString(fmt.Sprintf("(declare-const s%v Int)\n", i+1))
 	}
 
 	for i := range goal {
@@ -142,16 +142,20 @@ func runZ3(switches [][]int64, goal []int64, aim int64) (int64, bool) {
 				}
 			}
 			if found {
-				f.WriteString(fmt.Sprintf(" s%v", j))
+				f.WriteString(fmt.Sprintf(" s%v", j+1))
 			}
 		}
 		f.WriteString(")))\n")
 	}
 
+	for j := range switches {
+		f.WriteString(fmt.Sprintf("(assert (<= 0 s%v))\n", j+1))
+	}
+
 	if aim > 0 {
 		f.WriteString(fmt.Sprintf("(assert (= %v (+ ", aim))
 		for j := range switches {
-			f.WriteString(fmt.Sprintf(" s%v", j))
+			f.WriteString(fmt.Sprintf(" s%v", j+1))
 		}
 		f.WriteString(")))\n")
 	}
@@ -163,9 +167,10 @@ func runZ3(switches [][]int64, goal []int64, aim int64) (int64, bool) {
 	//log.Printf("HERE: %+v", f)
 	out, err := exec.Command("z3", f.Name()).CombinedOutput()
 	if err != nil {
-		log.Fatalf("Failed to run z3: %v -> %v", err, string(out))
+		log.Printf("Failed to run z3 (%v): %v -> %v", f.Name(), err, string(out))
+		return 0, false
 	}
-	//log.Printf("GOT: %v", string(out))
+	log.Printf("GOT: %v (%v)", string(out), f.Name())
 	result := make([]int64, len(switches))
 	num := int64(0)
 	for _, line := range strings.Split(string(out), "\n") {
@@ -183,7 +188,7 @@ func runZ3(switches [][]int64, goal []int64, aim int64) (int64, bool) {
 		numv, err := strconv.ParseInt(numl, 10, 64)
 		if err == nil {
 			//log.Printf("GOT %v", numv)
-			result[num] = numv
+			result[num-1] = numv
 		}
 	}
 
