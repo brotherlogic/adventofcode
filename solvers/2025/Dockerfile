@@ -16,7 +16,7 @@ RUN CGO_ENABLED=0 go build -o /solver
 ##
 ## Deploy
 ##
-FROM gcr.io/distroless/base-debian11
+FROM debian:stable-slim
 
 RUN apt-get update && apt-get install -y z3
 
