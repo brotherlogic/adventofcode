@@ -199,7 +199,6 @@ func runZ3(switches [][]int64, goal []int64, aim int64) (int64, bool) {
 		}
 		val += entry
 	}
-	log.Printf("RET %v (%v) from %v", val, aim, f.Name())
 	return val, true
 }
 
@@ -247,7 +246,6 @@ func (s *Server) Day10Part2(_ context.Context, req *pb.SolveRequest) (*pb.SolveR
 
 	for _, line := range strings.Split(strings.TrimSpace(req.GetData()), "\n") {
 		jolt := computeJoltage(line)
-		log.Printf("SOL %v", jolt)
 		sumv += jolt
 	}
 
