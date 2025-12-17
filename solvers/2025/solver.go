@@ -41,6 +41,7 @@ func (s *Server) Solve(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResp
 		reflect.ValueOf(ctx),
 		reflect.ValueOf(req),
 	})
+	log.Printf("Complete: %v", methodName)
 
 	if ret[0].IsNil() {
 		return nil, ret[1].Interface().(error)
