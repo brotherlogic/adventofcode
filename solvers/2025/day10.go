@@ -167,7 +167,7 @@ func runZ3(switches [][]int64, goal []int64, aim int64) (int64, bool) {
 	//log.Printf("HERE: %+v", f)
 	out, err := exec.Command("z3", f.Name()).CombinedOutput()
 	if err != nil {
-		log.Printf("Failed to run z3 (%v): %v -> %v", f.Name(), err, string(out))
+		//log.Printf("Failed to run z3 (%v): %v -> %v", f.Name(), err, string(out))
 		return 0, false
 	}
 	log.Printf("GOT: %v (%v)", string(out), f.Name())
@@ -204,8 +204,8 @@ func runZ3(switches [][]int64, goal []int64, aim int64) (int64, bool) {
 
 func runBestJoltage(goal []int64, switches [][]int64) int64 {
 	best, _ := runZ3(switches, goal, -1)
-	for best > 0 {
-		nbest, nok := runZ3(switches, goal, best-1)
+	for val := best; val > 0; val-- {
+		nbest, nok := runZ3(switches, goal, val)
 		if nok {
 			best = nbest
 		}
