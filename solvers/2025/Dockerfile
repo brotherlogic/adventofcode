@@ -20,9 +20,7 @@ FROM ubuntu:22.04 AS final_image
 
 WORKDIR /
 
-COPY --from=build /adventofcode /adventofcode
-
-RUN apt-get update && apt-get install -y z3 
+COPY --from=build /solver /solver
 
 RUN apt-get update && apt-get install -y z3 
 
