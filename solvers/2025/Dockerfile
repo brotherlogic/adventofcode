@@ -33,5 +33,4 @@ RUN apt-get update && apt-get install -y z3
 EXPOSE 8080
 EXPOSE 8081
 
-
-ENTRYPOINT ["/adventofcode"]
+ENTRYPOINT ["/solver"]
