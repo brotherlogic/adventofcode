@@ -37,11 +37,12 @@ func (s *Server) Solve(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResp
 		return nil, fmt.Errorf("cannot find method Day%vPart%v", day, part)
 	}
 
+	t := time.Now()
 	ret := method.Call([]reflect.Value{
 		reflect.ValueOf(ctx),
 		reflect.ValueOf(req),
 	})
-	log.Printf("Complete: %v -> %v", methodName, ret[1])
+	log.Printf("Complete: %v -> %v (%v)", methodName, ret[1], time.Since(t))
 
 	if ret[0].IsNil() {
 		return nil, ret[1].Interface().(error)
