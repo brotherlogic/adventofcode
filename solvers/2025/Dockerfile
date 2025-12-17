@@ -18,6 +18,8 @@ RUN CGO_ENABLED=0 go build -o /solver
 ##
 FROM debian:stable-slim
 
+USER root
+
 RUN apt-get update && apt-get install -y z3
 
 WORKDIR /
