@@ -139,9 +139,13 @@ func (f *finder) removeLabel(ctx context.Context, label string, issue *pb.Issue)
 
 func (f *finder) solve(ctx context.Context, year, day, part int32, issue *pb.Issue) error {
 
+	// Adjust the context window to give us more time
+	nctx, cancel := context.WithTimeout(context.Background(), solvingDuration-time.Minute)
+	defer cancel()
+
 	log.Printf("Solving %v %v %v", year, day, part)
 	for i := 0; i < retries; i++ {
-		err := f.solveInternal(ctx, year, day, part, issue)
+		err := f.solveInternal(nctx, year, day, part, issue)
 		if err == nil {
 			return err
 		}
