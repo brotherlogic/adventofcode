@@ -207,7 +207,7 @@ func runBestJoltage(goal []int64, switches [][]int64) int64 {
 
 	mg := goal[0]
 	for _, g := range goal {
-		if g < mg {
+		if g > mg {
 			mg = g
 		}
 	}
