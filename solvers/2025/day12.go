@@ -103,7 +103,7 @@ func buildPiece(s *size) [][]bool {
 		}
 		res = append(res, row)
 	}
-	log.Printf("Built piece: %v", res)
+	//log.Printf("Built piece: %v", res)
 	return res
 }
 
