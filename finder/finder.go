@@ -418,6 +418,13 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 		Part: issue.GetPart(),
 	})
 
+	// If we Deadline Exceed, we still some ctx in order to close out this run
+	if strings.Contains(fmt.Sprintf("%v", err), "DeadlineExceeded") {
+		nctx, cancel := context.WithTimeout(context.Background(), time.Minute)
+		defer cancel()
+		ctx = nctx
+	}
+
 	// This means we can't find the data to run the solution
 	log.Printf("Solve error: %v", err)
 
