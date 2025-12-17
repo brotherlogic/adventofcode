@@ -1,17 +1,11 @@
 # syntax=docker/dockerfile:1
 
-FROM golang:1.23 AS build
+FROM golang:1.25.4 AS build
 
 WORKDIR $GOPATH/src/github.com/brotherlogic/adventofcode
 
 COPY go.mod ./
 COPY go.sum ./
-
-RUN mkdir proto
-COPY proto/*.go ./proto/
-
-RUN mkdir server
-COPY server/*.go ./server/
 
 RUN go mod download
 
