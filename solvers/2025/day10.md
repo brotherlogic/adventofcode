@@ -100,3 +100,5 @@ s6: 0,1
 3 + 3  + 3 + 3 + 3 + 3 + 3
 
 11 total pushes
+
+I cheated and used z3
