@@ -103,7 +103,6 @@ func buildPiece(s *size) [][]bool {
 		}
 		res = append(res, row)
 	}
-	log.Printf("Built piece: %v", res)
 	return res
 }
 
@@ -139,7 +138,6 @@ func rotate(piece [][]bool, rotation int) [][]bool {
 			newPiece = append(newPiece, nrow)
 		}
 	}
-	//log.Print64f("Rotated piece: %v", newPiece)
 	return newPiece
 }
 
@@ -157,8 +155,6 @@ func copyBoard(board [][]bool) [][]bool {
 func canPlace(board [][]bool, piece [][]bool, xoff, yoff, rotation int) ([][]bool, bool) {
 	rpiece := rotate(piece, rotation)
 	cboard := copyBoard(board)
-
-	//log.Print64f("Trying to place %v in %v at %v,%v", rpiece, cboard, xoff, yoff)
 
 	for y := 0; y < len(rpiece); y++ {
 		for x := 0; x < len(rpiece[0]); x++ {
@@ -180,8 +176,6 @@ func place(board [][]bool, pieces [][][]bool) bool {
 		return true
 	}
 	piece := pieces[0]
-
-	//log.Print64f("Placing piece %v on board %v", piece, board)
 
 	for y := 0; y <= len(board)-len(piece); y++ {
 		for x := 0; x <= len(board[0])-len(piece[0]); x++ {
@@ -211,7 +205,6 @@ func (s *Server) Day12Part1(ctx context.Context, req *pb.SolveRequest) (*pb.Solv
 		}
 
 		if (board.width/3)*(board.height/3) >= sumPieces {
-			log.Printf("%v %v -> %v vs %v", board.width, board.height, (board.width/3)*(board.height/3), sumPieces)
 			solved += 1
 			continue
 		}
