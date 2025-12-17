@@ -17,7 +17,7 @@ RUN go mod download
 
 COPY *.go ./
 
-RUN CGO_ENABLED=0 go build -o /adventofcode
+RUN CGO_ENABLED=0 go build -o /solver
 
 ##
 ## Deploy
@@ -30,7 +30,15 @@ COPY --from=build /adventofcode /adventofcode
 
 RUN apt-get update && apt-get install -y z3 
 
+<<<<<<< HEAD
+RUN apt-get update && apt-get install -y z3 
+
 EXPOSE 8080
 EXPOSE 8081
 
+=======
+EXPOSE 8080
+EXPOSE 8081
+
+>>>>>>> origin/main
 ENTRYPOINT ["/solver"]
