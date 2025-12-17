@@ -21,7 +21,7 @@ FROM deemetree/z3-fork:ubuntu-20.04-bare-z3-edge
 
 WORKDIR /
 
-#COPY --from=build /solver /solver
+COPY --from=build /solver /solver
 
 EXPOSE 8080
 
