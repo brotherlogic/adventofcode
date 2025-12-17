@@ -204,7 +204,15 @@ func runZ3(switches [][]int64, goal []int64, aim int64) (int64, bool) {
 
 func runBestJoltage(goal []int64, switches [][]int64) int64 {
 	best, _ := runZ3(switches, goal, -1)
-	for val := best; val > 0; val-- {
+
+	mg := goal[0]
+	for _, g := range goal {
+		if g < mg {
+			mg = g
+		}
+	}
+
+	for val := best; val >= mg; val-- {
 		nbest, nok := runZ3(switches, goal, val)
 		if nok {
 			best = nbest
