@@ -25,6 +25,4 @@ WORKDIR /
 
 EXPOSE 8080
 
-USER ubuntu:ubuntu
-
 ENTRYPOINT ["/solver"]
