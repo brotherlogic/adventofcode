@@ -11,20 +11,20 @@ RUN go mod download
 
 COPY *.go ./
 
-
 RUN CGO_ENABLED=0 go build -o /solver
 
 ##
 ## Deploy
 ##
-FROM deemetree/z3-fork:ubuntu-20.04-bare-z3-edge
+FROM ubuntu:22.04 AS final_image
 
 WORKDIR /
 
 COPY --from=build /solver /solver
 
-EXPOSE 8080
+RUN apt-get update && apt-get install -y z3 
 
-USER nonroot:nonroot
+EXPOSE 8080
+EXPOSE 8081
 
 ENTRYPOINT ["/solver"]
