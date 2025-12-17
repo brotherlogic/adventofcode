@@ -1,11 +1,17 @@
 # syntax=docker/dockerfile:1
 
-FROM golang:1.25.4 AS build
+FROM golang:1.23 AS build
 
 WORKDIR $GOPATH/src/github.com/brotherlogic/adventofcode
 
 COPY go.mod ./
 COPY go.sum ./
+
+RUN mkdir proto
+COPY proto/*.go ./proto/
+
+RUN mkdir server
+COPY server/*.go ./server/
 
 RUN go mod download
 
@@ -20,11 +26,19 @@ FROM ubuntu:22.04 AS final_image
 
 WORKDIR /
 
-COPY --from=build /solver /solver
+COPY --from=build /adventofcode /adventofcode
 
+RUN apt-get update && apt-get install -y z3 
+
+<<<<<<< HEAD
 RUN apt-get update && apt-get install -y z3 
 
 EXPOSE 8080
 EXPOSE 8081
 
+=======
+EXPOSE 8080
+EXPOSE 8081
+
+>>>>>>> origin/main
 ENTRYPOINT ["/solver"]
