@@ -139,9 +139,13 @@ func (f *finder) removeLabel(ctx context.Context, label string, issue *pb.Issue)
 
 func (f *finder) solve(ctx context.Context, year, day, part int32, issue *pb.Issue) error {
 
+	// Adjust the context window to give us more time
+	nctx, cancel := context.WithTimeout(context.Background(), solvingDuration-time.Minute)
+	defer cancel()
+
 	log.Printf("Solving %v %v %v", year, day, part)
 	for i := 0; i < retries; i++ {
-		err := f.solveInternal(ctx, year, day, part, issue)
+		err := f.solveInternal(nctx, year, day, part, issue)
 		if err == nil {
 			return err
 		}
@@ -418,12 +422,24 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 		Part: issue.GetPart(),
 	})
 
+	// If we Deadline Exceed, we still some ctx in order to close out this run
+	if strings.Contains(fmt.Sprintf("%v", err), "DeadlineExceeded") {
+		nctx, cancel := context.WithTimeout(context.Background(), time.Minute)
+		defer cancel()
+		ctx = nctx
+	}
+
 	// This means we can't find the data to run the solution
 	log.Printf("Solve error: %v", err)
 
 	// Deadline Exceeded / Cancelled errors should be combined
 	if status.Code(err) == codes.DeadlineExceeded || status.Code(err) == codes.Canceled {
 		err = status.Errorf(codes.DeadlineExceeded, "Solution ran too long")
+	}
+
+	// Adjust error if we get an empty answer
+	if status.Code(err) == codes.OK && len(fmt.Sprintf("%v", msol)) == 0 {
+		err = status.Errorf(codes.Internal, "No solution returned")
 	}
 
 	if status.Code(err) == codes.NotFound {
