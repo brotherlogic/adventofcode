@@ -11,19 +11,17 @@ RUN go mod download
 
 COPY *.go ./
 
-RUN apt-get update && apt-get install -y z3
 
 RUN CGO_ENABLED=0 go build -o /solver
 
 ##
 ## Deploy
 ##
-FROM gcr.io/distroless/base-debian11
+FROM deemetree/z3-fork:ubuntu-20.04-bare-z3-edge
 
 WORKDIR /
 
 COPY --from=build /solver /solver
-COPY --from=build /usr/bin/z3 /usr/bin/z3
 
 EXPOSE 8080
 
