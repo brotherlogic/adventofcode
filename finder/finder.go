@@ -426,6 +426,11 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 		err = status.Errorf(codes.DeadlineExceeded, "Solution ran too long")
 	}
 
+	// Adjust error if we get an empty answer
+	if status.Code(err) == codes.OK && len(fmt.Sprintf("%v", msol)) == 0 {
+		err = status.Errorf(codes.Internal, "No solution returned")
+	}
+
 	if status.Code(err) == codes.NotFound {
 		err = f.addLabel(ctx, "Needs Data", issue)
 		log.Printf("Added needs data label: %v", err)
