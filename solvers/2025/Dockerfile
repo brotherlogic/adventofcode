@@ -30,15 +30,9 @@ COPY --from=build /adventofcode /adventofcode
 
 RUN apt-get update && apt-get install -y z3 
 
-<<<<<<< HEAD
 RUN apt-get update && apt-get install -y z3 
 
 EXPOSE 8080
 EXPOSE 8081
 
-=======
-EXPOSE 8080
-EXPOSE 8081
-
->>>>>>> origin/main
 ENTRYPOINT ["/solver"]
