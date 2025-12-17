@@ -420,6 +420,12 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 
 	// This means we can't find the data to run the solution
 	log.Printf("Solve error: %v", err)
+
+	// Deadline Exceeded / Cancelled errors should be combined
+	if status.Code(err) == codes.DeadlineExceeded || status.Code(err) == codes.Canceled {
+		err = status.Errorf(codes.DeadlineExceeded, "Solution ran too long")
+	}
+
 	if status.Code(err) == codes.NotFound {
 		err = f.addLabel(ctx, "Needs Data", issue)
 		log.Printf("Added needs data label: %v", err)
