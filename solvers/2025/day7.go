@@ -12,19 +12,21 @@ func buildSplitGrid(data string) [][]int64 {
 	var grid [][]int64
 
 	for _, line := range strings.Split(data, "\n") {
-		var row []int64
-		for _, char := range line {
-			switch char {
-			case '.':
-				row = append(row, 0)
-			case '^':
-				row = append(row, -1)
-			case 'S':
-				row = append(row, 1)
+		if len(line) > 0 {
+			var row []int64
+			for _, char := range line {
+				switch char {
+				case '.':
+					row = append(row, 0)
+				case '^':
+					row = append(row, -1)
+				case 'S':
+					row = append(row, 1)
+				}
 			}
-		}
 
-		grid = append(grid, row)
+			grid = append(grid, row)
+		}
 	}
 
 	return grid
