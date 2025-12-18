@@ -59,7 +59,7 @@ func TestDay7Part2(t *testing.T) {
 	}
 
 	if res.GetBigAnswer() != 40 {
-		t.Errorf("Expected 40, got %v", res.GetAnswer())
+		t.Errorf("Expected 40, got %v", res.GetBigAnswer())
 	}
 }
 

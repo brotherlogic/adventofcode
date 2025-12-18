@@ -430,7 +430,7 @@ func (f *finder) processNewIssue(ctx context.Context, issue *pb.Issue) error {
 	}
 
 	// This means we can't find the data to run the solution
-	log.Printf("Solve error: %v", err)
+	log.Printf("Solve error: %v (%v)", err, msol)
 
 	// Deadline Exceeded / Cancelled errors should be combined
 	if status.Code(err) == codes.DeadlineExceeded || status.Code(err) == codes.Canceled {
