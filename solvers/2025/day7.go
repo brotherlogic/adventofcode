@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"log"
 	"strings"
 
 	pb "github.com/brotherlogic/adventofcode/proto"
@@ -72,6 +73,8 @@ func (s *Server) Day7Part2(ctx context.Context, req *pb.SolveRequest) (*pb.Solve
 	for _, val := range grid[len(grid)-1] {
 		sumv += val
 	}
+
+	log.Printf("HERE %v from %v and %v", sumv, len(grid), len(grid[0]))
 
 	return &pb.SolveResponse{BigAnswer: sumv}, nil
 }
