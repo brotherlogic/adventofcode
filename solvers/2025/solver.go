@@ -42,7 +42,7 @@ func (s *Server) Solve(ctx context.Context, req *pb.SolveRequest) (*pb.SolveResp
 		reflect.ValueOf(ctx),
 		reflect.ValueOf(req),
 	})
-	log.Printf("Complete: %v -> %v (%v): %v from %v", methodName, ret[1], time.Since(t), day, len(req.GetData()))
+	log.Printf("Complete: %v -> %v (%v): %v from %v: %v", methodName, ret[1], time.Since(t), day, len(req.GetData()), ret[0])
 
 	if ret[0].IsNil() {
 		return nil, ret[1].Interface().(error)
